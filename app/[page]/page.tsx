@@ -3,6 +3,7 @@ import type { Metadata } from 'next';
 import Prose from 'components/prose';
 import { CHECKOUT_PAGE_PROPS } from 'lib/constants';
 import { notFound } from 'next/navigation';
+import Checkout from 'components/checkout';
 
 export const runtime = 'edge';
 
@@ -41,6 +42,7 @@ export default async function Page({ params }: { params: { page: string } }) {
     <>
       <h1 className="mb-8 text-5xl font-bold">{page.title}</h1>
       <Prose className="mb-8" html={page.body as string} />
+      <Checkout />,
       <p className="text-sm italic">
         {`This document was last updated on ${new Intl.DateTimeFormat(undefined, {
           year: 'numeric',
