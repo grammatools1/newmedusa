@@ -1,4 +1,3 @@
-
 import React from 'react';
 import Medusa from "@medusajs/medusa-js";
 
