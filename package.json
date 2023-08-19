@@ -21,13 +21,17 @@
   "lint-staged": {
     "*": "prettier --write --ignore-unknown"
   },
-  "dependencies": {
+ "dependencies": {
+    "@meilisearch/instant-meilisearch":"^0.13.4",
     "@headlessui/react": "^1.7.15",
+    "@medusajs/medusa-js": "^6.0.3",
+    "country-list": "^2.3.0",
     "@heroicons/react": "^2.0.18",
     "clsx": "^2.0.0",
     "next": "13.4.13-canary.15",
     "react": "18.2.0",
-    "react-dom": "18.2.0"
+    "react-dom": "18.2.0",
+    "axios": "^1.4.0"
   },
   "devDependencies": {
     "@tailwindcss/container-queries": "^0.1.1",
