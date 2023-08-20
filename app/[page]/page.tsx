@@ -1,9 +1,8 @@
 import type { Metadata } from 'next';
-
 import Prose from 'components/prose';
 import { CHECKOUT_PAGE_PROPS } from 'lib/constants';
 import { notFound } from 'next/navigation';
-import Checkout from 'components/checkout';
+import Checkout from 'components/checkout'; // Import the Checkout component
 
 export const runtime = 'edge';
 
@@ -16,7 +15,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   let page;
 
-  params.page === 'checkout' && (page = CHECKOUT_PAGE_PROPS);
+  if (params.page === 'checkout') {
+    page = CHECKOUT_PAGE_PROPS;
+  }
 
   if (!page) return notFound();
 
@@ -26,15 +27,17 @@ export async function generateMetadata({
     openGraph: {
       publishedTime: page.createdAt,
       modifiedTime: page.updatedAt,
-      type: 'article'
-    }
+      type: 'article',
+    },
   };
 }
 
-export default async function Page({ params }: { params: { page: string } }) {
+export default function Page({ params }: { params: { page: string } }) {
   let page;
 
-  params.page === 'checkout' && (page = CHECKOUT_PAGE_PROPS);
+  if (params.page === 'checkout') {
+    page = CHECKOUT_PAGE_PROPS;
+  }
 
   if (!page) return notFound();
 
@@ -42,7 +45,6 @@ export default async function Page({ params }: { params: { page: string } }) {
     <>
       <h1 className="mb-8 text-5xl font-bold">{page.title}</h1>
       <Prose className="mb-8" html={page.body as string} />
-    
       <p className="text-sm italic">
         {`This document was last updated on ${new Intl.DateTimeFormat(undefined, {
           year: 'numeric',
@@ -50,6 +52,7 @@ export default async function Page({ params }: { params: { page: string } }) {
           day: 'numeric'
         }).format(new Date(page.updatedAt))}.`}
       </p>
+      {params.page === 'checkout' && <Checkout />} {/* Render the Checkout component */}
     </>
   );
 }
