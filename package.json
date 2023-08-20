@@ -25,6 +25,7 @@
     "@meilisearch/instant-meilisearch":"^0.13.4",
     "@headlessui/react": "^1.7.15",
     "@medusajs/medusa-js": "^6.0.3",
+    "medusa-react":"^9.0.4",
     "country-list": "^2.3.0",
     "@heroicons/react": "^2.0.18",
     "clsx": "^2.0.0",
