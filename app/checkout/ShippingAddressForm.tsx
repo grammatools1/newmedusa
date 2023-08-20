@@ -2,7 +2,7 @@
 
 import React, { forwardRef, useEffect, useRef, useState, useMemo } from 'react';
 import Medusa from "@medusajs/medusa-js";
-import { useCart, useRegions, useShippingMethods } from 'medusa-react';
+import { useCart, useRegions, useCartShippingOptions } from 'medusa-react';
 import { getCountries } from 'country-list';
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
