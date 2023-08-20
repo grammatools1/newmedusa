@@ -52,7 +52,7 @@ export default function Page({ params }: { params: { page: string } }) {
           day: 'numeric'
         }).format(new Date(page.updatedAt))}.`}
       </p>
-      {params.page === 'checkout' && <Checkout />} {/* Render the Checkout component */}
+   
     </>
   );
 }
