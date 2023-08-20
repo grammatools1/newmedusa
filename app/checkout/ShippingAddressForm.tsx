@@ -5,10 +5,13 @@ import Medusa from "@medusajs/medusa-js";
 import { useCart, useRegions, useCartShippingOptions } from 'medusa-react';
 import { getNameList } from 'country-list';
 
+type ShippingFormProps = {
+  onComplete: () => void;
+};
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
-const ShippingForm = forwardRef(({ onComplete }, ref) => {
+const ShippingForm = forwardRef(({ onComplete }: ShippingFormProps, ref) => {
   const innerRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
