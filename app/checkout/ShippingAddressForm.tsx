@@ -4,11 +4,12 @@ import Medusa from "@medusajs/medusa-js";
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
 // Check if the base URL is defined before creating Medusa instance
-const medusa = medusaBaseUrl
-  ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 })
-  : null;
+interface ShippingFormProps {
+  cartId: string; // You might need to adjust the actual type of cartId
+  onComplete: () => void; // Adjust the type of onComplete function if needed
+}
 
-const ShippingForm = ({ cartId, onComplete }) => {
+const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
   const [shippingInfo, setShippingInfo] = React.useState({
     company: '',
     first_name: '',
