@@ -2,7 +2,7 @@ import React from 'react';
 import ShippingForm from './ShippingAddressForm'; // Import the ShippingForm component (provide the correct path)
 import Medusa from "@medusajs/medusa-js";
 
-const Checkout = () => {
+const Checkoutflow = () => {
   const MEDUSA_BACKEND_API = 'your_medusa_backend_api_here'; // Replace with your Medusa backend API URL
   const medusa = new Medusa({ baseUrl:process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API, maxRetries: 3 });
 
@@ -176,4 +176,4 @@ const Checkout = () => {
   );
 };
 
-export default Checkout;
+export default Checkoutflow;
