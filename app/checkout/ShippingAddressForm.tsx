@@ -4,14 +4,20 @@ import { useCart, useRegions, useShippingMethods, MedusaProvider } from 'medusa-
 import { getCountries } from 'country-list';
 import { QueryClient } from "@tanstack/react-query";
 
-const queryClient = new QueryClient()
+// Create a new instance of QueryClient
+const queryClient = new QueryClient();
+
+// Initialize the Medusa API client
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
+// ForwardRef component for the ShippingForm
 const ShippingForm = forwardRef(({ onComplete }, ref) => {
-  <MedusaProvider
-      queryClientProviderProps={{ client: queryClient }}
-      baseUrl=medusaBaseUrl;
+  // Use the MedusaProvider to set up Medusa-related functionality
+  return (
+    <MedusaProvider
+      queryClientProviderProps={{ client: queryClient }} // Provide the QueryClient
+      baseUrl={medusaBaseUrl} // Pass the Medusa base URL
     >
   const innerRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -359,7 +365,7 @@ const ShippingForm = forwardRef(({ onComplete }, ref) => {
       </form>
     </div>
   );
-<MedusaProvider/>
+  </MedusaProvider>
 });
  
 
