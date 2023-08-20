@@ -166,6 +166,7 @@ const ShippingForm = forwardRef(({ onComplete }, ref) => {
   return (
     <div>
       <h2>Shipping Information</h2>
+      {clientLoaded && (
       <form>
         <div>
           <label htmlFor="country">Country:</label>
@@ -356,6 +357,7 @@ const ShippingForm = forwardRef(({ onComplete }, ref) => {
           Save Shipping Address
         </button>
       </form>
+      )}
     </div>
   );
 });
