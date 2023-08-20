@@ -2,18 +2,12 @@ import React, { forwardRef, useEffect, useRef, useState, useMemo } from 'react';
 import Medusa from "@medusajs/medusa-js";
 import { useCart, useRegions, useShippingMethods } from 'medusa-react';
 import { getCountries } from 'country-list';
-import { QueryClient } from "@tanstack/react-query";
 
-const queryClient = new QueryClient();
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
 const ShippingForm = forwardRef(({ onComplete }, ref) => {
-  const [clientLoaded, setClientLoaded] = useState(false);
-
-  useEffect(() => {
-    setClientLoaded(true);
-  }, []);
+  const innerRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('Standard');
@@ -163,10 +157,10 @@ const ShippingForm = forwardRef(({ onComplete }, ref) => {
         });
     }
   };
+
   return (
     <div>
       <h2>Shipping Information</h2>
-      {clientLoaded && (
       <form>
         <div>
           <label htmlFor="country">Country:</label>
@@ -357,10 +351,9 @@ const ShippingForm = forwardRef(({ onComplete }, ref) => {
           Save Shipping Address
         </button>
       </form>
-      )}
     </div>
   );
 });
- 
 
 export default ShippingForm;
+
