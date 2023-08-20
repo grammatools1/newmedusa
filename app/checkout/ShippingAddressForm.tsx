@@ -4,7 +4,6 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import Medusa from "@medusajs/medusa-js";
 import { useCart, useCartShippingOptions } from 'medusa-react';
 import Autocomplete from 'react-autocomplete';
-import ShippForm from './shippingform';
 const { getName, getNameList } = require('country-list');
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
