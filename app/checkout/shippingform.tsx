@@ -1,4 +1,4 @@
-
+     const  ShippForm = () => { 
           <div>
           <label htmlFor="first_name">First Name:</label>
           <input
@@ -165,3 +165,5 @@
           <span style={{ color: 'red' }}>{validationErrors.phone}</span>
         )}
       </div>
+ };
+export default ShippForm;        
