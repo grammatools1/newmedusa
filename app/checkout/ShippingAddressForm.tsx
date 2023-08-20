@@ -1,7 +1,12 @@
 import React from 'react';
 import Medusa from "@medusajs/medusa-js";
 
-const medusa = new Medusa({ baseUrl: process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API, maxRetries: 3 });
+const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+
+// Check if the base URL is defined before creating Medusa instance
+const medusa = medusaBaseUrl
+  ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 })
+  : null;
 
 const ShippingForm = ({ cartId, onComplete }) => {
   const [shippingInfo, setShippingInfo] = React.useState({
