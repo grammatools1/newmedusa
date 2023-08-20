@@ -3,7 +3,7 @@ import type { Metadata } from 'next';
 import Prose from 'components/prose';
 import { CHECKOUT_PAGE_PROPS } from 'lib/constants';
 import { notFound } from 'next/navigation';
-import Checkout from 'components/checkout';
+
 
 // Set the runtime and revalidate settings
 export const runtime = 'edge';
@@ -58,8 +58,7 @@ export default function Page({ params }: { params: { page: string } }) {
           day: 'numeric'
         }).format(new Date(page.updatedAt))}.`}
       </p>
-      {/* Render the Checkout component if the page is 'checkout' */}
-      {params.page === 'checkout' && <Checkout />}
+      
     </>
   );
 }
