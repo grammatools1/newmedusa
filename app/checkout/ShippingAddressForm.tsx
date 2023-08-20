@@ -9,9 +9,11 @@ const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
 const ShippingForm = forwardRef(({ onComplete }, ref) => {
-  const innerRef = useRef(null);
-  
-  const innerRef = useRef(null);
+  const [clientLoaded, setClientLoaded] = useState(false);
+
+  useEffect(() => {
+    setClientLoaded(true);
+  }, []);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('Standard');
