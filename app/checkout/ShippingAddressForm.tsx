@@ -3,7 +3,7 @@
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import Medusa from "@medusajs/medusa-js";
 import { useCart, useCartShippingOptions } from 'medusa-react';
-import Autocomplete from '@types/react-autocomplete';
+import Autocomplete from 'react-autocomplete';
 const { getName, getNameList } = require('country-list');
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
