@@ -1,3 +1,5 @@
+'use client'
+
 import React, { forwardRef, useEffect, useRef, useState, useMemo } from 'react';
 import Medusa from "@medusajs/medusa-js";
 import { useCart, useRegions, useShippingMethods } from 'medusa-react';
