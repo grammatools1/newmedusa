@@ -31,7 +31,7 @@ const ShippingForm = forwardRef(({ onComplete }, ref) => {
 
   const { regions } = useRegions();
   const { cart } = useCart();
-  const { shippingMethods } = useShippingMethods();
+  const { shippingMethods } = useCartShippingOptions();
 
   const validateEmail = (email) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
