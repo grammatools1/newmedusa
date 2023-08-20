@@ -169,8 +169,6 @@ const ShippingForm = forwardRef(({ onComplete }, ref) => {
         });
     }
   };
-
-  return (
     <div>
       <h2>Shipping Information</h2>
       <form>
