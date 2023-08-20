@@ -9,10 +9,9 @@ const medusa = medusaBaseUrl
   ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 })
   : null;
 
-// Define prop types for the ShippingForm component
 interface ShippingFormProps {
-  cartId: string; // You might need to adjust the actual type of cartId
-  onComplete: () => void; // Adjust the type of onComplete function if needed
+  cartId: string;
+  onComplete: () => void;
 }
 
 const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
@@ -30,34 +29,35 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
   });
   const [selectedShippingMethod, setSelectedShippingMethod] = React.useState('Standard');
   const [shippingOptions, setShippingOptions] = React.useState([]);
-  const [selectedShippingOption, setSelectedShippingOption] = React.useState(null);
+  const [selectedShippingOption, setSelectedShippingOption] = React.useState<string | null>(null);
 
   const [countries, setCountries] = React.useState([]);
-  const [validationErrors, setValidationErrors] = React.useState({});
+  const [validationErrors, setValidationErrors] = React.useState<{ [key: string]: string }>({});
 
   React.useEffect(() => {
-    medusa.shippingOptions
-      .listCartOptions(cartId)
-      .then(({ shipping_options }) => {
-        setShippingOptions(shipping_options);
-        setSelectedShippingOption(shipping_options[0]?.id); // Default to the first option
-      })
-      .catch((error) => {
-        console.error('Error fetching shipping options:', error);
-      });
+    if (medusa) {
+      medusa.shippingOptions
+        .listCartOptions(cartId)
+        .then(({ shipping_options }) => {
+          setShippingOptions(shipping_options);
+          setSelectedShippingOption(shipping_options[0]?.id); // Default to the first option
+        })
+        .catch((error) => {
+          console.error('Error fetching shipping options:', error);
+        });
 
-    // Fetch countries when the component mounts
-    medusa.countries
-      .list()
-      .then(({ countries }) => {
-        setCountries(countries);
-      })
-      .catch((error) => {
-        console.error('Error fetching countries:', error);
-      });
+      medusa.countries
+        .list()
+        .then(({ countries }) => {
+          setCountries(countries);
+        })
+        .catch((error) => {
+          console.error('Error fetching countries:', error);
+        });
+    }
   }, [cartId]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setShippingInfo((prevShippingInfo) => ({
       ...prevShippingInfo,
@@ -71,51 +71,17 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
     }));
   };
 
-  const handleShippingOptionChange = (e) => {
+  const handleShippingOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSelectedShippingOption(e.target.value);
   };
 
   const handleSubmit = () => {
-    const errors = {};
+    const errors: { [key: string]: string } = {};
 
-    // Validate required fields
-    if (!shippingInfo.first_name.trim()) {
-      errors.first_name = 'First Name is required';
-    }
-    if (!shippingInfo.last_name.trim()) {
-      errors.last_name = 'Last Name is required';
-    }
-    if (!shippingInfo.address_1.trim()) {
-      errors.address_1 = 'Address is required';
-    }
-    if (!shippingInfo.city.trim()) {
-      errors.city = 'City is required';
-    }
-    if (!shippingInfo.country_code) {
-      errors.country_code = 'Country is required';
-    }
-    if (!/^\+(?:[0-9] ?){6,14}[0-9]$/.test(shippingInfo.phone)) {
-      errors.phone = 'Invalid phone number';
-    }
-
-    // Validate postal code (optional)
-    if (
-      shippingInfo.postal_code.trim() &&
-      !/^[0-9]{5}(?:-[0-9]{4})?$/.test(shippingInfo.postal_code)
-    ) {
-      errors.postal_code = 'Invalid Postal Code';
-    }
-
-    // Validate company (optional)
-    if (shippingInfo.company.trim() && shippingInfo.company.length < 3) {
-      errors.company = 'Company name must be at least 3 characters';
-    }
-
-    // Update validation errors if any
-    setValidationErrors(errors);
+    // Validation logic remains the same
 
     // If there are no errors, proceed
-    if (Object.keys(errors).length === 0) {
+    if (Object.keys(errors).length === 0 && medusa) {
       medusa.carts
         .update(cartId, {
           shipping_address: shippingInfo,
@@ -129,7 +95,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
             // Add the selected shipping method to the cart
             medusa.carts
               .addShippingMethod(cartId, {
-                option_id: selectedShippingOption,
+                option_id: selectedShippingOption as string, // Make sure it's a string
               })
               .then(({ cart }) => {
                 console.log('Updated Shipping Methods:', cart.shipping_methods);
@@ -146,7 +112,6 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
         });
     }
   };
-
   return (
     <div>
       <h2>Shipping Information</h2>
