@@ -13,14 +13,15 @@ export const metadata = {
   }
 };
 
-export default async function Checkout() {
+export default function Checkout() {
   return (
     <>
+      {/* Render the ThreeItemGrid component */}
       <ThreeItemGrid />
-      <Suspense>
-        <Suspense>
-          <Checkoutflow />
-        </Suspense>
+      {/* Use Suspense to wrap the Checkoutflow component */}
+      <Suspense fallback={<div>Loading...</div>}>
+        <Checkoutflow />
+      </Suspense>
     </>
   );
 }
