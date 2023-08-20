@@ -2,10 +2,12 @@ import React from 'react';
 import Medusa from "@medusajs/medusa-js";
 
 // Ensure that the environment variable is defined before using it
- const baseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
 // Check if the base URL is defined before creating Medusa instance
-const medusa = new Medusa({baseUrl, maxRetries: 3 });
+const medusa = medusaBaseUrl
+  ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 })
+  : null;
 
 // Define prop types for the ShippingForm component
 interface ShippingFormProps {
