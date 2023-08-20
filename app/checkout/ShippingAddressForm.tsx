@@ -1,12 +1,18 @@
 import React, { forwardRef, useEffect, useRef, useState, useMemo } from 'react';
 import Medusa from "@medusajs/medusa-js";
-import { useCart, useRegions, useShippingMethods } from 'medusa-react';
+import { useCart, useRegions, useShippingMethods, MedusaProvider } from 'medusa-react';
 import { getCountries } from 'country-list';
+import { QueryClient } from "@tanstack/react-query";
 
+const queryClient = new QueryClient()
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
 const ShippingForm = forwardRef(({ onComplete }, ref) => {
+  <MedusaProvider
+      queryClientProviderProps={{ client: queryClient }}
+      baseUrl=medusaBaseUrl;
+    >
   const innerRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedOption, setSelectedOption] = useState('');
@@ -353,6 +359,8 @@ const ShippingForm = forwardRef(({ onComplete }, ref) => {
       </form>
     </div>
   );
+<MedusaProvider/>
 });
+ 
 
 export default ShippingForm;
