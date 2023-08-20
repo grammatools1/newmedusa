@@ -1,21 +1,18 @@
-import React from 'react';
+import React, { forwardRef, useEffect, useRef, useState, useMemo } from 'react';
 import Medusa from "@medusajs/medusa-js";
+import { useCart, useRegions, useShippingMethods } from 'medusa-react';
+import { getCountries } from 'country-list';
 
-// Ensure that the environment variable is defined before using it
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
-// Check if the base URL is defined before creating Medusa instance
-const medusa = medusaBaseUrl
-  ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 })
-  : null;
-
-interface ShippingFormProps {
-  cartId: string;
-  onComplete: () => void;
-}
-
-const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
-  const [shippingInfo, setShippingInfo] = React.useState({
+const ShippingForm = forwardRef(({ onComplete }, ref) => {
+  const innerRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedOption, setSelectedOption] = useState('');
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState('Standard');
+  const [shippingOptions, setShippingOptions] = useState([]);
+  const [shippingInfo, setShippingInfo] = useState({
     company: '',
     first_name: '',
     last_name: '',
@@ -26,80 +23,128 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
     province: '',
     postal_code: '',
     phone: '',
+    email: '',
   });
-  const [selectedShippingMethod, setSelectedShippingMethod] = React.useState('Standard');
-  const [shippingOptions, setShippingOptions] = React.useState([]);
-  const [selectedShippingOption, setSelectedShippingOption] = React.useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState({});
 
-  const [countries, setCountries] = React.useState([]);
-  const [validationErrors, setValidationErrors] = React.useState<{ [key: string]: string }>({});
+  const { regions } = useRegions();
+  const { cart } = useCart();
+  const { shippingMethods } = useShippingMethods();
 
-  React.useEffect(() => {
+  const validateEmail = (email) => {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+     }; 
+     const isPostalCodeRequired = (countryCode) => {
+        // Replace this logic with your actual logic to determine if postal code is required
+        const countriesRequiringPostalCode = ['US', 'CA', 'GB']; // Example countries
+        return countriesRequiringPostalCode.includes(countryCode);
+      };
+
+  const countryOptions = useMemo(() => {
+    const currentRegion = regions?.find((r) => r.id === cart?.region_id);
+
+    if (!currentRegion) {
+      return [];
+    }
+
+    return currentRegion.countries.map((country) => ({
+      value: country.iso_2,
+      label: country.display_name,
+    }));
+  }, [regions, cart]);
+
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!innerRef.current.contains(e.target)) {
+        setSearchTerm('');
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  // ... (validateEmail, handleSelectOption, handleShippingOptionChange, handleInputChange)
+
+  useEffect(() => {
     if (medusa) {
       medusa.shippingOptions
-        .listCartOptions(cartId)
+        .listCartOptions(cart?.id)
         .then(({ shipping_options }) => {
           setShippingOptions(shipping_options);
-          setSelectedShippingOption(shipping_options[0]?.id); // Default to the first option
         })
         .catch((error) => {
           console.error('Error fetching shipping options:', error);
         });
-
-      medusa.countries
-        .list()
-        .then(({ countries }) => {
-          setCountries(countries);
-        })
-        .catch((error) => {
-          console.error('Error fetching countries:', error);
-        });
     }
-  }, [cartId]);
-
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setShippingInfo((prevShippingInfo) => ({
-      ...prevShippingInfo,
-      [name]: value,
-    }));
-
-    // Clear validation error when user starts typing
-    setValidationErrors((prevErrors) => ({
-      ...prevErrors,
-      [name]: '',
-    }));
-  };
-
-  const handleShippingOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedShippingOption(e.target.value);
-  };
+  }, [cart]);
 
   const handleSubmit = () => {
-    const errors: { [key: string]: string } = {};
+    const errors = {};
 
-    // Validation logic remains the same
+    if (!selectedOption) {
+      errors.country = 'Country is required';
+    }
 
-    // If there are no errors, proceed
+      // Validate required fields
+      if (!shippingInfo.first_name.trim()) {
+        errors.first_name = 'First Name is required';
+      }
+      if (!shippingInfo.last_name.trim()) {
+        errors.last_name = 'Last Name is required';
+      }
+      if (!shippingInfo.address_1.trim()) {
+        errors.address_1 = 'Address is required';
+      }
+      if (!shippingInfo.city.trim()) {
+        errors.city = 'City is required';
+      }
+      if (!shippingInfo.country_code) {
+        errors.country_code = 'Country is required';
+      }
+      if (!/^\+(?:[0-9] ?){6,14}[0-9]$/.test(shippingInfo.phone)) {
+        errors.phone = 'Invalid phone number';
+      }
+  
+      // Validate postal code (optional)
+      if (
+        shippingInfo.postal_code.trim() &&
+        !/^[0-9]{5}(?:-[0-9]{4})?$/.test(shippingInfo.postal_code)
+      ) {
+        errors.postal_code = 'Invalid Postal Code';
+      }
+  
+      // Validate company (optional)
+      if (shippingInfo.company.trim() && shippingInfo.company.length < 3) {
+        errors.company = 'Company name must be at least 3 characters';
+      }
+  
+      if (!validateEmail(shippingInfo.email)) {
+        errors.email = 'Invalid email address';
+      }
+      
+
+    setValidationErrors(errors);
+
     if (Object.keys(errors).length === 0 && medusa) {
       medusa.carts
-        .update(cartId, {
-          shipping_address: shippingInfo,
+        .update(cart?.id, {
+          shipping_address: { ...shippingInfo },
           shipping_method: selectedShippingMethod,
         })
         .then(() => {
           if (selectedShippingMethod === 'Local Pickup') {
-            // Handle local pickup scenario
             onComplete();
           } else {
-            // Add the selected shipping method to the cart
             medusa.carts
-              .addShippingMethod(cartId, {
-                option_id: selectedShippingOption as string, // Make sure it's a string
+              .addShippingMethod(cart?.id, {
+                option_id: selectedShippingOption,
               })
               .then(({ cart }) => {
                 console.log('Updated Shipping Methods:', cart.shipping_methods);
-                // Call a function to move to the next step (e.g., payment method selection)
                 onComplete();
               })
               .catch((error) => {
@@ -112,38 +157,43 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
         });
     }
   };
+
   return (
     <div>
       <h2>Shipping Information</h2>
-         <form>
+      <form>
         <div>
-          <label>First Name:</label>
+          <label htmlFor="country">Country:</label>
           <input
             type="text"
-            name="first_name"
-            placeholder="First Name"
-            value={shippingInfo.first_name}
+            name="country"
+            placeholder="Country"
+            value={searchTerm}
             onChange={handleInputChange}
           />
-          {validationErrors.first_name && (
-            <span style={{ color: 'red' }}>{validationErrors.first_name}</span>
+          {validationErrors.country && (
+            <span style={{ color: 'red' }}>{validationErrors.country}</span>
           )}
+             <ul>
+            {countryOptions.map(({ value, label }, index) => (
+              <li
+                key={index}
+                onClick={() => handleSelectOption(value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleSelectOption(value);
+                  }
+                }}
+                role="option"
+                aria-selected={value === selectedOption}
+              >
+                {label}
+              </li>
+            ))}
+          </ul>
         </div>
         <div>
-          <label>Last Name:</label>
-          <input
-            type="text"
-            name="last_name"
-            placeholder="Last Name"
-            value={shippingInfo.last_name}
-            onChange={handleInputChange}
-          />
-          {validationErrors.last_name && (
-            <span style={{ color: 'red' }}>{validationErrors.last_name}</span>
-          )}
-        </div>
-        <div>
-          <label>Email:</label>
+        <label htmlFor="email">Email:</label>
           <input
             type="email"
             name="email"
@@ -156,7 +206,33 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
           )}
         </div>
         <div>
-          <label>Company:</label>
+        <label htmlFor="first_name">First Name:</label>
+          <input
+            type="text"
+            name="first_name"
+            placeholder="First Name"
+            value={shippingInfo.first_name}
+            onChange={handleInputChange}
+          />
+          {validationErrors.first_name && (
+            <span style={{ color: 'red' }}>{validationErrors.first_name}</span>
+          )}
+        </div>
+        <div>
+        <label htmlFor="last_name">Last Name:</label>
+          <input
+            type="text"
+            name="last_name"
+            placeholder="Last Name"
+            value={shippingInfo.last_name}
+            onChange={handleInputChange}
+          />
+          {validationErrors.last_name && (
+            <span style={{ color: 'red' }}>{validationErrors.last_name}</span>
+          )}
+        </div>
+        <div>
+        <label htmlFor="company">Company:</label>
           <input
             type="text"
             name="company"
@@ -169,7 +245,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
           )}
         </div>
         <div>
-          <label>Address 1:</label>
+        <label htmlFor="address_1">Address 1:</label>
           <input
             type="text"
             name="address_1"
@@ -182,7 +258,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
           )}
         </div>
         <div>
-          <label>Address 2:</label>
+        <label htmlFor="address_2">Address_2:</label>
           <input
             type="text"
             name="address_2"
@@ -192,7 +268,7 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
           />
         </div>
         <div>
-          <label>City:</label>
+        <label htmlFor="city">City:</label>
           <input
             type="text"
             name="city"
@@ -204,26 +280,9 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
             <span style={{ color: 'red' }}>{validationErrors.city}</span>
           )}
         </div>
+        
         <div>
-          <label>Country:</label>
-          <select
-            name="country_code"
-            value={shippingInfo.country_code}
-            onChange={handleInputChange}
-          >
-            <option value="">Select Country</option>
-            {countries.map((country) => (
-              <option key={country.id} value={country.iso_2}>
-                {country.name}
-              </option>
-            ))}
-          </select>
-          {validationErrors.country_code && (
-            <span style={{ color: 'red' }}>{validationErrors.country_code}</span>
-          )}
-        </div>
-        <div>
-          <label>State/Province:</label>
+        <label htmlFor="province">Province/State:</label>
           <input
             type="text"
             name="province"
@@ -232,21 +291,24 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
             onChange={handleInputChange}
           />
         </div>
+        {isPostalCodeRequired(shippingInfo.country_code) && (
+            <div>
+                 <label htmlFor="postal_code">Postal Code:</label>
+                <input
+                type="text"
+                name="postal_code"
+                placeholder="Postal Code"
+                value={shippingInfo.postal_code}
+                onChange={handleInputChange}
+                />
+                {validationErrors.postal_code && (
+                <span style={{ color: 'red' }}>{validationErrors.postal_code}</span>
+                )}
+            </div>
+            )}
+
         <div>
-          <label>Postal Code:</label>
-          <input
-            type="text"
-            name="postal_code"
-            placeholder="Postal Code"
-            value={shippingInfo.postal_code}
-            onChange={handleInputChange}
-          />
-          {validationErrors.postal_code && (
-            <span style={{ color: 'red' }}>{validationErrors.postal_code}</span>
-          )}
-        </div>
-        <div>
-          <label>Phone:</label>
+        <label htmlFor="phone">Phone:</label>
           <input
             type="text"
             name="phone"
@@ -259,24 +321,20 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
           )}
         </div>
         <div>
-          <h3>Shipping Options</h3>
-          {shippingOptions.map((option) => (
-            <div key={option.id}>
-              <label>
-                <input
-                  type="radio"
-                  value={option.id}
-                  checked={selectedShippingOption === option.id}
-                  onChange={handleShippingOptionChange}
-                />
+        <label>Shipping Methods:</label>
+          <select
+            value={selectedShippingMethod}
+            onChange={handleShippingOptionChange}
+          >
+            {shippingOptions.map((option) => (
+              <option key={option.id} value={option.id}>
                 {option.name} - ${option.price}
-              </label>
-            </div>
-          ))}
+              </option>
+            ))}
+          </select>
         </div>
-
         <div>
-          <label>
+        <label htmlFor="local_pickup">
             <input
               type="checkbox"
               checked={selectedShippingMethod === 'Local Pickup'}
@@ -286,16 +344,15 @@ const ShippingForm: React.FC<ShippingFormProps> = ({ cartId, onComplete }) => {
                 )
               }
             />
-            Local Pickup
+            Local Pickup:
           </label>
         </div>
-
         <button type="button" onClick={handleSubmit}>
           Save Shipping Address
         </button>
       </form>
     </div>
   );
-};
+});
 
 export default ShippingForm;
