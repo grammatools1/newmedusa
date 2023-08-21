@@ -120,9 +120,9 @@ const handleClearCountry = () => {
   }));
 };
 
-  const handleCountryChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
+  const handleCountryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  setSearchTerm(e.target.value);
+};
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
