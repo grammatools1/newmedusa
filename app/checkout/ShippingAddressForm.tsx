@@ -394,5 +394,5 @@ const ShippingOptions = ({ cartId }: Props) => {
     </div>
   );
 };
-
+};
 export default ShippingForm;
