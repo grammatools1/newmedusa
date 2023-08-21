@@ -132,7 +132,7 @@ const handleClearCountry = () => {
     }));
   };
 
-  const handleShippingOptionChange = (e) => {
+  const handleShippingOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedOptionId = e.target.value;
     setSelectedShippingOption(selectedOptionId);
   };
