@@ -32,7 +32,7 @@ const generateErrorMessage = (fieldName: string) => {
 
 const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
   const innerRef = useRef(null);
-  const [selectedCountry, setSelectedCountry] = useState(null);
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
   const [shippingInfo, setShippingInfo] = useState({
@@ -104,7 +104,7 @@ const ShippingOptions = ({ cartId }: Props) => {
   
   const handleCountrySelect = (country: { value: string }) => {
   setSelectedCountry(country.value);
-  setSearchTerm(country.value); // Use country value as the search term
+  setSearchTerm(country.value); 
   setShippingInfo((prevShippingInfo) => ({
     ...prevShippingInfo,
     country_code: country.value,
