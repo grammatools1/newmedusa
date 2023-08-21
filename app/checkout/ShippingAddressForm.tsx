@@ -103,11 +103,20 @@ const ShippingOptions = ({ cartId }: Props) => {
   };
 
   const handleCountrySelect = (country: { value: string }) => {
-  setSelectedCountry(country.value); // Update selectedCountry with the value property
+  setSelectedCountry(country.value);
   setSearchTerm(country.label);
   setShippingInfo((prevShippingInfo) => ({
     ...prevShippingInfo,
     country_code: country.value,
+  }));
+};
+
+const handleClearCountry = () => {
+  setSelectedCountry(null); // Clear the selected country
+  setSearchTerm('');
+  setShippingInfo((prevShippingInfo) => ({
+    ...prevShippingInfo,
+    country_code: '',
   }));
 };
 
