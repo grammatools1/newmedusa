@@ -212,18 +212,19 @@ setValidationErrors(errors);
       <h2>Shipping Information</h2>
       <form>
         <div>
-          <label htmlFor="first_name">First Name:</label>
-          <input
-            type="text"
-            name="first_name"
-            placeholder="First Name"
-            value={shippingInfo.first_name}
-            onChange={handleInputChange}
-          />
-          {validationErrors.first_name && (
-            <span style={{ color: 'red' }}>{validationErrors.first_name}</span>
-          )}
-        </div>
+        <label htmlFor="first_name">First Name:</label>
+        <input
+          type="text"
+          name="first_name"
+          placeholder="First Name"
+          value={shippingInfo.first_name}
+          onChange={handleInputChange}
+        />
+        {validationErrors && validationErrors.first_name && (
+          <span style={{ color: 'red' }}>{validationErrors.first_name}</span>
+        )}
+      </div>
+
       <div>
       <label htmlFor="last_name">Last Name:</label>
         <input
