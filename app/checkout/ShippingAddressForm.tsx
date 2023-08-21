@@ -91,7 +91,7 @@ const ShippingOptions = ({ cartId }: Props) => {
     }
   }, [cart?.id]);
 
-  const validateEmail = (email: string) => { // Explicitly type email as string
+  const validateEmail = (email: string) => {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   return emailRegex.test(email);
 };
@@ -119,7 +119,6 @@ const handleClearCountry = () => {
     country_code: '',
   }));
 };
-
   const handleCountryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   setSearchTerm(e.target.value);
 };
@@ -133,9 +132,9 @@ const handleClearCountry = () => {
   };
 
   const handleShippingOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selectedOptionId = e.target.value;
-    setSelectedShippingOption(selectedOptionId);
-  };
+  const selectedOptionId = e.target.value;
+  setSelectedShippingOption(selectedOptionId);
+};
 
   const handleSubmit = async () => {
     const errors: { [key: string]: string } = {};
