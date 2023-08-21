@@ -11,7 +11,7 @@ const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 
 
 type OnCompleteFunction = () => void;
 
-const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
+const useClickOutside = (ref: React.RefObject<any>, onClickOutside: () => void) => {
   useEffect(() => {
     const handleClick = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -27,7 +27,7 @@ const generateErrorMessage = (fieldName: string) => {
   return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
 };
 
-const ShippingForm = ({ onComplete }) => {
+const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
   const innerRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
