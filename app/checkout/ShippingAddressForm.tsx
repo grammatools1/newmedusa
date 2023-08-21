@@ -141,10 +141,6 @@ const handleClearCountry = () => {
   const handleSubmit = async () => {
     const errors: { [key: string]: string } = {};
 
- if (!selectedCountry) {
-  errors.country = generateErrorMessage('country');
-}
-
 if (!shippingInfo.first_name.trim()) {
   errors.first_name = generateErrorMessage('first name');
 }
@@ -152,7 +148,9 @@ if (!shippingInfo.first_name.trim()) {
 if (!shippingInfo.last_name.trim()) {
   errors.last_name = generateErrorMessage('last name');
 }
-
+if (!validateEmail(shippingInfo.email)) {
+  errors.email = 'Invalid email address';
+}
 if (!shippingInfo.address_1.trim()) {
   errors.address_1 = generateErrorMessage('address');
 }
@@ -179,11 +177,9 @@ if (
 if (shippingInfo.company.trim() && shippingInfo.company.length < 3) {
   errors.company = 'Company name must be at least 3 characters';
 }
-
-if (!validateEmail(shippingInfo.email)) {
-  errors.email = 'Invalid email address';
+ if (!selectedCountry) {
+  errors.country = generateErrorMessage('country');
 }
-
 setValidationErrors(errors);
 
 
