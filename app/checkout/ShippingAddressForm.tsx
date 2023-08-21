@@ -4,7 +4,7 @@ import React, { useEffect, useRef, useState, useMemo } from 'react';
 import Medusa from "@medusajs/medusa-js";
 import { useCart, useCartShippingOptions } from 'medusa-react';
 import Autocomplete from 'react-autocomplete';
-const { getName, getNameList } = require('country-list');
+const countryListModule = require('country-list');
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
@@ -55,13 +55,13 @@ const ShippingOptions = ({ cartId }: Props) => {
   const { shipping_options, isLoading } = useCartShippingOptions(cartId);
 
 
-  const countryOptions = useMemo(() => {
-    const countryList = getNameList();
-    return countryList.map((countryCode) => ({
-      value: countryCode,
-      label: getName(countryCode),
-    }));
-  }, []);
+ const countryOptions = useMemo(() => {
+  const countryList = countryListModule.getNameList(); // Use the getNameList function from the module
+  return countryList.map((countryCode) => ({
+    value: countryCode,
+    label: countryListModule.getName(countryCode), // Use the getName function from the module
+  }));
+}, []);
 
   const [selectedShippingOption, setSelectedShippingOption] = useState(null);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('Standard');
@@ -323,7 +323,7 @@ const ShippingOptions = ({ cartId }: Props) => {
           )}
          <div>
           <label htmlFor="country">Country:</label>
-          <Autocomplete
+            <Autocomplete
             items={countryOptions}
             getItemValue={(item) => item.label}
             renderItem={(item, isHighlighted) => (
