@@ -369,7 +369,7 @@ const handleClearCountry = () => {
         )}
        </div>
         <div>
-       <label>Shipping Methods:</label>
+      <label>Shipping Methods:</label>
       {isLoading && <span>Loading...</span>}
       {!isLoading && shipping_options && shipping_options.length === 0 && (
         <span>No shipping options</span>
@@ -377,7 +377,15 @@ const handleClearCountry = () => {
       {!isLoading && shipping_options && (
         <ul>
           {shipping_options.map((shipping_option) => (
-            <li key={shipping_option.id}>{shipping_option.name}</li>
+            <li key={shipping_option.id}>
+              <input
+                type="radio"
+                value={shipping_option.id}
+                checked={selectedShippingOption === shipping_option.id}
+                onChange={handleShippingOptionChange}
+              />
+              {shipping_option.name}
+            </li>
           ))}
         </ul>
       )}
