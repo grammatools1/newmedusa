@@ -63,7 +63,7 @@ const ShippingOptions = ({ cartId }: Props) => {
   }));
 }, []);
 
-
+ 
   const [selectedShippingOption, setSelectedShippingOption] = useState(null);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('Standard');
 
@@ -101,7 +101,8 @@ const ShippingOptions = ({ cartId }: Props) => {
     const countriesRequiringPostalCode = ['US', 'CA', 'GB'];
     return countriesRequiringPostalCode.includes(countryCode);
   };
-
+  
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const handleCountrySelect = (country: { value: string }) => {
   setSelectedCountry(country.value);
   setSearchTerm(country.label);
