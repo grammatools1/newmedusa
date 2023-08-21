@@ -102,7 +102,7 @@ const ShippingOptions = ({ cartId }: Props) => {
     return countriesRequiringPostalCode.includes(countryCode);
   };
 
-  const handleCountrySelect = (country) => {
+  const handleCountrySelect = (country: string) => {
     setSelectedCountry(country);
     setSearchTerm(country.label);
     setShippingInfo((prevShippingInfo) => ({
