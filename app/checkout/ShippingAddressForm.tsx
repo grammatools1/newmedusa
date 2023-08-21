@@ -120,6 +120,7 @@ const handleClearCountry = () => {
     country_code: '',
   }));
 };
+
   const handleCountryChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   setSearchTerm(e.target.value);
 };
@@ -131,7 +132,7 @@ const handleClearCountry = () => {
       [name]: value,
     }));
   };
-
+  
   const handleShippingOptionChange = (e: React.ChangeEvent<HTMLInputElement>) => {
   const selectedOptionId = e.target.value;
   setSelectedShippingOption(selectedOptionId);
