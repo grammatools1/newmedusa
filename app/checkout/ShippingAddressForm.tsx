@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import React, { useEffect, useRef, useState, useMemo } from 'react';
 import Medusa from "@medusajs/medusa-js";
@@ -31,8 +31,8 @@ const generateErrorMessage = (fieldName: string) => {
 };
 
 const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
-const innerRef = useRef(null);
-const [selectedCountry, setSelectedCountry] = useState<{ value: string; label: string } | null>(
+  const innerRef = useRef(null);
+  const [selectedCountry, setSelectedCountry] = useState<{ value: string; label: string } | null>(
     null
   );
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('Standard');
@@ -54,6 +54,7 @@ const [selectedCountry, setSelectedCountry] = useState<{ value: string; label: s
   });
   const [validationErrors, setValidationErrors] = useState({});
   const { cart } = useCart();
+
   
 const ShippingOptions = ({ cartId }: Props) => {
   const { shipping_options, isLoading } = useCartShippingOptions(cartId);
