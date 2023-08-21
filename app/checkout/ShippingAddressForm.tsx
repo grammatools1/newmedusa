@@ -313,6 +313,7 @@ setValidationErrors(errors);
             <span style={{ color: 'red' }}>{validationErrors.province}</span>
           )}
         </div>
+          <div>
                <label htmlFor="postal_code">Postal Code:</label>
               <input
               type="text"
@@ -325,7 +326,6 @@ setValidationErrors(errors);
               <span style={{ color: 'red' }}>{validationErrors.postal_code}</span>
               )}
           </div>
-          )}
          <div>
           <label htmlFor="country">Country:</label>
             <Autocomplete
