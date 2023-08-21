@@ -203,7 +203,7 @@ const handleClearCountry = () => {
     <div>
       <h2>Shipping Information</h2>
       <form>
-     <div>
+        <div>
           <label htmlFor="first_name">First Name:</label>
           <input
             type="text"
@@ -212,7 +212,7 @@ const handleClearCountry = () => {
             value={shippingInfo.first_name}
             onChange={handleInputChange}
           />
-         {validationErrors && validationErrors.hasOwnProperty('first_name') && (
+          {validationErrors && validationErrors.hasOwnProperty('first_name') && (
             <span style={{ color: 'red' }}>{validationErrors.first_name}</span>
           )}
         </div>
