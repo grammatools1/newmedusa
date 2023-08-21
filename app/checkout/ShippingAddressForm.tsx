@@ -91,10 +91,11 @@ const ShippingOptions = ({ cartId }: Props) => {
     }
   }, [cart?.id]);
 
-  const validateEmail = (email) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
+  const validateEmail = (email: string) => { // Explicitly type email as string
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+};
+
 
   const isPostalCodeRequired = (countryCode) => {
     const countriesRequiringPostalCode = ['US', 'CA', 'GB'];
