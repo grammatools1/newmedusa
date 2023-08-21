@@ -47,7 +47,7 @@ const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
   });
   const [validationErrors, setValidationErrors] = useState({});
   const { cart } = useCart();
-  const { shippingMethods } = useCartShippingOptions();
+  const { ShippingOptions } = useCartShippingOptions();
 
   const countryOptions = useMemo(() => {
     const countryList = getNameList();
