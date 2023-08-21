@@ -124,7 +124,7 @@ const handleClearCountry = () => {
   setSearchTerm(e.target.value);
 };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e:  React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setShippingInfo((prevShippingInfo) => ({
       ...prevShippingInfo,
