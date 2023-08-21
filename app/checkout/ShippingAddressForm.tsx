@@ -32,7 +32,9 @@ const generateErrorMessage = (fieldName: string) => {
 
 const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
   const innerRef = useRef(null);
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+const [selectedCountry, setSelectedCountry] = useState<{ value: string; label: string } | null>(
+    null
+  );
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('Standard');
   const [selectedShippingOption, setSelectedShippingOption] = useState<null | string>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -100,14 +102,14 @@ const ShippingOptions = ({ cartId }: Props) => {
     return countriesRequiringPostalCode.includes(countryCode);
   };
   
-  const handleCountrySelect = (country: { value: string }) => {
-  setSelectedCountry(country.value);
-  setSearchTerm(country.value); 
-  setShippingInfo((prevShippingInfo) => ({
-    ...prevShippingInfo,
-    country_code: country.value,
-  }));
-};
+  const handleCountrySelect = (country: { value: string; label: string }) => {
+    setSelectedCountry(country);
+    setSearchTerm(country.label);
+    setShippingInfo((prevShippingInfo) => ({
+      ...prevShippingInfo,
+      country_code: country.value,
+    }));
+  };
 
 const handleClearCountry = () => {
   setSelectedCountry(null); // Clear the selected country
@@ -136,7 +138,7 @@ const handleClearCountry = () => {
   };
 
   const handleSubmit = async () => {
-    const errors = {};
+    const errors: { [key: string]: string } = {};
 
     if (!selectedCountry) {
       errors.country = generateErrorMessage('country');
