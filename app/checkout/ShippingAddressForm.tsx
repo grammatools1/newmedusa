@@ -102,14 +102,14 @@ const ShippingOptions = ({ cartId }: Props) => {
     return countriesRequiringPostalCode.includes(countryCode);
   };
 
-  const handleCountrySelect = (country: string) => {
-    setSelectedCountry(country);
-    setSearchTerm(country.label);
-    setShippingInfo((prevShippingInfo) => ({
-      ...prevShippingInfo,
-      country_code: country.value,
-    }));
-  };
+  const handleCountrySelect = (country: { value: string }) => {
+  setSelectedCountry(country.value); // Update selectedCountry with the value property
+  setSearchTerm(country.label);
+  setShippingInfo((prevShippingInfo) => ({
+    ...prevShippingInfo,
+    country_code: country.value,
+  }));
+};
 
   const handleCountryChange = (e) => {
     setSearchTerm(e.target.value);
