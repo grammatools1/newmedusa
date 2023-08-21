@@ -9,10 +9,10 @@ const { getName, getNameList } = require('country-list');
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
-const useClickOutside = (ref, onClickOutside) => {
+const useClickOutside = (ref: React.RefObject<any>, onClickOutside: () => void) => {
   useEffect(() => {
-    const handleClick = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) {
+    const handleClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
         onClickOutside();
       }
     };
