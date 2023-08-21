@@ -139,44 +139,51 @@ const handleClearCountry = () => {
   const handleSubmit = async () => {
     const errors: { [key: string]: string } = {};
 
-    if (!selectedCountry) {
-      errors.country = generateErrorMessage('country');
-    }
+ if (!selectedCountry) {
+  errors.country = generateErrorMessage('country');
+}
 
-    if (!shippingInfo.first_name.trim()) {
-      errors.first_name = generateErrorMessage('first name');
-    }
-    if (!shippingInfo.last_name.trim()) {
-      errors.last_name = generateErrorMessage('last name');
-    }
-    if (!shippingInfo.address_1.trim()) {
-      errors.address_1 = generateErrorMessage('address');
-    }
-    if (!shippingInfo.city.trim()) {
-      errors.city = generateErrorMessage('city');
-    }
-    if (!shippingInfo.country_code) {
-      errors.country_code = generateErrorMessage('country');
-    }
-    if (!/^\+(?:[0-9] ?){6,14}[0-9]$/.test(shippingInfo.phone)) {
-      errors.phone = 'Invalid phone number';
-    }
+if (!shippingInfo.first_name.trim()) {
+  errors.first_name = generateErrorMessage('first name');
+}
 
-    if (
-      shippingInfo.postal_code.trim() &&
-      !/^[0-9]{5}(?:-[0-9]{4})?$/.test(shippingInfo.postal_code)
-    ) {
-      errors.postal_code = 'Invalid Postal Code';
-    }
+if (!shippingInfo.last_name.trim()) {
+  errors.last_name = generateErrorMessage('last name');
+}
 
-    if (shippingInfo.company.trim() && shippingInfo.company.length < 3) {
-      errors.company = 'Company name must be at least 3 characters';
-    }
+if (!shippingInfo.address_1.trim()) {
+  errors.address_1 = generateErrorMessage('address');
+}
 
-    if (!validateEmail(shippingInfo.email)) {
-      errors.email = 'Invalid email address';
-    }
-    setValidationErrors(errors);
+if (!shippingInfo.city.trim()) {
+  errors.city = generateErrorMessage('city');
+}
+
+if (!shippingInfo.country_code) {
+  errors.country_code = generateErrorMessage('country');
+}
+
+if (!/^\+(?:[0-9] ?){6,14}[0-9]$/.test(shippingInfo.phone)) {
+  errors.phone = 'Invalid phone number';
+}
+
+if (
+  shippingInfo.postal_code.trim() &&
+  !/^[0-9]{5}(?:-[0-9]{4})?$/.test(shippingInfo.postal_code)
+) {
+  errors.postal_code = 'Invalid Postal Code';
+}
+
+if (shippingInfo.company.trim() && shippingInfo.company.length < 3) {
+  errors.company = 'Company name must be at least 3 characters';
+}
+
+if (!validateEmail(shippingInfo.email)) {
+  errors.email = 'Invalid email address';
+}
+
+setValidationErrors(errors);
+
 
     if (Object.keys(errors).length === 0 && medusa) {
       try {
