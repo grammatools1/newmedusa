@@ -33,6 +33,8 @@ const generateErrorMessage = (fieldName: string) => {
 const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
   const innerRef = useRef(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState('Standard');
+  const [selectedShippingOption, setSelectedShippingOption] = useState<null | string>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
   const [shippingInfo, setShippingInfo] = useState({
@@ -62,11 +64,7 @@ const ShippingOptions = ({ cartId }: Props) => {
     label: countryListModule.getName(countryCode),
   }));
 }, []);
-
- 
-  const [selectedShippingOption, setSelectedShippingOption] = useState(null);
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState('Standard');
-
+  
   useEffect(() => {
     const handleClickOutside = () => {
       setSearchTerm('');
