@@ -102,10 +102,9 @@ const ShippingOptions = ({ cartId }: Props) => {
     return countriesRequiringPostalCode.includes(countryCode);
   };
   
-  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const handleCountrySelect = (country: { value: string }) => {
   setSelectedCountry(country.value);
-  setSearchTerm(country.label);
+  setSearchTerm(country.value); // Use country value as the search term
   setShippingInfo((prevShippingInfo) => ({
     ...prevShippingInfo,
     country_code: country.value,
