@@ -56,12 +56,13 @@ const ShippingOptions = ({ cartId }: Props) => {
 
 
  const countryOptions = useMemo(() => {
-  const countryList = countryListModule.getNameList(); // Use the getNameList function from the module
-  return countryList.map((countryCode) => ({
+  const countryList = countryListModule.getNameList();
+  return countryList.map((countryCode: string) => ({ // Explicitly type countryCode as string
     value: countryCode,
-    label: countryListModule.getName(countryCode), // Use the getName function from the module
+    label: countryListModule.getName(countryCode),
   }));
 }, []);
+
 
   const [selectedShippingOption, setSelectedShippingOption] = useState(null);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('Standard');
