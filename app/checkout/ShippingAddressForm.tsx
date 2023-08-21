@@ -31,7 +31,7 @@ const generateErrorMessage = (fieldName: string) => {
 };
 
 const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
-  const innerRef = useRef(null);
+const innerRef = useRef(null);
 const [selectedCountry, setSelectedCountry] = useState<{ value: string; label: string } | null>(
     null
   );
@@ -219,23 +219,10 @@ setValidationErrors(errors);
             value={shippingInfo.first_name}
             onChange={handleInputChange}
           />
-          {validationErrors && validationErrors.hasOwnProperty('first_name') && (
+          {validationErrors.first_name && (
             <span style={{ color: 'red' }}>{validationErrors.first_name}</span>
           )}
         </div>
-        <div>
-      <label htmlFor="first_name">First Name:</label>
-        <input
-          type="text"
-          name="first_name"
-          placeholder="First Name"
-          value={shippingInfo.first_name}
-          onChange={handleInputChange}
-        />
-        {validationErrors.first_name && (
-          <span style={{ color: 'red' }}>{validationErrors.first_name}</span>
-        )}
-      </div>
       <div>
       <label htmlFor="last_name">Last Name:</label>
         <input
@@ -262,7 +249,6 @@ setValidationErrors(errors);
           <span style={{ color: 'red' }}>{validationErrors.email}</span>
         )}
       </div>
-      
       <div>
       <label htmlFor="address_1">Address 1:</label>
         <input
@@ -312,19 +298,20 @@ setValidationErrors(errors);
           <span style={{ color: 'red' }}>{validationErrors.city}</span>
         )}
       </div>
-      
       <div>
-      <label htmlFor="province">Province/State:</label>
-        <input
-          type="text"
-          name="province"
-          placeholder="State/Province"
-          value={shippingInfo.province}
-          onChange={handleInputChange}
-        />
-      </div>
-      {isPostalCodeRequired(shippingInfo.country_code) && (
-          <div>
+          <label htmlFor="province">Province/State:</label>
+          <input
+            type="text"
+            name="province"
+            placeholder="State/Province"
+            value={shippingInfo.province}
+            onChange={handleInputChange}
+          />
+          {/* Include validation error handling for province */}
+          {validationErrors.province && (
+            <span style={{ color: 'red' }}>{validationErrors.province}</span>
+          )}
+        </div>
                <label htmlFor="postal_code">Postal Code:</label>
               <input
               type="text"
