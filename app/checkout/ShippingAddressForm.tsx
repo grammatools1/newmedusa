@@ -10,6 +10,9 @@ const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
 type OnCompleteFunction = () => void;
+type Props = {
+  cartId: string;
+};
 
 const useClickOutside = (ref: React.RefObject<any>, onClickOutside: () => void) => {
   useEffect(() => {
@@ -47,7 +50,10 @@ const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
   });
   const [validationErrors, setValidationErrors] = useState({});
   const { cart } = useCart();
-  const { ShippingOptions } = useCartShippingOptions();
+  
+const ShippingOptions = ({ cartId }: Props) => {
+  const { shipping_options, isLoading } = useCartShippingOptions(cartId);
+
 
   const countryOptions = useMemo(() => {
     const countryList = getNameList();
@@ -352,20 +358,21 @@ const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
         {validationErrors.phone && (
           <span style={{ color: 'red' }}>{validationErrors.phone}</span>
         )}
-      </div>
+       </div>
         <div>
-          <label>Shipping Methods:</label>
-          <select
-            value={selectedShippingOption}
-            onChange={handleShippingOptionChange}
-          >
-            {shippingOptions.map((option) => (
-              <option key={option.id} value={option.id}>
-                {option.name} - ${option.price}
-              </option>
-            ))}
-          </select>
-        </div>
+       <label>Shipping Methods:</label>
+      {isLoading && <span>Loading...</span>}
+      {!isLoading && shipping_options && shipping_options.length === 0 && (
+        <span>No shipping options</span>
+      )}
+      {!isLoading && shipping_options && (
+        <ul>
+          {shipping_options.map((shipping_option) => (
+            <li key={shipping_option.id}>{shipping_option.name}</li>
+          ))}
+        </ul>
+      )}
+    </div>
         <div>
           <label htmlFor="local_pickup">
             <input
