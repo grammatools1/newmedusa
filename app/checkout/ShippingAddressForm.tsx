@@ -97,7 +97,7 @@ const ShippingOptions = ({ cartId }: Props) => {
 };
 
 
-  const isPostalCodeRequired = (countryCode) => {
+  const isPostalCodeRequired = (countryCode: string) => {
     const countriesRequiringPostalCode = ['US', 'CA', 'GB'];
     return countriesRequiringPostalCode.includes(countryCode);
   };
