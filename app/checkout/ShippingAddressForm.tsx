@@ -21,7 +21,7 @@ const useClickOutside = (ref: React.RefObject<any>, onClickOutside: () => void) 
   }, [ref, onClickOutside]);
 };
 
-const generateErrorMessage = (fieldName) => {
+const generateErrorMessage = (fieldName: string) => {
   return `${fieldName.charAt(0).toUpperCase() + fieldName.slice(1)} is required`;
 };
 
