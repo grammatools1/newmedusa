@@ -167,30 +167,25 @@ const handleClearCountry = () => {
   const selectedOptionId = e.target.value;
   setSelectedShippingOption(selectedOptionId);
 };
-  const handleSubmit = async () => {
-  try {
-    // Validate shippingInfo using validationSchema
-    await validationSchema.validate(shippingInfo, { abortEarly: false });
+ const handleSubmit = async () => {
+    try {
+      // Validate shippingInfo using validationSchema
+      await validationSchema.validate(shippingInfo, { abortEarly: false });
 
-    // Include the acceptUpdates value in the payload
-    const updatedShippingInfo = {
-      ...shippingInfo,
-      accept_updates: acceptUpdates,
-    };
+      // Include the acceptUpdates value in the payload
+      const updatedShippingInfo = {
+        ...shippingInfo,
+        accept_updates: acceptUpdates,
+      };
 
-    // Update shipping address and method
-    await medusa.carts.update(cart?.id, {
-      shipping_address: { ...updatedShippingInfo },
-      shipping_method: selectedShippingMethod,
-    });
-
-     if (Object.keys(errors).length === 0 && medusa) {
-      try {
+      if (medusa) {
+        // Update shipping address and method
         await medusa.carts.update(cart?.id, {
-          shipping_address: { ...shippingInfo },
+          shipping_address: { ...updatedShippingInfo },
           shipping_method: selectedShippingMethod,
         });
 
+        // Handle shipping methods and completion logic
         if (selectedShippingMethod === 'Local Pickup') {
           onComplete();
         } else {
@@ -199,19 +194,17 @@ const handleClearCountry = () => {
           });
           onComplete();
         }
-      } catch (error) {
-        console.error('Error updating shipping address:', error);
+      } else {
+        console.error('Medusa is not available.');
       }
+    } catch (validationError) {
+      const errors = {};
+      validationError.inner.forEach((error) => {
+        errors[error.path] = error.message;
+      });
+      setValidationErrors(errors);
     }
-
-  } catch (validationError) {
-    const errors = {};
-    validationError.inner.forEach((error) => {
-      errors[error.path] = error.message;
-    });
-    setValidationErrors(errors);
-  }
-};
+  };
   return (
     <div>
       <h2>Shipping Information</h2>
