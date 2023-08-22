@@ -27,6 +27,7 @@
     "@tanstack/react-query": "^4.33.0",
     "@medusajs/medusa-js": "^6.0.3",
     "medusa-react":"^9.0.4",
+    "yup": "^1.2.0",
     "country-list": "^2.3.0",
     "react-autocomplete":"^1.8.1",
     "@heroicons/react": "^2.0.18",
