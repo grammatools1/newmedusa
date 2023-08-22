@@ -14,9 +14,16 @@ const validationSchema = yup.object().shape({
   address_1: yup.string().required('Address is required'),
   city: yup.string().required('City is required'),
   country_code: yup.string().required('Country is required'),
-    postal_code: yup.string().when('country_code', {
+  postal_code: yup.string().when('country_code', {
     is: (countryCode) => isPostalCodeRequired(countryCode),
-    then: yup.string().matches(/^[0-9]{5}(?:-[0-9]{4})?$/, 'Invalid Postal Code')
+    then: yup.string().test('postal-code', 'Invalid Postal Code', (value, context) => {
+      if (!isPostalCodeRequired(context.parent.country_code)) {
+        // If postal code is not required for the selected country, no validation is needed
+        return true;
+      }
+      // Validate the postal code using regex
+      return /^[0-9]{5}(?:-[0-9]{4})?$/.test(value || '');
+    })
   }),
   phone: yup.string().matches(/^\+(?:[0-9] ?){6,14}[0-9]$/, 'Invalid phone number').required('Phone is required'),
   company: yup.string().when('company', {
