@@ -5,6 +5,26 @@ import Medusa from "@medusajs/medusa-js";
 import { useCart, useCartShippingOptions } from 'medusa-react';
 import Autocomplete from 'react-autocomplete';
 const countryListModule = require('country-list');
+import * as yup from 'yup';
+
+// Define the validation schema
+const validationSchema = yup.object().shape({
+  first_name: yup.string().required('First Name is required'),
+  last_name: yup.string().required('Last Name is required'),
+  email: yup.string().email('Invalid email address').required('Email is required'),
+  address_1: yup.string().required('Address is required'),
+  city: yup.string().required('City is required'),
+  country_code: yup.string().required('Country is required'),
+  postal_code: yup.string().when('country_code', {
+    is: (countryCode) => isPostalCodeRequired(countryCode),
+    then: yup.string().matches(/^[0-9]{5}(?:-[0-9]{4})?$/, 'Invalid Postal Code').required('Postal Code is required'),
+  }),
+  phone: yup.string().matches(/^\+(?:[0-9] ?){6,14}[0-9]$/, 'Invalid phone number').required('Phone is required'),
+  company: yup.string().when('company', {
+    is: (value) => value.trim().length > 0,
+    then: yup.string().min(3, 'Company name must be at least 3 characters'),
+  }),
+});
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
@@ -35,6 +55,7 @@ const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
   const [selectedCountry, setSelectedCountry] = useState<{ value: string; label: string } | null>(
     null
   );
+  const [acceptUpdates, setAcceptUpdates] = useState(false);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('Standard');
   const [selectedShippingOption, setSelectedShippingOption] = useState<null | string>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -55,6 +76,7 @@ const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
   });
 
   const [validationErrors, setValidationErrors] = useState({});
+  
   const { cart } = useCart();
 
   
@@ -139,53 +161,24 @@ const handleClearCountry = () => {
   const selectedOptionId = e.target.value;
   setSelectedShippingOption(selectedOptionId);
 };
-
   const handleSubmit = async () => {
-    const errors: { [key: string]: string } = {};
+  try {
+    // Validate shippingInfo using validationSchema
+    await validationSchema.validate(shippingInfo, { abortEarly: false });
 
-if (!shippingInfo.first_name.trim()) {
-  errors.first_name = generateErrorMessage('first_name');
-}
+    // Include the acceptUpdates value in the payload
+    const updatedShippingInfo = {
+      ...shippingInfo,
+      accept_updates: acceptUpdates,
+    };
 
-if (!shippingInfo.last_name.trim()) {
-  errors.last_name = generateErrorMessage('last_name');
-}
-if (!validateEmail(shippingInfo.email)) {
-  errors.email = 'Invalid email address';
-}
-if (!shippingInfo.address_1.trim()) {
-  errors.address_1 = generateErrorMessage('address');
-}
+    // Update shipping address and method
+    await medusa.carts.update(cart?.id, {
+      shipping_address: { ...updatedShippingInfo },
+      shipping_method: selectedShippingMethod,
+    });
 
-if (!shippingInfo.city.trim()) {
-  errors.city = generateErrorMessage('city');
-}
-
-if (!shippingInfo.country_code) {
-  errors.country_code = generateErrorMessage('country');
-}
-
-if (!/^\+(?:[0-9] ?){6,14}[0-9]$/.test(shippingInfo.phone)) {
-  errors.phone = 'Invalid phone number';
-}
-
-if (
-  shippingInfo.postal_code.trim() &&
-  !/^[0-9]{5}(?:-[0-9]{4})?$/.test(shippingInfo.postal_code)
-) {
-  errors.postal_code = 'Invalid Postal Code';
-}
-
-if (shippingInfo.company.trim() && shippingInfo.company.length < 3) {
-  errors.company = 'Company name must be at least 3 characters';
-}
- if (!selectedCountry) {
-  errors.country = generateErrorMessage('country');
-}
-setValidationErrors(errors);
-
-
-    if (Object.keys(errors).length === 0 && medusa) {
+     if (Object.keys(errors).length === 0 && medusa) {
       try {
         await medusa.carts.update(cart?.id, {
           shipping_address: { ...shippingInfo },
@@ -204,8 +197,15 @@ setValidationErrors(errors);
         console.error('Error updating shipping address:', error);
       }
     }
-  };
 
+  } catch (validationError) {
+    const errors = {};
+    validationError.inner.forEach((error) => {
+      errors[error.path] = error.message;
+    });
+    setValidationErrors(errors);
+  }
+};
   return (
     <div>
       <h2>Shipping Information</h2>
@@ -249,6 +249,17 @@ setValidationErrors(errors);
           <span style={{ color: 'red' }}>{validationErrors.email}</span>
         )}
       </div>
+          <div>
+          <label htmlFor="accept_updates">
+            <input
+              type="checkbox"
+              id="accept_updates"
+              checked={acceptUpdates}
+              onChange={() => setAcceptUpdates(!acceptUpdates)}
+            />
+            Accept Product Updates and Newsletters
+          </label>
+        </div>
       <div>
       <label htmlFor="address_1">Address 1:</label>
         <input
