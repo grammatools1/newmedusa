@@ -14,7 +14,7 @@ const validationSchema = yup.object().shape({
   address_1: yup.string().required('Address is required'),
   city: yup.string().required('City is required'),
   country_code: yup.string().required('Country is required'),
-  postal_code: Yup.string()
+  postal_code: yup.string()
     .length(5)
     .matches(/^[0-9]{5}/)
     .required(),
