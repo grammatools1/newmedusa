@@ -198,9 +198,9 @@ const handleClearCountry = () => {
         console.error('Medusa is not available.');
       }
     } catch (validationError: any) { // Explicitly define the type of validationError
-      const errors = {};
+      const errors: { [key: string]: string } = {};
       if (validationError.inner) {
-        validationError.inner.forEach((error) => {
+        (validationError.inner as any[]).forEach((error) => {
           errors[error.path] = error.message;
         });
       }
