@@ -39,7 +39,8 @@ const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
   const [selectedShippingOption, setSelectedShippingOption] = useState<null | string>(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
-  const [shippingInfo, setShippingInfo] = useState({
+  const [shippingInfo, setShippingInfo] = useState({    
+    company: '',
     first_name: '',
     last_name: '',
     email: '',
@@ -50,8 +51,9 @@ const ShippingForm = ({ onComplete }: { onComplete: OnCompleteFunction }) => {
     postal_code: '',
     phone: '',
     country_code: '',
-    company: '',
+
   });
+
   const [validationErrors, setValidationErrors] = useState({});
   const { cart } = useCart();
 
@@ -142,11 +144,11 @@ const handleClearCountry = () => {
     const errors: { [key: string]: string } = {};
 
 if (!shippingInfo.first_name.trim()) {
-  errors.first_name = generateErrorMessage('first name');
+  errors.first_name = generateErrorMessage('first_name');
 }
 
 if (!shippingInfo.last_name.trim()) {
-  errors.last_name = generateErrorMessage('last name');
+  errors.last_name = generateErrorMessage('last_name');
 }
 if (!validateEmail(shippingInfo.email)) {
   errors.email = 'Invalid email address';
