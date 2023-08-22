@@ -14,12 +14,10 @@ const validationSchema = yup.object().shape({
   address_1: yup.string().required('Address is required'),
   city: yup.string().required('City is required'),
   country_code: yup.string().required('Country is required'),
-  export default Yup.object().shape({
   postal_code: Yup.string()
     .length(5)
     .matches(/^[0-9]{5}/)
-    .required()
-})
+    .required(),
   phone: yup.string().matches(/^\+(?:[0-9] ?){6,14}[0-9]$/, 'Invalid phone number').required('Phone is required'),
   company: yup.string().when('company', {
     is: (value) => value.trim().length > 0,
