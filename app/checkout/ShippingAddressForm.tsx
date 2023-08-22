@@ -7,13 +7,6 @@ import Autocomplete from 'react-autocomplete';
 const countryListModule = require('country-list');
 import * as yup from 'yup';
 
-const isPostalCodeValid = (value: string, country_code: string) => {
-  if (!isPostalCodeValid(country_code)) {
-    return true;
-  }
-  return /^[0-9]{5}(?:-[0-9]{4})?$/.test(value);
-};
-
 const validationSchema = yup.object().shape({
   first_name: yup.string().required('First Name is required'),
   last_name: yup.string().required('Last Name is required'),
@@ -21,9 +14,12 @@ const validationSchema = yup.object().shape({
   address_1: yup.string().required('Address is required'),
   city: yup.string().required('City is required'),
   country_code: yup.string().required('Country is required'),
-  postal_code: yup.string().test('postal-code', 'Invalid Postal Code', (value, context) =>
-    isPostalCodeValid(value, context.parent.country_code)
-  ),
+  export default Yup.object().shape({
+  postal_code: Yup.string()
+    .length(5)
+    .matches(/^[0-9]{5}/)
+    .required()
+})
   phone: yup.string().matches(/^\+(?:[0-9] ?){6,14}[0-9]$/, 'Invalid phone number').required('Phone is required'),
   company: yup.string().when('company', {
     is: (value) => value.trim().length > 0,
