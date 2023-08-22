@@ -8,7 +8,7 @@ const countryListModule = require('country-list');
 import * as yup from 'yup';
 
 const isPostalCodeValid = (value: string, country_code: string) => {
-  if (!isPostalCodeRequired(country_code)) {
+  if (!isPostalCodeValid(country_code)) {
     return true;
   }
   return /^[0-9]{5}(?:-[0-9]{4})?$/.test(value);
