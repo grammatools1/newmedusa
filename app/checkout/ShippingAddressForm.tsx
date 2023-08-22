@@ -220,9 +220,9 @@ const handleClearCountry = () => {
           value={shippingInfo.first_name}
           onChange={handleInputChange}
         />
-             {validationErrors && validationErrors.name && (
-        <span style={{ color: 'red' }}>{validationErrors.name}</span>
-      )}
+           {validationErrors.first_name && (
+          <span style={{ color: 'red' }}>{validationErrors.first_name}</span>
+        )}
       </div>  
       <div>
       <label htmlFor="last_name">Last Name:</label>
