@@ -19,7 +19,18 @@ const validationSchema = yup.object().shape({
     .matches(/^[0-9]{5}/)
     .required(),
   phone: yup.string().matches(/^\+(?:[0-9] ?){6,14}[0-9]$/, 'Invalid phone number').required('Phone is required'),
-  company: yup.string().required().minlength(3).maxlength(25)
+  company:  yup
+            .string()
+            .test(
+                'len',
+                'can be empty or with string at least 2 characters and not more than 10',
+                (val) => {
+                    if (val == undefined) {
+                        return true;
+                    }
+                    return  ((val.length == 3 || (val.length >= 5 && val.length <= 10)))
+                }
+            ),
 });
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
