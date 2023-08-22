@@ -222,7 +222,7 @@ const handleClearCountry = () => {
              {validationErrors && validationErrors.name && (
         <span style={{ color: 'red' }}>{validationErrors.name}</span>
       )}
-      </div>
+      </div>  
       <div>
       <label htmlFor="last_name">Last Name:</label>
         <input
