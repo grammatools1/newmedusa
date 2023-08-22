@@ -7,6 +7,13 @@ import Autocomplete from 'react-autocomplete';
 const countryListModule = require('country-list');
 import * as yup from 'yup';
 
+const isPostalCodeValid = (value, country_code) => {
+  if (!isPostalCodeRequired(country_code)) {
+    return true;
+  }
+  return /^[0-9]{5}(?:-[0-9]{4})?$/.test(value || '');
+};
+
 const validationSchema = yup.object().shape({
   first_name: yup.string().required('First Name is required'),
   last_name: yup.string().required('Last Name is required'),
@@ -14,23 +21,16 @@ const validationSchema = yup.object().shape({
   address_1: yup.string().required('Address is required'),
   city: yup.string().required('City is required'),
   country_code: yup.string().required('Country is required'),
-  postal_code: yup.string().when('country_code', {
-    is: (countryCode) => isPostalCodeRequired(countryCode),
-    then: yup.string().test('postal-code', 'Invalid Postal Code', (value, context) => {
-      if (!isPostalCodeRequired(context.parent.country_code)) {
-        // If postal code is not required for the selected country, no validation is needed
-        return true;
-      }
-      // Validate the postal code using regex
-      return /^[0-9]{5}(?:-[0-9]{4})?$/.test(value || '');
-    })
-  }),
+  postal_code: yup.string().test('postal-code', 'Invalid Postal Code', (value, context) =>
+    isPostalCodeValid(value, context.parent.country_code)
+  ),
   phone: yup.string().matches(/^\+(?:[0-9] ?){6,14}[0-9]$/, 'Invalid phone number').required('Phone is required'),
   company: yup.string().when('company', {
     is: (value) => value.trim().length > 0,
     then: yup.string().min(3, 'Company name must be at least 3 characters'),
   }),
 });
+
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
