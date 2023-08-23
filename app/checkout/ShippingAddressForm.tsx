@@ -20,17 +20,17 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
 
   useEffect(() => {
     const fetchCart = async () => {
-      try {
-        if (medusa) {
-         const cart = await medusa.carts.retrieve(cart);
-          setCart(cart);
-        }
-      } catch (error) {
-        console.error('Error retrieving cart', error);
-        setError('Error retrieving cart');
-      } finally {
-        setIsLoading(false);
-      }
+    try {
+  if (medusa) {
+    const cartData = await medusa.carts.retrieve();
+    setCart(cartData.cart);
+  }
+} catch (error) {
+  console.error('Error retrieving cart', error);
+  setError('Error retrieving cart');
+} finally {
+  setIsLoading(false);
+}
     };
 
     fetchCart();
