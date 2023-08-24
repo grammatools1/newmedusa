@@ -23,7 +23,18 @@ const validationSchema = yup.object().shape({
   company: yup.string().min(3, 'Company name must be at least 3 characters long'),
 });
 
-const ShippingFormFields = ({
+interface ShippingFormFieldsProps {
+  cart: any; // Replace 'any' with the actual type of the 'cart' prop
+  shippingOptions: any; // Replace 'any' with the actual type
+  selectedShippingMethod: any; // Replace 'any' with the actual type
+  setSelectedShippingMethod: any; // Replace 'any' with the actual type
+  validationErrors: any; // Replace 'any' with the actual type
+  setValidationErrors: any; // Replace 'any' with the actual type
+  subscribeNewsletter: any; // Replace 'any' with the actual type
+  setSubscribeNewsletter: any; // Replace 'any' with the actual type
+}
+
+const ShippingFormFields: React.FC<ShippingFormFieldsProps> = ({
   cart,
   shippingOptions,
   selectedShippingMethod,
