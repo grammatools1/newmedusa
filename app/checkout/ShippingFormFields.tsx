@@ -24,10 +24,12 @@ const validationSchema = yup.object().shape({
 });
 
 interface ShippingFormFieldsProps {
-  cart: CartData;
-  shippingOptions: any[]; // Replace `any` with the type of your shippingOptions
+  cart: CartData | null;
+  shippingOptions: never[]; // Replace `never[]` with the correct type of your shippingOptions
   selectedShippingMethod: string;
   setSelectedShippingMethod: React.Dispatch<React.SetStateAction<string>>;
+  validationErrors: any; // Replace `any` with the appropriate type for validationErrors
+  setValidationErrors: React.Dispatch<React.SetStateAction<any>>; // Replace `any` with the appropriate type for setValidationErrors
   subscribeNewsletter: boolean;
   setSubscribeNewsletter: React.Dispatch<React.SetStateAction<boolean>>;
 }
