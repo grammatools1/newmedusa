@@ -22,7 +22,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     const fetchCart = async () => {
     try {
   if (medusa) {
-    const cartData = await medusa.carts.retrieve();
+    const cartData = await medusa.carts.retrieve(cartId);
     setCart(cartData.cart);
   }
 } catch (error) {
