@@ -9,8 +9,13 @@ import ShippingFormFields from './ShippingFormFields';
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
+interface CartData {
+  id: string;
+  // Add other properties based on the actual cart response
+}
+
 const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
-  const [cart, setCart] = useState(null);
+  const [cart, setCart] = useState<CartData | null>(null);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [validationErrors, setValidationErrors] = useState({});
   const [shippingOptions, setShippingOptions] = useState([]);
@@ -37,14 +42,14 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     fetchCart();
   }, []);
 
-  // Rest of your code...
- useEffect(() => {
+  useEffect(() => {
     const fetchShippingOptions = async () => {
       try {
-        if (medusa) {
-          const { shipping_options } = await medusa.shippingOptions.list();
-          console.log(shipping_options.length);
-          setShippingOptions(shipping_options);
+        if (medusa && cart) {
+          const shippingOptions = await medusa.shippingOptions.list({
+            region: cart.region,
+          });
+          setShippingOptions(shippingOptions);
         }
       } catch (error) {
         console.error('Error retrieving shipping options', error);
@@ -57,45 +62,18 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
 
   const handleSubmit = async () => {
     try {
-      setIsLoading(true);
-
-      // Perform validation
-      const errors = {};
-
-      // ... Additional form validation
-
-      setValidationErrors(errors);
-
-      if (Object.keys(errors).length > 0) {
-        setIsLoading(false);
-        return;
-      }
-
-      if (!medusa) {
-        setIsLoading(false);
-        setError('Medusa is not available');
-        return;
-      }
-
-      const updatedShippingInfo = {
-        // ... Extract the shipping information from the form fields
-      };
-
-     const handleSubmit = async () => {
-    try {
       if (medusa && cart) {
         await medusa.carts.update(cart.id, {
           shipping_address: { ...updatedShippingInfo },
           shipping_method: selectedShippingMethod,
         });
 
-      // Call the onComplete function or perform any other actions
-      onComplete();
+        onComplete();
+      }
     } catch (validationError) {
       const errors = {};
       // ... Handle validation errors
       setValidationErrors(errors);
-      setError('Error during form submission');
     } finally {
       setIsLoading(false);
     }
