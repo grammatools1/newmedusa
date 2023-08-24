@@ -81,10 +81,13 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
         // ... Extract the shipping information from the form fields
       };
 
-      await medusa.carts.update(cart?.id, {
-        shipping_address: { ...updatedShippingInfo },
-        shipping_method: selectedShippingMethod,
-      });
+     const handleSubmit = async () => {
+    try {
+      if (medusa && cart) {
+        await medusa.carts.update(cart.id, {
+          shipping_address: { ...updatedShippingInfo },
+          shipping_method: selectedShippingMethod,
+        });
 
       // Call the onComplete function or perform any other actions
       onComplete();
