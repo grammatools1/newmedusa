@@ -45,11 +45,10 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   useEffect(() => {
     const fetchShippingOptions = async () => {
       try {
-        if (medusa && cart) {
-          const shippingOptions = await medusa.shippingOptions.list({
-            region: cart.region,
-          });
-          setShippingOptions(shippingOptions);
+        if (medusa) {
+          const { shipping_options } = await medusa.shippingOptions.list();
+          console.log(shipping_options.length);
+          setShippingOptions(shipping_options);
         }
       } catch (error) {
         console.error('Error retrieving shipping options', error);
@@ -58,7 +57,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     };
 
     fetchShippingOptions();
-  }, [cart]);
+  }, []);
 
   const handleSubmit = async () => {
     try {
