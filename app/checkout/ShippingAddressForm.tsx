@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useEffect, useState } from 'react';
 import Medusa from '@medusajs/medusa-js';
 import { useCart, useCartShippingOptions } from 'medusa-react';
