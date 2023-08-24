@@ -59,9 +59,14 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     fetchShippingOptions();
   }, []);
 
-  const handleSubmit = async () => {
+ const handleSubmit = async () => {
     try {
       if (medusa && cart) {
+        // Replace the following line with the appropriate shipping address object
+        const updatedShippingInfo = {
+          // Provide the necessary shipping address properties
+        };
+
         await medusa.carts.update(cart.id, {
           shipping_address: { ...updatedShippingInfo },
           shipping_method: selectedShippingMethod,
