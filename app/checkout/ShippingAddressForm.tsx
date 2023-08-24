@@ -1,5 +1,3 @@
-'use client';
-
 import React, { useEffect, useState } from 'react';
 import Medusa from '@medusajs/medusa-js';
 import { useCart, useCartShippingOptions } from 'medusa-react';
@@ -17,25 +15,27 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const cartId = '<cartId>'; // Replace '<cartId>' with the actual cart ID
 
   useEffect(() => {
     const fetchCart = async () => {
-    try {
-  if (medusa) {
-    const cartData = await medusa.carts.retrieve(cartId);
-    setCart(cartData.cart);
-  }
-} catch (error) {
-  console.error('Error retrieving cart', error);
-  setError('Error retrieving cart');
-} finally {
-  setIsLoading(false);
-}
+      try {
+        if (medusa) {
+          const cartData = await medusa.carts.retrieve(cartId);
+          setCart(cartData.cart);
+        }
+      } catch (error) {
+        console.error('Error retrieving cart', error);
+        setError('Error retrieving cart');
+      } finally {
+        setIsLoading(false);
+      }
     };
 
     fetchCart();
   }, []);
 
+  // Rest of your code...
   useEffect(() => {
     const fetchShippingOptions = async () => {
       try {
