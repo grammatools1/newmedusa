@@ -96,16 +96,15 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
       <h2>Shipping Information</h2>
       <form>
         <ShippingFormFields
-          cart={cart}
-          shippingOptions={shippingOptions}
-          selectedShippingMethod={selectedShippingMethod}
-          setSelectedShippingMethod={setSelectedShippingMethod}
-          validationErrors={validationErrors}
-          setValidationErrors={setValidationErrors}
-          subscribeNewsletter={subscribeNewsletter}
-          setSubscribeNewsletter={setSubscribeNewsletter}
-        />
-
+            cart={cart}
+            shippingOptions={shippingOptions}
+            selectedShippingMethod={selectedShippingMethod}
+            setSelectedShippingMethod={setSelectedShippingMethod}
+            validationErrors={validationErrors}
+            setValidationErrors={setValidationErrors}
+            subscribeNewsletter={subscribeNewsletter}
+            setSubscribeNewsletter={setSubscribeNewsletter}
+          />
         <button type="button" onClick={handleSubmit}>
           Save Shipping Address
         </button>
