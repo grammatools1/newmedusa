@@ -60,7 +60,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     try {
       if (medusa && cart) {
         // Use cURL to retrieve cart details
-        const response = await fetch(`{medusaBaseUrl}/store/carts/${id}`);
+        const response = await fetch(`{medusaBaseUrl}/store/carts/{id}`);
         const cartData = await response.json();
 
         setCart(cartData.cart || {});
