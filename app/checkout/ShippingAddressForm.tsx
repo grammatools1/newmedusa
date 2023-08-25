@@ -48,6 +48,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     lastName: string;
     email: string;
     address1: string;
+    address2: string;
     city: string;
     province: string;
     countryCode: string;
