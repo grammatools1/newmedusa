@@ -41,7 +41,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const cartId = "cart_01G8ZH853Y6TFXWPG5EYE81X63";
+  //const cartId = "cart_01G8ZH853Y6TFXWPG5EYE81X63";
 
   interface FormData {
     firstName: string;
@@ -57,22 +57,22 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   }
 
   useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        if (medusa && cart) {
-          const cartData = await medusa.carts.retrieve(cartId);
-          setCart(cartData.cart);
-        }
-      } catch (error) {
-        console.error('Error retrieving cart', error);
-        setError('Error retrieving cart');
-      } finally {
-        setIsLoading(false);
+  const fetchCart = async () => {
+    try {
+      if (medusa && cartId) {
+        const cartData = await medusa.carts.retrieve(cartId);
+        setCart(cartData.cart || {}); // Initialize with empty object
       }
-    };
+    } catch (error) {
+      console.error('Error retrieving cart', error);
+      setError('Error retrieving cart');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    fetchCart();
-  }, []);
+  fetchCart();
+}, []);
 
   useEffect(() => {
   const fetchShippingOptions = async () => {
