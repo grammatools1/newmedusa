@@ -42,6 +42,18 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
+  interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  address1: string;
+  city: string;
+  countryCode: string;
+  postalCode: string;
+  phone: string;
+  company: string | undefined;
+};
+
   // Replace with actual cart ID
   const cartId = '<cartId>';
 
@@ -79,7 +91,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     fetchShippingOptions();
   }, []);
 
-  const handleFormSubmit = async (data) => {
+  const handleFormSubmit = async (data: FormData) => {
     try {
       setIsLoading(true);
       setError('');
