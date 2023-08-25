@@ -42,7 +42,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
   
-  const cartId = curl '{medusaBaseUrl}/store/carts/{id}'
+  const cartId = curl '{medusaBaseUrl}/store/carts/{id}';
 
   interface FormData {
     firstName: string;
