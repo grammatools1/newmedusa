@@ -41,8 +41,6 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  
-  const cartId = curl '{medusaBaseUrl}/store/carts/{id}';
 
   interface FormData {
     firstName: string;
@@ -61,8 +59,11 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const fetchCart = async () => {
     try {
       if (medusa && cartId) {
-        const cartData = await medusa.carts.retrieve(cartId);
-        setCart(cartData.cart || {}); // Initialize with empty object
+        // Use cURL to retrieve cart details
+        const response = await fetch(`{medusaBaseUrl}/store/carts/${cartId}`);
+        const cartData = await response.json();
+
+        setCart(cartData.cart || {});
       }
     } catch (error) {
       console.error('Error retrieving cart', error);
