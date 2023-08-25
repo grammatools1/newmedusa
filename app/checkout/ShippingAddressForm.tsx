@@ -31,9 +31,9 @@ const validationSchema = yup.object().shape({
 
 const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const { control, handleSubmit, formState } = useForm({
-  resolver: yupResolver(validationSchema),
+    resolver: yupResolver(validationSchema),
   });
-  
+
   const { errors } = formState;
   const [cart, setCart] = useState(null);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
@@ -43,25 +43,22 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const [error, setError] = useState('');
 
   interface FormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  address1: string;
-  city: string;
-  province: string
-  countryCode: string;
-  postalCode: string;
-  phone: string;
-  company: string | undefined;
-};
-
-  // Replace with actual cart ID
-  const cartId = '<cartId>';
+    firstName: string;
+    lastName: string;
+    email: string;
+    address1: string;
+    city: string;
+    province: string;
+    countryCode: string;
+    postalCode: string;
+    phone: string;
+    company: string | undefined;
+  }
 
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        if (medusa) {
+        if (medusa && cartId) {
           const cartData = await medusa.carts.retrieve(cartId);
           setCart(cartData.cart);
         }
@@ -79,8 +76,8 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   useEffect(() => {
     const fetchShippingOptions = async () => {
       try {
-        if (medusa) {
-          const { shipping_options } = await medusa.shippingOptions.list();
+        if (medusa && cart) {
+          const { shipping_options } = await medusa.shippingOptions.list(cart.id);
           setShippingOptions(shipping_options);
         }
       } catch (error) {
@@ -90,16 +87,16 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     };
 
     fetchShippingOptions();
-  }, []);
+  }, [cart]);
 
   const handleFormSubmit = async (data: FormData) => {
     try {
       setIsLoading(true);
       setError('');
 
-     if (medusa && cart && cart.id) {
+      if (medusa && cart && cart.id) {
         const cartId = cart.id as string; // Type assertion
-      
+
         // Update shipping address and method
         await medusa.carts.update(cartId, {
           shipping_address: {
@@ -138,39 +135,39 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
 
   const countryOptions = React.useMemo(() => {
     const countries = countryListModule.getNameList();
-    return countries.map((countryCode) => ({
+    return    countries.map((countryCode) => ({
       value: countryCode,
       label: countryListModule.getName(countryCode),
     }));
   }, []);
-
+  
   return (
     <div>
       <h2>Shipping Information</h2>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-      <ShippingFormFields
-  control={control}
-  acceptUpdates={subscribeNewsletter}
-  setAcceptUpdates={setSubscribeNewsletter}
-  errors={errors}
-  countryOptions={countryOptions}
-/>
-<div>
-  <label htmlFor="acceptUpdates">
-    <Controller
-      as={<input type="checkbox" />}
-      control={control}
-      name="acceptUpdates"
-      defaultValue={subscribeNewsletter}
-    />
-    Receive product updates and newsletters
-  </label>
-</div>
-{error && <div style={{ color: 'red' }}>{error}</div>}
-<button type="submit">Save Shipping Address</button>
-</form>
-</div>
-);
+        <ShippingFormFields
+          control={control}
+          acceptUpdates={subscribeNewsletter}
+          setAcceptUpdates={setSubscribeNewsletter}
+          errors={errors}
+          countryOptions={countryOptions}
+        />
+        <div>
+          <label htmlFor="acceptUpdates">
+            <Controller
+              as={<input type="checkbox" />}
+              control={control}
+              name="acceptUpdates"
+              defaultValue={subscribeNewsletter}
+            />
+            Receive product updates and newsletters
+          </label>
+        </div>
+        {error && <div style={{ color: 'red' }}>{error}</div>}
+        <button type="submit">Save Shipping Address</button>
+      </form>
+    </div>
+  );
 };
 
 export default ShippingForm;
