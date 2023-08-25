@@ -77,7 +77,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   useEffect(() => {
     const fetchShippingOptions = async () => {
       try {
-        if (medusa && cart) {
+        if (medusa && cartId) {
           const { shipping_options } = await medusa.shippingOptions.list(cart.id);
           setShippingOptions(shipping_options);
         }
