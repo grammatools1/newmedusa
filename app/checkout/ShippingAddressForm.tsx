@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { useForm, Controller } from 'react-hook-form';
-import Medusa, { ValidationError } from '@medusajs/medusa-js';
+import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ShippingFormFields from './ShippingFormFields';
