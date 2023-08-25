@@ -36,7 +36,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   });
 
   const { errors } = formState;
-  const [cart, setCart] = useState(null);
+ const [cart, setCart] = useState<any>(null);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
