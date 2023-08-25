@@ -55,6 +55,7 @@ interface FormData {
   phone: string;
   company: string | undefined;
   address2?: string; // Make it optional
+   acceptUpdates: boolean; 
 }
 
   const cartId = '<cartId>'; // Replace with actual cart ID
