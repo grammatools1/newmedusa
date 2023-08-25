@@ -43,19 +43,19 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
-  interface FormData {
-     firstName: string;
-    lastName: string;
-    email: string;
-    address1: string;
-    address2: string;
-    city: string;
-    province: string;
-    countryCode: string;
-    postalCode: string;
-    phone: string;
-    company: string | undefined;
-  }
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  address1: string;
+  city: string;
+  province?: string; // Make it optional
+  countryCode: string;
+  postalCode: string;
+  phone: string;
+  company: string | undefined;
+  address2?: string; // Make it optional
+}
 
   const cartId = '<cartId>'; // Replace with actual cart ID
 
