@@ -30,10 +30,11 @@ const validationSchema = yup.object().shape({
 });
 
 const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
-  const { control, handleSubmit, errors } = useForm({
-    resolver: yupResolver(validationSchema),
+  const { control, handleSubmit, formState } = useForm({
+  resolver: yupResolver(validationSchema),
   });
- 
+  
+  const { errors } = formState;
   const [cart, setCart] = useState(null);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
