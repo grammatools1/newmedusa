@@ -78,11 +78,6 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   type Cart = {
   id?: string;
 }
-
-const [cart, setCart] = useState<Cart>({});
-
-// ...
-
 useEffect(() => {
   const fetchShippingOptions = async () => {
     try {
