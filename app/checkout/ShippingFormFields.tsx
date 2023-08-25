@@ -1,152 +1,213 @@
 import React from 'react';
-import { useField } from 'formik';
+import { Controller } from 'react-hook-form';
 import Autocomplete from 'react-autocomplete';
-const countryListModule = require('country-list');
-import * as yup from 'yup';
+import countryListModule from 'country-list';
 
-// Validation schema
-const validationSchema = yup.object().shape({
-  firstName: yup.string().required('First Name is required'),
-  lastName: yup.string().required('Last Name is required'),
-  email: yup.string().email('Invalid email address').required('Email is required'),
-  address1: yup.string().required('Address is required'),
-  city: yup.string().required('City is required'),
-  countryCode: yup.string().required('Country is required'),
-  postalCode: yup
-    .string()
-    .matches(/^\d{5}(-\d{4})?$/, 'Invalid postal code')
-    .required('Postal code is required'),
-  phone: yup
-    .string()
-    .matches(/^\+(?:[0-9] ?){6,14}[0-9]$/, 'Invalid phone number')
-    .required('Phone is required'),
-  company: yup.string().min(3, 'Company name must be at least 3 characters long'),
-});
-
-interface ShippingFormFieldsProps {
-  cart: CartData | null;
-  shippingOptions: never[]; // Replace `never[]` with the correct type of your shippingOptions
-  selectedShippingMethod: string;
-  setSelectedShippingMethod: React.Dispatch<React.SetStateAction<string>>;
-  validationErrors: any; // Replace `any` with the appropriate type for validationErrors
-  setValidationErrors: React.Dispatch<React.SetStateAction<any>>; // Replace `any` with the appropriate type for setValidationErrors
-  subscribeNewsletter: boolean;
-  setSubscribeNewsletter: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-const ShippingFormFields: React.FC<ShippingFormFieldsProps> = ({
-  cart,
-  shippingOptions,
-  selectedShippingMethod,
-  setSelectedShippingMethod,
-  subscribeNewsletter,
-  setSubscribeNewsletter,
+const ShippingFormFields = ({
+  control,
+  acceptUpdates,
+  setAcceptUpdates,
+  errors,
+  countryOptions,
 }) => {
-  const countryOptions = React.useMemo(() => {
-    const countryList = countryListModule.getNameList();
-    return countryList.map((countryCode) => ({
-      value: countryCode,
-      label: countryListModule.getName(countryCode),
-    }));
-  }, []);
-
-  const renderErrorMessage = (field) => {
-    const meta = field.meta;
-    return meta.touched && meta.error && <span style={{ color: 'red' }}>{meta.error}</span>;
-  };
-
-  const [fieldFirstName, metaFirstName] = useField('firstName');
-  const [fieldLastName, metaLastName] = useField('lastName');
-  const [fieldEmail, metaEmail] = useField('email');
-  const [fieldAddress1, metaAddress1] = useField('address1');
-  const [fieldCity, metaCity] = useField('city');
-  const [fieldPostalCode, metaPostalCode] = useField('postalCode');
-  const [fieldCountryCode, metaCountryCode] = useField('countryCode');
-  const [fieldPhone, metaPhone] = useField('phone');
-  const [fieldCompany, metaCompany] = useField('company');
+  const countryList = countryListModule.getData();
 
   return (
     <>
       <div>
         <label htmlFor="firstName">First Name:</label>
-        <input type="text" name="firstName" {...fieldFirstName} />
-        {renderErrorMessage(metaFirstName)}
+        <Controller
+          as={<input />}
+          name="firstName"
+          control={control}
+          defaultValue=""
+          rules={{ required: 'First Name is required' }}
+        />
+        {errors.firstName && (
+          <span style={{ color: 'red' }}>{errors.firstName.message}</span>
+        )}
       </div>
+      
       <div>
         <label htmlFor="lastName">Last Name:</label>
-        <input type="text" name="lastName" {...fieldLastName} />
-        {renderErrorMessage(metaLastName)}
+        <Controller
+          as={<input />}
+          name="lastName"
+          control={control}
+          defaultValue=""
+          rules={{ required: 'Last Name is required' }}
+        />
+        {errors.lastName && (
+          <span style={{ color: 'red' }}>{errors.lastName.message}</span>
+        )}
       </div>
+      
       <div>
         <label htmlFor="email">Email:</label>
-        <input type="text" name="email" {...fieldEmail} />
-        {renderErrorMessage(metaEmail)}
+        <Controller
+          as={<input type="email" />}
+          name="email"
+          control={control}
+          defaultValue=""
+          rules={{
+            required: 'Email is required',
+            pattern: {
+              value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+              message: 'Invalid email address',
+            },
+          }}
+        />
+        {errors.email && (
+          <span style={{ color: 'red' }}>{errors.email.message}</span>
+        )}
       </div>
+      
       <div>
-        <label htmlFor="subscribeNewsletter">
+        <label htmlFor="acceptUpdates">
           <input
             type="checkbox"
-            id="subscribeNewsletter"
-            checked={subscribeNewsletter}
-            onChange={(e) => setSubscribeNewsletter(e.target.checked)}
+            id="acceptUpdates"
+            checked={acceptUpdates}
+            onChange={() => setAcceptUpdates(!acceptUpdates)}
           />
-          Subscribe to Product Updates and Newsletters
+          Accept Product Updates and Newsletters
         </label>
       </div>
+      
       <div>
         <label htmlFor="address1">Address:</label>
-        <input type="text" name="address1" {...fieldAddress1} />
-        {renderErrorMessage(metaAddress1)}
+        <Controller
+          as={<input />}
+          name="address1"
+          control={control}
+          defaultValue=""
+          rules={{ required: 'Address is required' }}
+        />
+        {errors.address1 && (
+          <span style={{ color: 'red' }}>{errors.address1.message}</span>
+        )}
       </div>
+      
       <div>
         <label htmlFor="address2">Address 2:</label>
-        <input type="text" name="address2" />
+        <Controller as={<input />} name="address2" control={control} defaultValue="" />
       </div>
+      
       <div>
         <label htmlFor="city">City:</label>
-        <input type="text" name="city" {...fieldCity} />
-        {renderErrorMessage(metaCity)}
+        <Controller
+          as={<input />}
+          name="city"
+          control={control}
+          defaultValue=""
+          rules={{ required: 'City is required' }}
+        />
+        {errors.city && (
+          <span style={{ color: 'red' }}>{errors.city.message}</span>
+        )}
       </div>
+      
       <div>
         <label htmlFor="province">Province:</label>
-        <input type="text" name="province" />
+        <Controller as={<input />} name="province" control={control} defaultValue="" />
       </div>
+      
       <div>
         <label htmlFor="postalCode">Postal Code:</label>
-        <input type="text" name="postalCode" {...fieldPostalCode} />
-        {renderErrorMessage(metaPostalCode)}
+        <Controller
+          as={<input />}
+          name="postalCode"
+          control={control}
+          defaultValue=""
+          rules={{
+            pattern: {
+              value: /^\d{5}(-\d{4})?$/,
+              message: 'Invalid postal code',
+            },
+            required: 'Postal code is required',
+          }}
+        />
+        {errors.postalCode && (
+          <span style={{ color: 'red' }}>{errors.postalCode.message}</span>
+        )}
       </div>
+      
       <div>
         <label htmlFor="countryCode">Country:</label>
-        <Autocomplete
+        <Controller
+          as={Autocomplete}
           name="countryCode"
+          control={control}
+          defaultValue=""
+          rules={{ required: 'Country is required' }}
           renderInput={(params) => (
-            <input {...params} type="text" placeholder="Country" autoComplete="off" />
+            <input
+              {...params}
+              type="text"
+              placeholder="Country"
+              autoComplete="off"
+            />
           )}
           renderItem={(item, isHighlighted) => (
-            <div key={item.value} style={{ background: isHighlighted ? 'lightgray' : 'white' }}>
+            <div
+              key={item.value}
+              style={{ background: isHighlighted ? 'lightgray' : 'white' }}
+            >
               {item.label}
             </div>
           )}
           value={({ onChange, value }) => (
-            <input onChange={(e) => onChange(e.target.value)} value={value} style={{ display: 'none' }} readOnly />
+            <input
+              onChange={(e) => onChange(e.target.value)}
+              value={value}
+              style={{ display: 'none' }}
+              readOnly
+            />
           )}
           items={countryOptions}
           getItemValue={(item) => item.label}
-          onSelect={([item]) => item.value}
         />
-        {renderErrorMessage(metaCountryCode)}
+        {errors.countryCode && (
+          <span style={{ color: 'red' }}>{errors.countryCode.message}</span>
+        )}
       </div>
+      
       <div>
         <label htmlFor="phone">Phone:</label>
-        <input type="text" name="phone" {...fieldPhone} />
-        {renderErrorMessage(metaPhone)}
+        <Controller
+          as={<input />}
+          name="phone"
+          control={control}
+          defaultValue=""
+          rules={{
+            pattern: {
+              value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
+              message: 'Invalid phone number',
+            },
+            required: 'Phone is required',
+          }}
+        />
+        {errors.phone && (
+          <span style={{ color: 'red' }}>{errors.phone.message}</span>
+        )}
       </div>
+
       <div>
         <label htmlFor="company">Company:</label>
-        <input type="text" name="company" {...fieldCompany} />
-        {renderErrorMessage(metaCompany)}
+        <Controller
+          as={<input />}
+          name="company"
+          control={control}
+          defaultValue=""
+          rules={{ minLength: { value: 3, message: 'Company name must be at least 3 characters long' } }}
+        />
+        {errors.company && (
+          <span style={{ color: 'red' }}>{errors.company.message}</span>
+        )}
       </div>
+      
+      {/* Add more form fields here */}
+      
     </>
   );
 };
