@@ -97,21 +97,22 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
       setIsLoading(true);
       setError('');
 
-      if (medusa && cart && cart.id) {
+     if (medusa && cart && cart.id) {
+        const cartId = cart.id as string; // Type assertion
+      
         // Update shipping address and method
-   await medusa.carts.update(cart.id, {
+        await medusa.carts.update(cartId, {
           shipping_address: {
-      company: data.company,
-      first_name: data.firstName,
-      last_name: data.lastName,
-      address_1: data.address1,
-      address_2: data.address2 || undefined,
-      city: data.city,
-      province: data.province,
-      postal_code: data.postalCode,
-      country_code: data.countryCode,
-      phone: data.phone,
-            },
+            company: data.company,
+            first_name: data.firstName,
+            last_name: data.lastName,
+            address_1: data.address1,
+            address_2: data.address2 || undefined,
+            city: data.city,
+            postal_code: data.postalCode,
+            country_code: data.countryCode,
+            phone: data.phone,
+          },
           shipping_method: selectedShippingMethod,
         });
 
