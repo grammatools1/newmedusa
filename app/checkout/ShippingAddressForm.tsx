@@ -58,7 +58,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   useEffect(() => {
     const fetchCart = async () => {
       try {
-        if (medusa && cartId) {
+        if (medusa && cart) {
           const cartData = await medusa.carts.retrieve(cartId);
           setCart(cartData.cart);
         }
