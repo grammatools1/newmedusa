@@ -74,21 +74,21 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     fetchCart();
   }, []);
 
-  useEffect(() => {
-    const fetchShippingOptions = async () => {
-      try {
-        if (medusa && cartId) {
-          const { shipping_options } = await medusa.shippingOptions.list(cart.id);
-          setShippingOptions(shipping_options);
-        }
-      } catch (error) {
-        console.error('Error retrieving shipping options', error);
-        setError('Error retrieving shipping options');
+  seEffect(() => {
+  const fetchShippingOptions = async () => {
+    try {
+      if (medusa && cart && cart.id) {
+        const { shipping_options } = await medusa.shippingOptions.list(cart.id);
+        setShippingOptions(shipping_options);
       }
-    };
+    } catch (error) {
+      console.error('Error retrieving shipping options', error);
+      setError('Error retrieving shipping options');
+    }
+  };
 
-    fetchShippingOptions();
-  }, [cart]);
+  fetchShippingOptions();
+}, [medusa, cart]);
 
   const handleFormSubmit = async (data: FormData) => {
     try {
