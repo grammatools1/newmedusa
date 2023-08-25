@@ -6,13 +6,14 @@ import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import ShippingFormFields from './ShippingFormFields';
+import { ValidationError } from 'yup';
 const countryListModule = require('country-list');
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
 const validationSchema = yup.object().shape({
-  firstName: yup.string().required('First Name is required'),
+   firstName: yup.string().required('First Name is required'),
   lastName: yup.string().required('Last Name is required'),
   email: yup.string().email('Invalid email address').required('Email is required'),
   address1: yup.string().required('Address is required'),
@@ -43,7 +44,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const [error, setError] = useState('');
 
   interface FormData {
-    firstName: string;
+     firstName: string;
     lastName: string;
     email: string;
     address1: string;
@@ -55,45 +56,41 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     company: string | undefined;
   }
 
+  const cartId = '<cartId>'; // Replace with actual cart ID
+
   useEffect(() => {
-  const fetchCart = async () => {
-    try {
-      if (medusa && cart) {
-        // Use cURL to retrieve cart details
-        const response = await fetch(`{medusaBaseUrl}/store/carts/{id}`);
-        const cartData = await response.json();
-
-        setCart(cartData.cart || {});
+    const fetchCart = async () => {
+      try {
+        if (medusa) {
+          const cartData = await medusa.carts.retrieve(cartId);
+          setCart(cartData.cart);
+        }
+      } catch (error) {
+        console.error('Error retrieving cart', error);
+          setError('Error retrieving cart');
+      } finally {
+        setIsLoading(false);
       }
-    } catch (error) {
-      console.error('Error retrieving cart', error);
-      setError('Error retrieving cart');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    };
 
-  fetchCart();
-}, []);
+    fetchCart();
+  }, []);
 
-  type Cart = {
-  id?: string;
-}
-useEffect(() => {
-  const fetchShippingOptions = async () => {
-    try {
-      if (medusa && cart && cart.id) {
-        const { shipping_options } = await medusa.shippingOptions.list(cart.id);
-        setShippingOptions(shipping_options);
+  useEffect(() => {
+    const fetchShippingOptions = async () => {
+      try {
+        if (medusa) {
+          const { shipping_options } = await medusa.shippingOptions.list();
+          setShippingOptions(shipping_options);
+        }
+      } catch (error) {
+        console.error('Error retrieving shipping options', error);
+          setError('Error retrieving shipping options');
       }
-    } catch (error) {
-      console.error('Error retrieving shipping options', error);
-      setError('Error retrieving shipping options');
-    }
-  };
+    };
 
-  fetchShippingOptions();
-}, [medusa, cart]);
+    fetchShippingOptions();
+  }, []);
 
   const handleFormSubmit = async (data: FormData) => {
     try {
@@ -105,13 +102,14 @@ useEffect(() => {
 
         // Update shipping address and method
         await medusa.carts.update(cartId, {
-          shipping_address: {
+        shipping_address: {
             company: data.company,
             first_name: data.firstName,
             last_name: data.lastName,
             address_1: data.address1,
             address_2: data.address2 || undefined,
             city: data.city,
+            province: data.province,
             postal_code: data.postalCode,
             country_code: data.countryCode,
             phone: data.phone,
@@ -119,12 +117,10 @@ useEffect(() => {
           shipping_method: selectedShippingMethod,
         });
 
-        // Clear validation errors on success
         setError('');
-        onComplete(); // Optionally, show a success message or redirect
+        onComplete();
       }
     } catch (validationError) {
-      // Handle specific validation errors or network errors
       if (validationError instanceof ValidationError) {
         setError('Validation error: ' + validationError.message);
       } else {
@@ -141,12 +137,12 @@ useEffect(() => {
 
   const countryOptions = React.useMemo(() => {
     const countries = countryListModule.getNameList();
-    return    countries.map((countryCode) => ({
+    return countries.map((countryCode) => ({
       value: countryCode,
       label: countryListModule.getName(countryCode),
     }));
   }, []);
-  
+
   return (
     <div>
       <h2>Shipping Information</h2>
