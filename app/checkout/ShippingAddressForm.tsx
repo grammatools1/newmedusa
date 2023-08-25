@@ -48,6 +48,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   email: string;
   address1: string;
   city: string;
+  province: string
   countryCode: string;
   postalCode: string;
   phone: string;
@@ -96,22 +97,21 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
       setIsLoading(true);
       setError('');
 
-      if (medusa && cart) {
+      if (medusa && cart && cart.id) {
         // Update shipping address and method
-        await medusa.carts.update(cart.id, {
+   await medusa.carts.update(cart.id, {
           shipping_address: {
-            company: data.company,
-            first_name: data.firstName,
-            last_name: data.lastName,
-            email: data.email,
-            address_1: data.address1,
-            address_2: data.address2,
-            city: data.city,
-            country_code: data.countryCode,
-            postal_code: data.postalCode,
-            phone: data.phone,
-            // Add other shipping address properties as needed
-          },
+      company: data.company,
+      first_name: data.firstName,
+      last_name: data.lastName,
+      address_1: data.address1,
+      address_2: data.address2 || undefined,
+      city: data.city,
+      province: data.province,
+      postal_code: data.postalCode,
+      country_code: data.countryCode,
+      phone: data.phone,
+            },
           shipping_method: selectedShippingMethod,
         });
 
