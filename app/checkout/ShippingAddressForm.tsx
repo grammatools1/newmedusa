@@ -137,12 +137,13 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   }
 
   const countryOptions = React.useMemo(() => {
-    const countries = countryListModule.getNameList();
-    return countries.map((countryCode) => ({
-      value: countryCode,
-      label: countryListModule.getName(countryCode),
-    }));
-  }, []);
+  const countries = countryListModule.getNameList();
+  return countries.map((countryCode: string) => ({
+    value: countryCode,
+    label: countryListModule.getName(countryCode),
+  }));
+}, []);
+
 
   return (
     <div>
