@@ -26,10 +26,10 @@ const validationSchema = yup.object().shape({
     .string()
     .matches(/^\+(?:[0-9] ?){6,14}[0-9]$/, 'Invalid phone number')
     .required('Phone is required'),
-  company: yup.string().min(3, 'Company name must be at least 3 characters long'),
+  company: yup.string().min(3, 'Company name must be at least 3 characters long')
 });
 
-onst ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
+const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const { control, handleSubmit, errors } = useForm({
     resolver: yupResolver(validationSchema),
   });
