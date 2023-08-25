@@ -29,7 +29,7 @@ const validationSchema = yup.object().shape({
   company: yup.string().min(3, 'Company name must be at least 3 characters long'),
 });
 
-const ShippingForm = ({ onComplete }) => {
+onst ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const { control, handleSubmit, errors } = useForm({
     resolver: yupResolver(validationSchema),
   });
