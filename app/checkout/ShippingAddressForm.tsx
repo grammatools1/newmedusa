@@ -41,6 +41,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const cartId = "cart_01G8ZH853Y6TFXWPG5EYE81X63";
 
   interface FormData {
     firstName: string;
