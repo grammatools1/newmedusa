@@ -5,11 +5,16 @@ import Medusa from "@medusajs/medusa-js";
 import ShippingForm from './ShippingAddressForm'; // Import the ShippingForm component
 
 const CheckoutFlow = () => {
-const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const [medusa, setMedusa] = useState<Medusa | null>(null);
   
- useEffect(() => {
+useEffect(() => {
     const initializeMedusa = async () => {
+      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API; // Make sure this is properly defined
+      if (!medusaBaseUrl) {
+        console.error('Medusa base URL is not defined.');
+        return;
+      }
+
       const initializedMedusa = new Medusa({
         baseUrl: medusaBaseUrl,
         maxRetries: 3,
@@ -19,7 +24,6 @@ const [medusa, setMedusa] = useState<Medusa | null>(null);
 
     initializeMedusa();
   }, []);
-
   const cartId = localStorage.getItem("cart_id");
 
   const [cartItems, setCartItems] = useState([]);
