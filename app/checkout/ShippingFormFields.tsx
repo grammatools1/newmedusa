@@ -92,7 +92,7 @@ const ShippingFormFields = ({
           </div>
           )}
           />
-     <div>
+    <div>
   <label htmlFor="acceptUpdates">
     <input
       type="checkbox"
@@ -107,10 +107,15 @@ const ShippingFormFields = ({
 <div>
   <label htmlFor="address1">Address:</label>
   <Controller
-    as={<input type="text" />}
     name="address1"
     control={control}
     defaultValue=""
+    render={({ field }) => (
+      <input
+        type="text"
+        {...field}
+      />
+    )}
     rules={{ required: 'Address is required' }}
   />
   {errors.address1 && (
@@ -121,32 +126,49 @@ const ShippingFormFields = ({
 <div>
   <label htmlFor="city">City:</label>
   <Controller
-    as={<input type="text" />}
     name="city"
     control={control}
     defaultValue=""
+    render={({ field }) => (
+      <input
+        type="text"
+        {...field}
+      />
+    )}
     rules={{ required: 'City is required' }}
   />
   {errors.city && (
     <span style={{ color: 'red' }}>{errors.city.message}</span>
   )}
 </div>
+
 <div>
   <label htmlFor="province">Province:</label>
   <Controller
-    as={<input type="text" />}
     name="province"
     control={control}
     defaultValue=""
+    render={({ field }) => (
+      <input
+        type="text"
+        {...field}
+      />
+    )}
   />
 </div>
+
 <div>
   <label htmlFor="postalCode">Postal Code:</label>
   <Controller
-    as={<input type="text" />}
     name="postalCode"
     control={control}
     defaultValue=""
+    render={({ field }) => (
+      <input
+        type="text"
+        {...field}
+      />
+    )}
     rules={{
       pattern: {
         value: /^\d{5}(-\d{4})?$/,
@@ -162,37 +184,41 @@ const ShippingFormFields = ({
 <div>
   <label htmlFor="countryCode">Country:</label>
   <Controller
-    as={Autocomplete}
     name="countryCode"
     control={control}
     defaultValue=""
     rules={{ required: 'Country is required' }}
-    renderInput={(params) => (
-      <input
-        {...params}
-        type="text"
-        placeholder="Country"
-        autoComplete="off"
+    render={({ field }) => (
+      <Autocomplete
+        {...field}
+        renderInput={(params) => (
+          <input
+            {...params}
+            type="text"
+            placeholder="Country"
+            autoComplete="off"
+          />
+        )}
+        renderItem={(item, isHighlighted) => (
+          <div
+            key={item.value}
+            style={{ background: isHighlighted ? 'lightgray' : 'white' }}
+          >
+            {item.label}
+          </div>
+        )}
+        value={({ onChange, value }) => (
+          <input
+            onChange={(e) => onChange(e.target.value)}
+            value={value}
+            style={{ display: 'none' }}
+            readOnly
+          />
+        )}
+        items={countryOptions}
+        getItemValue={(item) => item.label}
       />
     )}
-    renderItem={(item, isHighlighted) => (
-      <div
-        key={item.value}
-        style={{ background: isHighlighted ? 'lightgray' : 'white' }}
-      >
-        {item.label}
-      </div>
-    )}
-    value={({ onChange, value }) => (
-      <input
-        onChange={(e) => onChange(e.target.value)}
-        value={value}
-        style={{ display: 'none' }}
-        readOnly
-      />
-    )}
-    items={countryOptions}
-    getItemValue={(item) => item.label}
   />
   {errors.countryCode && (
     <span style={{ color: 'red' }}>{errors.countryCode.message}</span>
@@ -202,7 +228,6 @@ const ShippingFormFields = ({
 <div>
   <label htmlFor="phone">Phone:</label>
   <Controller
-    as={<input type="text" />}
     name="phone"
     control={control}
     defaultValue=""
@@ -213,24 +238,36 @@ const ShippingFormFields = ({
       },
       required: 'Phone is required',
     }}
+    render={({ field }) => (
+      <input
+        {...field}
+        type="text"
+      />
+    )}
   />
   {errors.phone && (
     <span style={{ color: 'red' }}>{errors.phone.message}</span>
   )}
 </div>
+
 <div>
   <label htmlFor="company">Company:</label>
   <Controller
-    as={<input type="text" />}
     name="company"
     control={control}
     defaultValue=""
     rules={{ minLength: { value: 3, message: 'Company name must be at least 3 characters long' } }}
+    render={({ field }) => (
+      <input
+        {...field}
+        type="text"
+      />
+    )}
   />
   {errors.company && (
     <span style={{ color: 'red' }}>{errors.company.message}</span>
   )}
-</div> 
+</div>
    {/* Add more form fields here */}
       
     </>
