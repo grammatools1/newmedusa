@@ -95,13 +95,7 @@ const ShippingFormFields = ({
         {errors.address1 && (
           <span style={{ color: 'red' }}>{errors.address1.message}</span>
         )}
-      </div>
-      
-      <div>
-        <label htmlFor="address2">Address 2:</label>
-        <Controller as={<input />} name="address2" control={control} defaultValue="" />
-      </div>
-      
+      </div> 
       <div>
         <label htmlFor="city">City:</label>
         <Controller
