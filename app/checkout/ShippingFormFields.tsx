@@ -1,10 +1,10 @@
 import React from 'react';
-import { Controller, Control,FieldValues } from 'react-hook-form';
+import { Controller, Control } from 'react-hook-form';
 import Autocomplete from 'react-autocomplete';
 const countryListModule = require('country-list');
 
 type ShippingFormFieldsProps = {
-  control: Control<FieldValues>;
+  control: Control<CombinedFormData>;
   acceptUpdates: boolean;
   setAcceptUpdates: (value: boolean) => void;
   errors: any;
