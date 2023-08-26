@@ -141,18 +141,24 @@ const cartId = localStorage.getItem("cart_id");
 };
   return (
     <div>
-      {step === 1 && (
+    <div>
+    {/* Step 1: Cart Review */}
+    {step === 1 && (
+      <div>
+        <h1>Step 1: Cart Review</h1>
         <div>
-          <h1>Step 1: Cart Review</h1>
-          <div>
-            {/* Display cart items */}
-            {cartItems.map((item) => (
-              <div key={item.id}>
-                <p>Product: {item.product.title}</p>
-                <p>Quantity: {item.quantity}</p>
-                <p>Total Price: ${item.total}</p>
-              </div>
+          {/* Display cart items */}
+          {cartItems.map((item) => (
+            <div key={item.id}>
+              <p>Product: {item.product.title}</p>
+              <p>Quantity: {item.quantity}</p>
+              <p>Total Price: ${item.total}</p>
+            </div>
           ))}
+          {/* Rest of your code... */}
+        </div>
+         </div>
+          )}
           <div>
             <label>Coupon Code:</label>
             <input
@@ -174,7 +180,6 @@ const cartId = localStorage.getItem("cart_id");
           <p>Order Total: ${orderTotal}</p>
           <button onClick={handleShippingComplete}>Proceed to Shipping</button>
         </div>
-      )}
       {step === 2 && (
         <ShippingForm cartId={cartId} onComplete={handleShippingComplete} />
       )}
