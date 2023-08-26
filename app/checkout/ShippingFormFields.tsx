@@ -4,10 +4,10 @@ import Autocomplete from 'react-autocomplete';
 const countryListModule = require('country-list');
 
 interface ShippingFormFieldsProps {
-  control: Control<FormData>;
+  control: Control<CombinedFormData>;
   acceptUpdates: boolean; // Add this line
   setAcceptUpdates: React.Dispatch<React.SetStateAction<boolean>>; // Add this line
-  errors: DeepMap<FormData, FieldError>;
+  errors: DeepMap<CombinedFormData, FieldError>;
   countryOptions: { value: string; label: string }[];
 }
 
