@@ -181,7 +181,7 @@ const cartId = localStorage.getItem("cart_id");
           <button onClick={handleShippingComplete}>Proceed to Shipping</button>
         </div>
       {step === 2 && (
-        <ShippingForm cartId={cartId} onComplete={handleShippingComplete} />
+       {step === 2 && <ShippingForm onComplete={handleShippingComplete} />}
       )}
       {step === 3 && (
         <div>
