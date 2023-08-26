@@ -167,12 +167,12 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
       <h2>Shipping Information</h2>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
          <ShippingFormFields
-              control={control}
-              acceptUpdates={acceptUpdates}
-              setAcceptUpdates={setAcceptUpdates}
-              errors={errors}
-              countryOptions={countryOptions}
-            />
+          control={control as Control<CombinedFormData>}
+           acceptUpdates={acceptUpdates}
+           setAcceptUpdates={setAcceptUpdates}
+           errors={errors}
+           countryOptions={countryOptions}
+         />
 
         <div>
           <label htmlFor="acceptUpdates">
