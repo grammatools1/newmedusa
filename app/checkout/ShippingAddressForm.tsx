@@ -118,6 +118,7 @@ const handleFormSubmit = async (data: FormData) => {
             country_code: data.countryCode,
             phone: data.phone,
           },
+          accept_updates: data.acceptUpdates, // Include acceptUpdates
           shipping_method: selectedShippingMethod,
         });
 
@@ -148,24 +149,21 @@ const handleFormSubmit = async (data: FormData) => {
 }, []);
 
 
-  return (
+   return (
     <div>
       <h2>Shipping Information</h2>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <ShippingFormFields
           control={control}
-          acceptUpdates={subscribeNewsletter}
-          setAcceptUpdates={setSubscribeNewsletter}
           errors={errors}
           countryOptions={countryOptions}
         />
         <div>
           <label htmlFor="acceptUpdates">
-            <Controller
-              as={<input type="checkbox" />}
-              control={control}
-              name="acceptUpdates"
-              defaultValue={subscribeNewsletter}
+            <input
+              type="checkbox"
+              checked={acceptUpdates}
+              onChange={() => setAcceptUpdates(!acceptUpdates)}
             />
             Receive product updates and newsletters
           </label>
