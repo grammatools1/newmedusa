@@ -42,6 +42,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+   const [acceptUpdates, setAcceptUpdates] = useState(false);
 
 interface FormData {
   firstName: string;
@@ -49,14 +50,15 @@ interface FormData {
   email: string;
   address1: string;
   city: string;
-  province?: string; // Make it optional
+  province?: string;
   countryCode: string;
   postalCode: string;
   phone: string;
   company: string | undefined;
-  address2?: string; // Make it optional
-   acceptUpdates: boolean; 
+  address2?: string;
+  acceptUpdates: boolean; // Include acceptUpdates in FormData
 }
+
 
   const cartId = '<cartId>'; // Replace with actual cart ID
 
@@ -94,7 +96,7 @@ interface FormData {
     fetchShippingOptions();
   }, []);
 
-  const handleFormSubmit = async (data: FormData) => {
+const handleFormSubmit = async (data: FormData) => {
     try {
       setIsLoading(true);
       setError('');
