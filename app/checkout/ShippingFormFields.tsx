@@ -207,16 +207,8 @@ const ShippingFormFields = ({
             {item.label}
           </div>
         )}
-        value={({ onChange, value }) => (
-          <input
-            onChange={(e) => onChange(e.target.value)}
-            value={value}
-            style={{ display: 'none' }}
-            readOnly
-          />
-        )}
-        items={countryOptions}
         getItemValue={(item) => item.label}
+        items={countryOptions}
       />
     )}
   />
