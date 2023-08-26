@@ -6,7 +6,19 @@ import ShippingForm from './ShippingAddressForm'; // Import the ShippingForm com
 
 const CheckoutFlow = () => {
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }): null;
+const [medusa, setMedusa] = useState<Medusa | null>(null);
+  
+ useEffect(() => {
+    const initializeMedusa = async () => {
+      const initializedMedusa = new Medusa({
+        baseUrl: medusaBaseUrl,
+        maxRetries: 3,
+      });
+      setMedusa(initializedMedusa);
+    };
+
+    initializeMedusa();
+  }, []);
 
   const cartId = localStorage.getItem("cart_id");
 
