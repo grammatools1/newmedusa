@@ -5,7 +5,7 @@ import Medusa from "@medusajs/medusa-js";
 import ShippingForm from './ShippingAddressForm'; // Import the ShippingForm component
 
 const CheckoutFlow = () => {
-  const MEDUSA_BACKEND_API = process.env.MEDUSA_API_KEY; // Replace with your Medusa backend API URL
+  const MEDUSA_BACKEND_API = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API; // Replace with your Medusa backend API URL
   const medusa = new Medusa({ baseUrl: MEDUSA_BACKEND_API, maxRetries: 3 });
 
   const cartId = localStorage.getItem("cart_id");
