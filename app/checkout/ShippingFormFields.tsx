@@ -2,6 +2,7 @@ import React from 'react';
 import { Controller, Control } from 'react-hook-form';
 import Autocomplete from 'react-autocomplete';
 const countryListModule = require('country-list');
+import { ValidationError } from 'yup';
 
 interface CombinedFormData {
   firstName: string;
@@ -21,17 +22,17 @@ type ShippingFormFieldsProps = {
   control: Control<CombinedFormData>;
   acceptUpdates: boolean;
   setAcceptUpdates: (value: boolean) => void;
-  errors: any;
-  countryOptions: any[];
+  errors: any; // Replace with your error type
+  countryOptions: any[]; // Replace with your country options type
 };
 
-const ShippingFormFields = ({
+const ShippingFormFields: React.FC<ShippingFormFieldsProps> = ({
   control,
   acceptUpdates,
   setAcceptUpdates,
   errors,
   countryOptions,
-}: ShippingFormFieldsProps) => {
+}) => {
   
   const countryList = countryListModule.getData();
 
