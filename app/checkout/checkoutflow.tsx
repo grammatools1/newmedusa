@@ -61,26 +61,29 @@ const cartId = localStorage.getItem("cart_id");
     setStep(3);
   };
 
-  const handlePlaceOrder = () => {
+ const handlePlaceOrder = () => {
+  if (medusa && cartId) {
     const paymentData = {
       provider_id: selectedPaymentMethod,
       data: {
-        // Add any required payment data for the selected method
+        // Add any required payment data for the selected method (e.g., crypto wallet address)
       },
     };
 
-    medusa.carts.setPaymentSession(cartId, paymentData)
+    medusa.carts
+      .setPaymentSession(cartId, paymentData)
       .then(() => {
         return medusa.carts.complete(cartId);
       })
       .then(({ type, data }) => {
         console.log('Checkout Completed:', type, data);
-        // Display order confirmation or handle further actions
+        // Display order confirmation or handle any further actions
       })
       .catch((error) => {
         console.error('Error completing checkout:', error);
       });
-  };
+  }
+};
 
   const handleApplyCoupon = () => {
     medusa.carts.applyCoupon(cartId, couponCode)
