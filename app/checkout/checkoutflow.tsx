@@ -4,11 +4,22 @@ import React, { useState, useEffect } from 'react';
 import Medusa from "@medusajs/medusa-js";
 import ShippingForm from './ShippingAddressForm'; // Import the ShippingForm component
 
+interface CartItem {
+  id: string;
+  product: {
+    title: string;
+    // Other product properties
+  };
+  quantity: number;
+  total: number;
+  // Other cart item properties
+}
+
 const CheckoutFlow = () => {
 const [medusa, setMedusa] = useState<Medusa | null>(null);
 
 
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState<CartItem[]>([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
   const [couponCode, setCouponCode] = useState('');
   const [giftCardCode, setGiftCardCode] = useState('');
@@ -133,13 +144,14 @@ const cartId = localStorage.getItem("cart_id");
       {step === 1 && (
         <div>
           <h1>Step 1: Cart Review</h1>
-          {/* Display cart items */}
-          {cartItems.map((item) => (
-            <div key={item.id}>
-              <p>Product: {item.product.title}</p>
-              <p>Quantity: {item.quantity}</p>
-              <p>Total Price: ${item.total}</p>
-            </div>
+          <div>
+            {/* Display cart items */}
+            {cartItems.map((item) => (
+              <div key={item.id}>
+                <p>Product: {item.product.title}</p>
+                <p>Quantity: {item.quantity}</p>
+                <p>Total Price: ${item.total}</p>
+              </div>
           ))}
           <div>
             <label>Coupon Code:</label>
