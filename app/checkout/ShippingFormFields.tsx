@@ -1,7 +1,15 @@
 import React from 'react';
-import { Controller, Control } from 'react-hook-form';
+import { Controller, Control,FieldValues } from 'react-hook-form';
 import Autocomplete from 'react-autocomplete';
 const countryListModule = require('country-list');
+
+type ShippingFormFieldsProps = {
+  control: Control<FieldValues>;
+  acceptUpdates: boolean;
+  setAcceptUpdates: (value: boolean) => void;
+  errors: any;
+  countryOptions: any[];
+};
 
 const ShippingFormFields = ({
   control,
@@ -9,13 +17,7 @@ const ShippingFormFields = ({
   setAcceptUpdates,
   errors,
   countryOptions,
-}: {
-  control: Control;
-  acceptUpdates: boolean;
-  setAcceptUpdates: (value: boolean) => void;
-  errors: any; // Or you can specify the type of `errors` based on your error object type
-  countryOptions: any[]; // Or you can specify the type of `countryOptions` based on your country options array type
-}) => {
+}: ShippingFormFieldsProps) => {
   
   const countryList = countryListModule.getData();
 
