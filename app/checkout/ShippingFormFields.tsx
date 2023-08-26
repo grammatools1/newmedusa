@@ -3,13 +3,22 @@ import { Controller } from 'react-hook-form';
 import Autocomplete from 'react-autocomplete';
 import countryListModule from 'country-list';
 
+interface ShippingFormFieldsProps {
+  control: Control<FormData>;
+  acceptUpdates: boolean; // Add this line
+  setAcceptUpdates: React.Dispatch<React.SetStateAction<boolean>>; // Add this line
+  errors: DeepMap<FormData, FieldError>;
+  countryOptions: { value: string; label: string }[];
+}
+
 const ShippingFormFields = ({
   control,
-  acceptUpdates,
-  setAcceptUpdates,
+  acceptUpdates, // Add this line
+  setAcceptUpdates, // Add this line
   errors,
   countryOptions,
-}) => {
+}: ShippingFormFieldsProps) => {
+  
   const countryList = countryListModule.getData();
 
   return (
