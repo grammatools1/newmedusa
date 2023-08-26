@@ -1,7 +1,7 @@
 import React from 'react';
 import { Controller } from 'react-hook-form';
 import Autocomplete from 'react-autocomplete';
-import countryListModule from 'country-list';
+const countryListModule = require('country-list');
 
 interface ShippingFormFieldsProps {
   control: Control<FormData>;
