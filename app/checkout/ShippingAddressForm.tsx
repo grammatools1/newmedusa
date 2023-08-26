@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useEffect, useState } from 'react';
-import { useForm, Controller } from 'react-hook-form';
+import { useForm, Controller, SubmitHandler} from 'react-hook-form';
 import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -29,6 +29,8 @@ const validationSchema = yup.object().shape({
     .required('Phone is required'),
   company: yup.string().min(3, 'Company name must be at least 3 characters long')
 });
+
+type SubmitType = SubmitHandler<FormData & { acceptUpdates: boolean }>;
 
 interface FormData {
   firstName: string;
@@ -101,8 +103,8 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
 
     fetchShippingOptions();
   }, []);
-
-const handleFormSubmit = async (data: FormData) => {
+   
+  const handleFormSubmit: SubmitType = async (data) => {
     try {
       setIsLoading(true);
       setError('');
