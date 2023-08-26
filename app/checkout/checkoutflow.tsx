@@ -6,7 +6,7 @@ import ShippingForm from './ShippingAddressForm'; // Import the ShippingForm com
 
 const CheckoutFlow = () => {
 const [medusa, setMedusa] = useState<Medusa | null>(null);
-const cartId = localStorage.getItem("cart_id");
+
 
   const [cartItems, setCartItems] = useState([]);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
@@ -33,20 +33,21 @@ const cartId = localStorage.getItem("cart_id");
 
     initializeMedusa();
   }, []);
-
-  const fetchCartItems = () => {
-    if (medusa) {
-      medusa.carts
-        .retrieve(cartId) // Make sure cartId is defined
-        .then(({ cart }) => {
-          setCartItems(cart.items);
-          setOrderTotal(cart.total);
-        })
-        .catch((error) => {
-          console.error('Error fetching cart items:', error);
-        });
-    }
-  };
+  
+const cartId = localStorage.getItem("cart_id");
+ const fetchCartItems = () => {
+  if (medusa && cartId) {
+    medusa.carts
+      .retrieve(cartId)
+      .then(({ cart }) => {
+        setCartItems(cart.items);
+        setOrderTotal(cart.total);
+      })
+      .catch((error) => {
+        console.error('Error fetching cart items:', error);
+      });
+  }
+};
 
   useEffect(() => {
     fetchCartItems();
