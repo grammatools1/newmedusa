@@ -123,7 +123,7 @@ const handleFormSubmit = async (data: FormData) => {
             postal_code: data.postalCode,
             country_code: data.countryCode,
             phone: data.phone,
-            accept_updates: data.acceptUpdates,
+            acceptUpdates: data.acceptUpdates,
           },
           shipping_method: selectedShippingMethod,
         });
