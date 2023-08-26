@@ -10,7 +10,7 @@ import { ValidationError } from 'yup';
 const countryListModule = require('country-list');
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 });
+const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
 const validationSchema = yup.object().shape({
    firstName: yup.string().required('First Name is required'),
