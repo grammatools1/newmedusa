@@ -53,6 +53,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const { errors } = formState;
   const [cart, setCart] = useState<any>(null); // Replace 'any' with your actual cart type
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
+  const [shippingOptions, setShippingOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -85,7 +86,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     fetchCart();
   }, []);
 
-  useEffect(() => {
+   useEffect(() => {
     const fetchShippingOptions = async () => {
       try {
         if (medusa) {
@@ -94,7 +95,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
         }
       } catch (error) {
         console.error('Error retrieving shipping options', error);
-          setError('Error retrieving shipping options');
+        setError('Error retrieving shipping options');
       }
     };
 
