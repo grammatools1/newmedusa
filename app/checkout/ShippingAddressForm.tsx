@@ -35,16 +35,15 @@ interface FormData {
   lastName: string;
   email: string;
   address1: string;
+  address2: string; // Include address2
   city: string;
-  province?: string;
+  province: string;
   countryCode: string;
   postalCode: string;
   phone: string;
   company: string | undefined;
-  address2?: string;
-  acceptUpdates: boolean; // Include acceptUpdates in FormData
+  acceptUpdates: boolean; // Include acceptUpdates
 }
-
 const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const { control, handleSubmit, formState } = useForm({
     resolver: yupResolver(validationSchema),
@@ -151,12 +150,13 @@ const handleFormSubmit = async (data: FormData) => {
       <h2>Shipping Information</h2>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
          <ShippingFormFields
-           control={control}
-           acceptUpdates={acceptUpdates} // Pass 'acceptUpdates' state
-           setAcceptUpdates={setAcceptUpdates} // Pass 'setAcceptUpdates' function
-           errors={errors}
-           countryOptions={countryOptions}
-         />
+              control={control}
+              acceptUpdates={acceptUpdates}
+              setAcceptUpdates={setAcceptUpdates}
+              errors={errors}
+              countryOptions={countryOptions}
+            />
+
         <div>
           <label htmlFor="acceptUpdates">
             <input
