@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState, useEffect } from 'react';
 import Medusa from "@medusajs/medusa-js";
 import ShippingForm from './ShippingAddressForm'; // Import the ShippingForm component
