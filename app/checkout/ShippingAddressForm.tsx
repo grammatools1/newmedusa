@@ -150,13 +150,13 @@ const handleFormSubmit = async (data: FormData) => {
     <div>
       <h2>Shipping Information</h2>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
-        <ShippingFormFields
-          control={control}
-          acceptUpdates={acceptUpdates} // Pass 'acceptUpdates' state
-          setAcceptUpdates={setAcceptUpdates} // Pass 'setAcceptUpdates' function
-          errors={errors}
-          countryOptions={countryOptions}
-        />
+         <ShippingFormFields
+           control={control}
+           acceptUpdates={acceptUpdates} // Pass 'acceptUpdates' state
+           setAcceptUpdates={setAcceptUpdates} // Pass 'setAcceptUpdates' function
+           errors={errors}
+           countryOptions={countryOptions}
+         />
         <div>
           <label htmlFor="acceptUpdates">
             <input
