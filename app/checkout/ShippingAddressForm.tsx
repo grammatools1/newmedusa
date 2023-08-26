@@ -31,7 +31,7 @@ const validationSchema = yup.object().shape({
 });
 
 
-interface FormData {
+interface FormValues {
   firstName: string;
   lastName: string;
   email: string;
@@ -43,10 +43,6 @@ interface FormData {
   postalCode: string;
   phone: string;
   company?: string;
-  acceptUpdates: boolean;
-}
-
-interface FormValues extends FormData {
   acceptUpdates: boolean;
 }
 type SubmitType = SubmitHandler<FormValues>;
