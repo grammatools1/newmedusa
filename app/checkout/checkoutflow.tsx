@@ -6,8 +6,17 @@ import ShippingForm from './ShippingAddressForm'; // Import the ShippingForm com
 
 const CheckoutFlow = () => {
 const [medusa, setMedusa] = useState<Medusa | null>(null);
-  
-useEffect(() => {
+const cartId = localStorage.getItem("cart_id");
+
+  const [cartItems, setCartItems] = useState([]);
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
+  const [couponCode, setCouponCode] = useState('');
+  const [giftCardCode, setGiftCardCode] = useState('');
+  const [orderTotal, setOrderTotal] = useState(0);
+  const [step, setStep] = useState(1);
+  const MEDUSA_BACKEND_API = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;; 
+
+  useEffect(() => {
     const initializeMedusa = async () => {
       const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API; // Make sure this is properly defined
       if (!medusaBaseUrl) {
@@ -24,29 +33,25 @@ useEffect(() => {
 
     initializeMedusa();
   }, []);
-  const cartId = localStorage.getItem("cart_id");
 
-  const [cartItems, setCartItems] = useState([]);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
-  const [couponCode, setCouponCode] = useState('');
-  const [giftCardCode, setGiftCardCode] = useState('');
-  const [orderTotal, setOrderTotal] = useState(0);
-  const [step, setStep] = useState(1);
-
-  useEffect(() => {
-    // Fetch cart items
-    if (cartId) {
-      medusa.carts.retrieve(cartId)
+  const fetchCartItems = () => {
+    if (medusa) {
+      medusa.carts
+        .retrieve(cartId) // Make sure cartId is defined
         .then(({ cart }) => {
           setCartItems(cart.items);
           setOrderTotal(cart.total);
         })
         .catch((error) => {
-          console.error('Error fetching cart:', error);
+          console.error('Error fetching cart items:', error);
         });
     }
-  }, [cartId]);
+  };
 
+  useEffect(() => {
+    fetchCartItems();
+  }, [medusa]); // Refetch when medusa changes
+  
   const handleShippingComplete = () => {
     setStep(2);
   };
