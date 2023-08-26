@@ -86,30 +86,48 @@ const cartId = localStorage.getItem("cart_id");
 };
 
   const handleApplyCoupon = () => {
-  if (medusa && cartId) {
+  if (medusa && cartId && couponCode) {
+    // Apply the discount code to the cart
     medusa.carts
-      .applyCoupon(cartId, couponCode)
+      .update(cartId, {
+        discounts: [
+          {
+            code: couponCode,
+          },
+        ],
+      })
       .then(({ cart }) => {
+        console.log(cart.discounts);
         setOrderTotal(cart.total);
       })
       .catch((error) => {
-        console.error('Error applying coupon:', error);
+        console.error('Error applying discount code:', error);
+        // Display an error to the customer
+        alert('Discount is invalid');
       });
   }
 };
  const handleApplyGiftCard = () => {
-  if (medusa && cartId) {
+  if (medusa && cartId && giftCardCode) {
+    // Redeem the gift card and update the cart with the gift card
     medusa.carts
-      .applyGiftCard(cartId, giftCardCode)
+      .update(cartId, {
+        gift_cards: [
+          {
+            code: giftCardCode,
+          },
+        ],
+      })
       .then(({ cart }) => {
+        console.log(cart.gift_cards.length);
         setOrderTotal(cart.total);
       })
       .catch((error) => {
         console.error('Error applying gift card:', error);
+        // Handle the case where the gift card doesn't exist or is disabled
       });
   }
 };
-
   return (
     <div>
       {step === 1 && (
