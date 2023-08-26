@@ -6,7 +6,7 @@ import ShippingForm from './ShippingAddressForm'; // Import the ShippingForm com
 
 const CheckoutFlow = () => {
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
+const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }): null;
 
   const cartId = localStorage.getItem("cart_id");
 
