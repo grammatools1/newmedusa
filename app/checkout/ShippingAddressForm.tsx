@@ -55,6 +55,7 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const [shippingOptions, setShippingOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const [acceptUpdates, setAcceptUpdates] = useState(false);
 
 
    const countryOptions = React.useMemo(() => {
@@ -173,5 +174,6 @@ const handleFormSubmit = async (data: FormData) => {
     </div>
   );
 };
+
 
 export default ShippingForm;
