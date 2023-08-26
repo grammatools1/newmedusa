@@ -5,11 +5,11 @@ const countryListModule = require('country-list');
 
 const ShippingFormFields = ({
   control,
-  acceptUpdates, // Add this line
-  setAcceptUpdates, // Add this line
+  acceptUpdates,
+  setAcceptUpdates,
   errors,
   countryOptions,
-}: ShippingFormFieldsProps) => {
+}) => {
   
   const countryList = countryListModule.getData();
 
