@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Medusa from "@medusajs/medusa-js";
 import ShippingForm from './ShippingAddressForm'; // Import the ShippingForm component
-import { cookies } from 'next/headers';
+
 
 interface CartItem {
   id: string;
@@ -42,8 +42,6 @@ const CheckoutFlow = () => {
 
     initializeMedusa();
   }, []);
-  
-const cartId = cookies().get('cartId')?.value;
 
   const fetchCartItems = () => {
     if (medusa && cartId) {
