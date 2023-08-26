@@ -35,14 +35,14 @@ interface FormData {
   lastName: string;
   email: string;
   address1: string;
-  address2: string; // Include address2
+  address2?: string;
   city: string;
-  province: string;
+  province?: string;
   countryCode: string;
   postalCode: string;
   phone: string;
-  company: string | undefined;
-  acceptUpdates: boolean; // Include acceptUpdates
+  company?: string;
+  acceptUpdates: boolean;
 }
 const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const { control, handleSubmit, formState } = useForm({
