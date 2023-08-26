@@ -30,20 +30,6 @@ const validationSchema = yup.object().shape({
   company: yup.string().min(3, 'Company name must be at least 3 characters long')
 });
 
-const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
-  const { control, handleSubmit, formState } = useForm({
-    resolver: yupResolver(validationSchema),
-  });
-
-  const { errors } = formState;
- const [cart, setCart] = useState<any>(null);
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
-  const [shippingOptions, setShippingOptions] = useState([]);
-  const [subscribeNewsletter, setSubscribeNewsletter] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState('');
-   const [acceptUpdates, setAcceptUpdates] = useState(false);
-
 interface FormData {
   firstName: string;
   lastName: string;
@@ -59,6 +45,25 @@ interface FormData {
   acceptUpdates: boolean; // Include acceptUpdates in FormData
 }
 
+const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
+  const { control, handleSubmit, formState } = useForm({
+    resolver: yupResolver(validationSchema),
+  });
+
+  const { errors } = formState;
+  const [cart, setCart] = useState<any>(null); // Replace 'any' with your actual cart type
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState('');
+
+
+   const countryOptions = React.useMemo(() => {
+    const countries = countryListModule.getNameList();
+    return countries.map((countryCode) => ({
+      value: countryCode,
+      label: countryListModule.getName(countryCode),
+    }));
+  }, []);
 
   const cartId = '<cartId>'; // Replace with actual cart ID
 
@@ -140,21 +145,14 @@ const handleFormSubmit = async (data: FormData) => {
     return <div>Loading...</div>;
   }
 
-  const countryOptions = React.useMemo(() => {
-  const countries = countryListModule.getNameList();
-  return countries.map((countryCode: string) => ({
-    value: countryCode,
-    label: countryListModule.getName(countryCode),
-  }));
-}, []);
-
-
-   return (
+  return (
     <div>
       <h2>Shipping Information</h2>
       <form onSubmit={handleSubmit(handleFormSubmit)}>
         <ShippingFormFields
           control={control}
+          acceptUpdates={acceptUpdates} // Pass 'acceptUpdates' state
+          setAcceptUpdates={setAcceptUpdates} // Pass 'setAcceptUpdates' function
           errors={errors}
           countryOptions={countryOptions}
         />
