@@ -3,6 +3,20 @@ import { Controller, Control } from 'react-hook-form';
 import Autocomplete from 'react-autocomplete';
 const countryListModule = require('country-list');
 
+interface CombinedFormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  address1: string;
+  city: string;
+  province?: string;
+  countryCode: string;
+  postalCode: string;
+  phone: string;
+  company?: string;
+  acceptUpdates?: boolean;
+}
+
 type ShippingFormFieldsProps = {
   control: Control<CombinedFormData>;
   acceptUpdates: boolean;
