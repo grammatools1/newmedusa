@@ -42,7 +42,6 @@ const CheckoutFlow = () => {
     initializeMedusa();
   }, []);
   
-const cart = new Cart();
 const cartId = cart.id; 
 
   const fetchCartItems = () => {
