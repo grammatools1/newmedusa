@@ -30,7 +30,6 @@ const validationSchema = yup.object().shape({
   company: yup.string().min(3, 'Company name must be at least 3 characters long')
 });
 
-type SubmitType = SubmitHandler<FormData & { acceptUpdates: boolean }>;
 
 interface FormData {
   firstName: string;
@@ -46,6 +45,12 @@ interface FormData {
   company?: string;
   acceptUpdates: boolean;
 }
+
+interface FormValues extends FormData {
+  acceptUpdates: boolean;
+}
+type SubmitType = SubmitHandler<FormValues>;
+
 const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const { control, handleSubmit, formState } = useForm({
     resolver: yupResolver(validationSchema),
@@ -105,6 +110,20 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   }, []);
    
   const handleFormSubmit: SubmitType = async (data) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    address1,
+    address2,
+    city,
+    province,
+    countryCode,
+    postalCode,
+    phone,
+    company,
+    acceptUpdates,
+  } = data;
     try {
       setIsLoading(true);
       setError('');
