@@ -41,7 +41,7 @@ const ShippingFormFields: React.FC<ShippingFormFieldsProps> = ({
       <div>
         <label htmlFor="firstName">First Name:</label>
         <Controller
-          as={<input />}
+          as={<input type="text"/>}
           name="firstName"
           control={control}
           defaultValue=""
@@ -55,7 +55,7 @@ const ShippingFormFields: React.FC<ShippingFormFieldsProps> = ({
       <div>
         <label htmlFor="lastName">Last Name:</label>
         <Controller
-          as={<input />}
+          as={<input type="text"/>}
           name="lastName"
           control={control}
           defaultValue=""
@@ -101,7 +101,7 @@ const ShippingFormFields: React.FC<ShippingFormFieldsProps> = ({
       <div>
         <label htmlFor="address1">Address:</label>
         <Controller
-          as={<input />}
+        as={<input type="text"/>}
           name="address1"
           control={control}
           defaultValue=""
@@ -114,7 +114,7 @@ const ShippingFormFields: React.FC<ShippingFormFieldsProps> = ({
       <div>
         <label htmlFor="city">City:</label>
         <Controller
-          as={<input />}
+          as={<input type="text"/>}
           name="city"
           control={control}
           defaultValue=""
@@ -133,7 +133,7 @@ const ShippingFormFields: React.FC<ShippingFormFieldsProps> = ({
       <div>
         <label htmlFor="postalCode">Postal Code:</label>
         <Controller
-          as={<input />}
+        as={<input type="text"/>}
           name="postalCode"
           control={control}
           defaultValue=""
@@ -193,7 +193,7 @@ const ShippingFormFields: React.FC<ShippingFormFieldsProps> = ({
       <div>
         <label htmlFor="phone">Phone:</label>
         <Controller
-          as={<input />}
+         as={<input type="text"/>}
           name="phone"
           control={control}
           defaultValue=""
@@ -213,7 +213,7 @@ const ShippingFormFields: React.FC<ShippingFormFieldsProps> = ({
       <div>
         <label htmlFor="company">Company:</label>
         <Controller
-          as={<input />}
+        as={<input type="text"/>}
           name="company"
           control={control}
           defaultValue=""
