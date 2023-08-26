@@ -37,7 +37,7 @@ interface CombinedFormData {
   email: string;
   address1: string;
   city: string;
-  province: string;
+  province?: string;
   countryCode: string;
   postalCode: string;
   phone: string;
