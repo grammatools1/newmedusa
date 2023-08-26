@@ -86,24 +86,29 @@ const cartId = localStorage.getItem("cart_id");
 };
 
   const handleApplyCoupon = () => {
-    medusa.carts.applyCoupon(cartId, couponCode)
+  if (medusa && cartId) {
+    medusa.carts
+      .applyCoupon(cartId, couponCode)
       .then(({ cart }) => {
         setOrderTotal(cart.total);
       })
       .catch((error) => {
         console.error('Error applying coupon:', error);
       });
-  };
-
-  const handleApplyGiftCard = () => {
-    medusa.carts.applyGiftCard(cartId, giftCardCode)
+  }
+};
+ const handleApplyGiftCard = () => {
+  if (medusa && cartId) {
+    medusa.carts
+      .applyGiftCard(cartId, giftCardCode)
       .then(({ cart }) => {
         setOrderTotal(cart.total);
       })
       .catch((error) => {
         console.error('Error applying gift card:', error);
       });
-  };
+  }
+};
 
   return (
     <div>
