@@ -31,21 +31,21 @@ const validationSchema = yup.object().shape({
 });
 
 
-interface FormValues {
+interface CombinedFormData {
   firstName: string;
   lastName: string;
   email: string;
   address1: string;
-  address2?: string;
   city: string;
-  province?: string;
+  province: string;
   countryCode: string;
   postalCode: string;
   phone: string;
   company?: string;
-  acceptUpdates: boolean;
+  acceptUpdates?: boolean;
 }
-type SubmitType = SubmitHandler<FormValues>;
+
+type SubmitType = SubmitHandler<CombinedFormData>;
 
 const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
   const { control, handleSubmit, formState } = useForm({
@@ -111,7 +111,6 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     lastName,
     email,
     address1,
-    address2,
     city,
     province,
     countryCode,
@@ -133,8 +132,8 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
             company: data.company,
             first_name: data.firstName,
             last_name: data.lastName,
+            email: data.email,
             address_1: data.address1,
-            address_2: data.address2 || undefined,
             city: data.city,
             province: data.province,
             postal_code: data.postalCode,
