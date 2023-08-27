@@ -23,7 +23,7 @@ export interface CombinedFormData {
   countryCode: string;
   postalCode: string;
   phone: string;
-  company?: string;
+  company: string;
 }
 
 const validationSchema = yup.object().shape({
