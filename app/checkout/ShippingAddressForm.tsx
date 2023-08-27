@@ -5,7 +5,7 @@ import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { ValidationError } from 'yup';
+import { ValidationError as YupValidationError } from 'yup';
 import ShippingFormFields from './ShippingFormFields';
 
 interface Props {
@@ -187,7 +187,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         onComplete();
       }
     } catch (error) {
-      if (error instanceof ValidationError) {
+      if (error instanceof YupValidationError)) {
         setError(new Error('Validation error: ' + error.message) as FormErrors);
       } else {
         setError(new Error('An error occurred while updating shipping information.') as FormErrors);
