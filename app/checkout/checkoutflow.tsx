@@ -7,23 +7,20 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cart from 'components/cart';
 
-interface PaymentMethod {
+const PaymentMethod = {
   credit_card: {
-    card_number: string;
-    exp_month: string;
-    exp_year: string;
-    cvv: string;
-  };
+    card_number: '',
+    exp_month: '',
+    exp_year: '',
+    cvv: '',
+  },
   paypal: {
-    email: string;
-  };
+    email: '',
+  },
   crypto: {
-    wallet_address: string;
-  };
-  [key: string]: {
-    [key: string]: string;
-  };
-}
+    wallet_address: '',
+  },
+};
 
 interface Props {
   cart: any;
@@ -90,32 +87,30 @@ interface Props {
     setStep(3);
   };
 
-  const handlePlaceOrder = useCallback(async () => {
-    if (!medusa) return;
+ const handlePlaceOrder = async () => {
+  if (!medusa) return;
 
-    try {
-      setLoading(true);
-      const paymentData = {
-        provider_id: selectedPaymentMethod,
-        data: {
-          ...PaymentMethod[selectedPaymentMethod],
-        },
-      };
-
-      await medusa.carts.setPaymentSession(cart.id, paymentData);
-      const { type, data } = await medusa.carts.complete(cart.id);
-      console.log('Checkout Completed:', type, data);
-      toast.success('Your order has been successfully placed!', { autoClose: 3000 });
-      setConfirmOrder(false);
-      // TODO: Display order confirmation or handle any further actions
-    } catch (error) {
-      console.error('Error completing checkout:', error);
-      toast.error('Failed to place order. Please try again or contact support.', { autoClose: 3000 });
-    } finally {
-      setLoading(false);
-    }
-  }, [cart, medusa, selectedPaymentMethod]);
-
+  try {
+    setLoading(true);
+    const paymentData = {
+      provider_id: selectedPaymentMethod,
+      data: {
+        ...PaymentMethod[selectedPaymentMethod],
+      },
+    };
+    await medusa.carts.setPaymentSession(cart.id, paymentData);
+    const { type, data } = await medusa.carts.complete(cart.id);
+    console.log('Checkout Completed:', type, data);
+    toast.success('Your order has been successfully placed!', { autoClose: 3000 });
+    setConfirmOrder(false);
+    // TODO: Display order confirmation or handle any further actions
+  } catch (error) {
+    console.error('Error completing checkout:', error);
+    toast.error('Failed to place order. Please try again or contact support.', { autoClose: 3000 });
+  } finally {
+    setLoading(false);
+  }
+};
   const handleApplyCoupon = useCallback(async () => {
     if (!medusa || !couponCode) {
       return;
