@@ -47,7 +47,11 @@ interface CombinedFormData {
 
 type SubmitType = SubmitHandler<CombinedFormData>;
 
-const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
+function CheckoutFlow {
+  
+
+funtion ShippingForm(props: Props) = ({ onComplete }: { onComplete: () => void }) => {
+  const { cart } = props;
   const { control, handleSubmit, formState } = useForm({
     resolver: yupResolver(validationSchema),
   });
@@ -69,25 +73,29 @@ const ShippingForm = ({ onComplete }: { onComplete: () => void }) => {
     }));
   }, []);
 
-  const cartId = '<cartId>'; // Replace with actual cart ID
 
-  useEffect(() => {
-    const fetchCart = async () => {
-      try {
-        if (medusa) {
-          const cartData = await medusa.carts.retrieve(cartId);
-          setCart(cartData.cart);
-        }
-      } catch (error) {
-        console.error('Error retrieving cart', error);
-          setError('Error retrieving cart');
-      } finally {
-        setIsLoading(false);
-      }
-    };
+    useEffect(() => {
+    fetchCartItems(cart);
+  }, [cart]);
 
-    fetchCart();
-  }, []);
+  const fetchCartItems = async (cart: { id: string }) => {
+  if (!medusa) {
+    console.error('Medusa not initialized');
+    return;
+  }
+
+  try {
+    setLoading(true);
+    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+    setOrderTotal(updatedCart.total);
+    setCartItems(updatedCart.items);
+  } catch (error) {
+    console.error('Error fetching cart items:', error);
+    toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
+  } finally {
+    setLoading(false);
+  }
+  };
 
    useEffect(() => {
     const fetchShippingOptions = async () => {
