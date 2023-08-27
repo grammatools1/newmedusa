@@ -115,12 +115,12 @@ interface Props {
   }
 };
    
-  const handleApplyCoupon = async () => {
+ const handleApplyCoupon = async () => {
     if (!medusa || !cart || !couponCode) return;
 
     try {
-      // move cart declaration to outer scope
-      let cartData = cart
+      // rename cart to cartData
+      let cartData = cart;
       const { cart } = await medusa.carts.update(cartData.id, {
         discounts: [{ code: couponCode }],
       });
@@ -133,6 +133,7 @@ interface Props {
       toast.error("Failed to apply coupon. Please try again or contact support.", { autoClose: 3000 });
     }
   };
+
    
   const handleApplyGiftCard = useCallback(async () => {
     if (!medusa || !giftCardCode) {
