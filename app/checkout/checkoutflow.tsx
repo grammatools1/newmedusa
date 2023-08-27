@@ -5,6 +5,7 @@ import Medusa from '@medusajs/medusa-js';
 import ShippingForm from './ShippingAddressForm';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Cart from 'components/cart';
 
 interface PaymentMethod {
   credit_card: {
