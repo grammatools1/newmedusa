@@ -59,11 +59,12 @@ interface Props {
     initializeMedusa();
   }, []);
 
+ 
   useEffect(() => {
-    fetchCartItems();
+    fetchCartItems(cart);
   }, [cart]);
 
-  const fetchCartItems = async () => {
+  const fetchCartItems = async (cart: any) => {
     if (!medusa) return;
 
     try {
@@ -78,7 +79,6 @@ interface Props {
       setLoading(false);
     }
   };
-
   const handleShippingComplete = () => {
     setStep(2);
   };
