@@ -26,6 +26,17 @@ export interface CombinedFormData {
   company: string;
 }
 
+interface ValidationError {
+  path: string;
+  message: string;
+}
+
+interface CustomError {
+  [key: string]: string;
+}
+
+type FormErrors = CustomError | ValidationError[];
+
 const validationSchema = yup.object().shape({
   firstName: yup.string().required(),
   lastName: yup.string().required(),
@@ -46,39 +57,34 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<Error>();
+  const [error, setError] = useState<FormErrors>();
   const [acceptUpdates, setAcceptUpdates] = useState(false);
 
   const { control, handleSubmit, formState } = useForm<CombinedFormData>({
-  resolver: async (data: CombinedFormData, context: any, options: any) => {
-    try {
-      // Cast the data object to the expected type - this will throw 
-      // an error if any required fields are missing
-      const values = await validationSchema.validate(data, {
-        abortEarly: false,
-        stripUnknown: true,
-      }) as CombinedFormData;
-      
-      // If validation succeeds, we can return the validated data object
-      return {
-        values,
-        errors: {},
-      };
-    
-    } catch (errors) {
-      // If there are any validation errors, return them
-      return {
-        values: {},
-        errors: errors.inner.reduce((allErrors, currentError) => {
-          return {
-            ...allErrors,
-            [currentError.path as string]: currentError.message,
-          };
-        }, {}),
-      };
-    }
-  },
-});
+    resolver: async (data: CombinedFormData, context: any, options: any) => {
+      try {
+        // Cast the data object to the expected type - this will throw 
+        // an error if any required fields are missing
+        const values = await validationSchema.validate(data, {
+          abortEarly: false,
+          stripUnknown: true,
+        }) as CombinedFormData;
+
+        // If validation succeeds, we can return the validated data object
+        return {
+          values,
+          errors: {},
+        };
+
+      } catch (errors) {
+        // If there are any validation errors, return them
+        return {
+          values: {},
+          errors: errors.errors || {}, // Use `errors.errors` if it exists, otherwise an empty object
+        };
+      }
+    },
+  });
 
   const { errors } = formState;
 
@@ -131,7 +137,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         setShippingOptions(shipping_options);
       } catch (error) {
         console.error('Error retrieving shipping options', error);
-        setError(error);
+        setError(error as FormErrors);
       }
     };
 
@@ -182,9 +188,9 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
       }
     } catch (error) {
       if (error instanceof ValidationError) {
-        setError(new Error('Validation error: ' + error.message));
+        setError(new Error('Validation error: ' + error.message) as FormErrors);
       } else {
-        setError(new Error('An error occurred while updating shipping information.'));
+        setError(new Error('An error occurred while updating shipping information.') as FormErrors);
       }
     } finally {
       setIsLoading(false);
