@@ -116,23 +116,24 @@ interface Props {
 };
    
  const handleApplyCoupon = async () => {
-  if (medusa && cartId && couponCode) {
+    if (!medusa || !cart || !couponCode) return;
+
     try {
-      // Declare cart variable before using it
-      const cartData = await medusa.carts.update(cartId, {
+      // rename cart to cartData
+      let cartData = cart;
+      const { cart } = await medusa.carts.update(cartData.id, {
         discounts: [{ code: couponCode }],
       });
+      setOrderTotal(cart.total);
+      setCouponCode("");
 
-      // Update the cart state and order total
-      setCart(cartData);
-      setOrderTotal(cartData.total);
+      toast.success("Coupon applied!", { autoClose: 3000 });
     } catch (error) {
-      console.error('Error applying discount code:', error);
-      // Display an error to the customer
-      alert('Discount is invalid');
+      console.error("Error applying coupon:", error);
+      toast.error("Failed to apply coupon. Please try again or contact support.", { autoClose: 3000 });
     }
-  }
-};
+  };
+
 
 
    
