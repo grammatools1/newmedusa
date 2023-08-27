@@ -64,21 +64,19 @@ interface Props {
     fetchCartItems(cart);
   }, [cart]);
 
-  const fetchCartItems = async (cart: any) => {
-    if (!medusa) return;
-
-    try {
-      setLoading(true);
-      const { cart } = await medusa.carts.retrieve(cart.id);
-      setOrderTotal(cart.total);
-      setCartItems(cart.items);
-    } catch (error) {
-      console.error('Error fetching cart items:', error);
-      toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
-    } finally {
-      setLoading(false);
-    }
-  };
+  const fetchCartItems = async (cart) => {
+  try {
+    setLoading(true);
+    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+    setOrderTotal(updatedCart.total);
+    setCartItems(updatedCart.items);
+  } catch (error) {
+    console.error('Error fetching cart items:', error);
+    toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
+  } finally {
+    setLoading(false);
+  }
+};
   const handleShippingComplete = () => {
     setStep(2);
   };
