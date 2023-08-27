@@ -187,12 +187,12 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         onComplete();
       }
     } catch (error) {
-      if (error instanceof YupValidationError)) {
-        setError(new Error('Validation error: ' + error.message) as FormErrors);
-      } else {
-        setError(new Error('An error occurred while updating shipping information.') as FormErrors);
-      }
-    } finally {
+    if (error instanceof YupValidationError) {
+      setError(new Error('Validation error: ' + error.message) as FormErrors);
+    } else {
+      setError(new Error('An error occurred while updating shipping information.') as FormErrors);
+    }
+  } finally {
       setIsLoading(false);
     }
   };
