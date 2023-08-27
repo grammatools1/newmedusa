@@ -7,20 +7,28 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cart from 'components/cart';
 
-const PaymentMethod = {
-  credit_card: {
-    card_number: '',
-    exp_month: '',
-    exp_year: '',
-    cvv: '',
-  },
-  paypal: {
-    email: '',
-  },
-  crypto: {
-    wallet_address: '',
-  },
+type CreditCardData = {
+  card_number: string;
+  exp_month: string;
+  exp_year: string;
+  cvv: string;
 };
+
+type PaypalData = {
+  email: string;
+};
+
+type CryptoData = {
+  wallet_address: string;
+};
+
+type PaymentMethod = {
+  credit_card: CreditCardData;
+  paypal: PaypalData;
+  crypto: CryptoData;
+};
+
+
 
 interface Props {
   cart: any;
