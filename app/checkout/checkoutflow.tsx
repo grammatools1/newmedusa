@@ -42,7 +42,9 @@ const CheckoutFlow = () => {
 
     initializeMedusa();
   }, []);
-
+  
+ const cartId = localStorage.getItem("cart_id");
+  
   const fetchCartItems = () => {
     if (medusa && cartId) {
       medusa.carts
