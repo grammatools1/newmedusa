@@ -80,10 +80,14 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         // If there are any validation errors, return them
         return {
           values: {},
-          errors: errors.errors || {}, // Use `errors.errors` if it exists, otherwise an empty object
+          errors: (errors as ValidationError)?.errors || {},  // Use `(errors as ValidationError)?.errors || {}` to access the `errors` property if it exists, otherwise an empty object
         };
       }
     },
+    defaultValues: { ... },
+    mode: 'onChange',
+    shouldUnregister: true,
+    errors: {} as FormErrors,  // Type the 'errors' property as 'FormErrors'
   });
 
   const { errors } = formState;
@@ -187,12 +191,12 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         onComplete();
       }
     } catch (error) {
-    if (error instanceof YupValidationError) {
-      setError(new Error('Validation error: ' + error.message) as FormErrors);
-    } else {
-      setError(new Error('An error occurred while updating shipping information.') as FormErrors);
-    }
-  } finally {
+      if (error instanceof YupValidationError) {
+        setError(new Error('Validation error: ' + error.message) as FormErrors);
+      } else {
+        setError(new Error('An error occurred while updating shipping information.') as FormErrors);
+      }
+    } finally {
       setIsLoading(false);
     }
   };
