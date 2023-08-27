@@ -119,11 +119,11 @@ interface Props {
   if (!medusa || !cart || !couponCode) return;
 
   try {
-    let cartData = cart; // declare cartData first
-    const { cart } = await medusa.carts.update(cartData.id, {
+    let cartData = cart;
+    const { cart: updatedCartData } = await medusa.carts.update(cartData.id, {
       discounts: [{ code: couponCode }],
     });
-    setOrderTotal(cart.total);
+    setOrderTotal(updatedCartData.total);
     setCouponCode("");
 
     toast.success("Coupon applied!", { autoClose: 3000 });
