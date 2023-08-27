@@ -64,7 +64,7 @@ interface Props {
     fetchCartItems(cart);
   }, [cart]);
 
-  const fetchCartItems = async (cart) => {
+  const fetchCartItems = async (cart: { id: string }) => {
   try {
     setLoading(true);
     const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
