@@ -1,7 +1,7 @@
 import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CartModal from './modal';
-import CheckoutFlow from './CheckoutFlow';
+import CheckoutFlow from './checkoutflow';
 
 export default function Cart() {
   const cartId = cookies().get('cartId')?.value;
