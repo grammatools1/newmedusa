@@ -73,7 +73,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         // If validation succeeds, we can return the validated data object
         return {
           values,
-          errors: undefined,
+          errors: {},
         };
 
       } catch (errors) {
