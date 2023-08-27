@@ -13,17 +13,18 @@ interface Props {
   onComplete: () => void;
 }
 
-export interface CombinedFormData {
+interface CombinedFormData {
   firstName: string;
   lastName: string;
   email: string;
   address1: string;
   city: string;
-  province: string | undefined;
+  province?: string;
   countryCode: string;
   postalCode: string;
   phone: string;
-  company: string;
+  company?: string;
+  acceptUpdates?: boolean;
 }
 
 interface ValidationError {
