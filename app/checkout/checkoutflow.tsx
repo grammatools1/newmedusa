@@ -65,6 +65,11 @@ interface Props {
   }, [cart]);
 
   const fetchCartItems = async (cart: { id: string }) => {
+  if (!medusa) {
+    console.error('Medusa not initialized');
+    return;
+  }
+
   try {
     setLoading(true);
     const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
