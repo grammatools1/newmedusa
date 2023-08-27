@@ -178,10 +178,12 @@ const CheckoutFlow = () => {
               <button onClick={handleApplyGiftCard}>Apply Gift Card</button>
             </div>
             <p>Order Total: ${orderTotal}</p>
-          </div>
-           <ShippingForm onComplete={handleShippingComplete} />
+            </div>
         </div>
-      {step === 2 && (
+      )}
+      {step === 2 && (<ShippingForm  onComplete={handleShippingComplete} />
+      )}
+      {step === 3 && (
         <div>
           {/* Step 3: Payment Method Selection */}
           <h1>Step 3: Payment Method Selection</h1>
