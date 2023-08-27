@@ -39,25 +39,6 @@ const validationSchema = Yup.object().shape({
   company: Yup.string().notRequired(),
 });
 
-const validationSchema = yup.object().shape({
-  firstName: yup.string().required('First Name is required'),
-  lastName: yup.string().required('Last Name is required'),
-  email: yup.string().email('Invalid email address').required('Email is required'),
-  address1: yup.string().required('Address is required'),
-  city: yup.string().required('City is required'),
-  province: yup.string().notRequired(),
-  countryCode: yup.string().required('Country is required'),
-  postalCode: yup
-    .string()
-    .matches(/^\d{5}(-\d{4})?$/, 'Invalid postal code')
-    .required('Postal code is required'),
-  phone: yup
-    .string()
-    .matches(/^\+(?:[0-9] ?){6,14}[0-9]$/, 'Invalid phone number')
-    .required('Phone is required'),
-  company: yup.string().min(3, 'Company name must be at least 3 characters long'),
-});
-
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
