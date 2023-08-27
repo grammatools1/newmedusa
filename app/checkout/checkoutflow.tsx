@@ -29,7 +29,8 @@ interface Props {
   cart: any;
 }
 
-function CheckoutFlow({ cart }: Props) {
+ function CheckoutFlow(props: Props) {
+  const { cart } = props;
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof PaymentMethod>('credit_card');
