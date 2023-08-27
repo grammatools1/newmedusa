@@ -115,24 +115,25 @@ interface Props {
   }
 };
    
-  const handleApplyCoupon = useCallback(async () => {
-    if (!medusa || !couponCode) {
-      return;
-    }
+  const handleApplyCoupon = async () => {
+    if (!medusa || !cart || !couponCode) return;
 
     try {
-      const { cart } = await medusa.carts.update(cart.id, {
+      // move cart declaration to outer scope
+      let cartData = cart
+      const { cart } = await medusa.carts.update(cartData.id, {
         discounts: [{ code: couponCode }],
       });
       setOrderTotal(cart.total);
-      setCouponCode('');
-      toast.info('Coupon applied successfully!', { autoClose: 3000 });
-    } catch (error) {
-      console.error('Error applying discount code:', error);
-      toast.error('Failed to apply coupon code. Please try again or contact support.', { autoClose: 3000 });
-    }
-  }, [cart, couponCode, medusa]);
+      setCouponCode("");
 
+      toast.success("Coupon applied!", { autoClose: 3000 });
+    } catch (error) {
+      console.error("Error applying coupon:", error);
+      toast.error("Failed to apply coupon. Please try again or contact support.", { autoClose: 3000 });
+    }
+  };
+   
   const handleApplyGiftCard = useCallback(async () => {
     if (!medusa || !giftCardCode) {
       return;
