@@ -43,7 +43,7 @@ const CheckoutFlow = () => {
     initializeMedusa();
   }, []);
   
- const cartId = "cart_01H88SMQFPQCRY7TVFW56GJVDB";
+ const cartId = '${cart_01H88SMQFPQCRY7TVFW56GJVDB}';
   
   const fetchCartItems = () => {
     if (medusa && cartId) {
@@ -179,6 +179,7 @@ const CheckoutFlow = () => {
             </div>
             <p>Order Total: ${orderTotal}</p>
           </div>
+           <ShippingForm onComplete={handleShippingComplete} />
           <button onClick={handleShippingComplete}>Proceed to Shipping</button>
         </div>
       )}
