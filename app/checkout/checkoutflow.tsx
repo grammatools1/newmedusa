@@ -116,23 +116,22 @@ interface Props {
 };
    
  const handleApplyCoupon = async () => {
-    if (!medusa || !cart || !couponCode) return;
-         let cartData = cart;
-    try {
-      // rename cart to cartData
-      let cartData = cart;
-      const { cart } = await medusa.carts.update(cartData.id, {
-        discounts: [{ code: couponCode }],
-      });
-      setOrderTotal(cart.total);
-      setCouponCode("");
+  if (!medusa || !cart || !couponCode) return;
 
-      toast.success("Coupon applied!", { autoClose: 3000 });
-    } catch (error) {
-      console.error("Error applying coupon:", error);
-      toast.error("Failed to apply coupon. Please try again or contact support.", { autoClose: 3000 });
-    }
-  };
+  try {
+    let cartData = cart; // declare cartData first
+    const { cart } = await medusa.carts.update(cartData.id, {
+      discounts: [{ code: couponCode }],
+    });
+    setOrderTotal(cart.total);
+    setCouponCode("");
+
+    toast.success("Coupon applied!", { autoClose: 3000 });
+  } catch (error) {
+    console.error("Error applying coupon:", error);
+    toast.error("Failed to apply coupon. Please try again or contact support.", { autoClose: 3000 });
+  }
+};
 
 
 
