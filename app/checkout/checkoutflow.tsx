@@ -181,10 +181,7 @@ const CheckoutFlow = () => {
           </div>
            <ShippingForm onComplete={handleShippingComplete} />
         </div>
-      )}
-      {step === 2 && (<ShippingForm  onComplete={handleShippingComplete} />
-      )}
-      {step === 3 && (
+      {step === 2 && (
         <div>
           {/* Step 3: Payment Method Selection */}
           <h1>Step 3: Payment Method Selection</h1>
