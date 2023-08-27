@@ -184,18 +184,18 @@ interface Props {
     setConfirmOrder(false);
   };
 
-  const handleCreditCardChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setSelectedPaymentMethod('credit_card');
-  }, []);
+  const handleCreditCardChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+  const { name, value } = e.currentTarget;
+  setSelectedPaymentMethod('credit_card');
+}, []);
 
-  const handlePaypalChange = useCallback((e) => {
-    const { name, value } = e.target;
+  const handlePaypalChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+    const { name, value } = e.currentTarget;
     setSelectedPaymentMethod('paypal');
   }, []);
 
-  const handleCryptoChange = useCallback((e) => {
-    const { name, value } = e.target;
+  const handleCryptoChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
+    const { name, value } = e.currentTarget;
     setSelectedPaymentMethod('crypto');
   }, []);
 
