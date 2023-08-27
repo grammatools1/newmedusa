@@ -47,10 +47,7 @@ interface CombinedFormData {
 
 type SubmitType = SubmitHandler<CombinedFormData>;
 
-function CheckoutFlow {
-  
-
-funtion ShippingForm(props: Props) = ({ onComplete }: { onComplete: () => void }) => {
+function ShippingForm(props: Props) = ({ onComplete }: { onComplete: () => void }) => {
   const { cart } = props;
   const { control, handleSubmit, formState } = useForm({
     resolver: yupResolver(validationSchema),
