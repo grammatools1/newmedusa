@@ -73,7 +73,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         // If validation succeeds, we can return the validated data object
         return {
           values,
-          errors: {},
+          errors: undefined,
         };
 
       } catch (errors) {
@@ -84,18 +84,17 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         };
       }
     },
-    defaultValues: {            
-      firstName: "",
-      lastName: "",
-      email: "",
-      address1: "",
-      city: "",
-      province: "",
-      countryCode: "",
-      postalCode: "",
-      phone: "",
-      company: "",
-      errors: {} as FormErrors, // Add an empty object for the 'errors' field
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      address1: '',
+      city: '',
+      province: '',
+      countryCode: '',
+      postalCode: '',
+      phone: '',
+      company: '',
     },
     mode: 'onChange',
     shouldUnregister: true,
