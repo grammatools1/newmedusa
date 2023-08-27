@@ -22,7 +22,12 @@ type ShippingFormFieldsProps = {
   acceptUpdates: boolean;
   setAcceptUpdates: (value: boolean) => void;
   errors: any; // Replace with your error type
-  countryOptions: any[]; // Replace with your country options type
+  countryOptions: CountryOption[]; // Replace with your country options type
+};
+
+type CountryOption = {
+  value: string;
+  label: string;
 };
 
 const ShippingFormFields = ({
@@ -32,8 +37,8 @@ const ShippingFormFields = ({
   errors,
   countryOptions,
 }: ShippingFormFieldsProps) => {
-  
-  const countryList = countryListModule.getData();
+  const countryList = countryListModule.default();
+  const selectedCountryCode = control.watch('countryCode');
 
   return (
     <>
@@ -53,7 +58,7 @@ const ShippingFormFields = ({
           </div>
         )}
       />
-      
+
       {/* Last Name */}
       <Controller
         name="lastName"
@@ -90,178 +95,162 @@ const ShippingFormFields = ({
               <span style={{ color: 'red' }}>{errors.email.message}</span>
             )}
           </div>
+        )}
+      />
+      <div>
+        <input
+          type="checkbox"
+          checked={acceptUpdates}
+          onChange={() => setAcceptUpdates(!acceptUpdates)}
+        />
+        <label htmlFor="acceptUpdates">
+          Receive product updates and newsletters
+        </label>
+      </div>
+
+      <div>
+        <label htmlFor="address1">Address:</label>
+        <Controller
+          name="address1"
+          control={control}
+          defaultValue=""
+          render={({ field }) => <input type="text" {...field} />}
+          rules={{ required: 'Address is required' }}
+        />
+        {errors.address1 && (
+          <span style={{ color: 'red' }}>{errors.address1.message}</span>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="city">City:</label>
+        <Controller
+          name="city"
+          control={control}
+          defaultValue=""
+          render={({ field }) => <input type="text" {...field} />}
+          rules={{ required: 'City is required' }}
+        />
+        {errors.city && (
+          <span style={{ color: 'red' }}>{errors.city.message}</span>
+        )}
+      </div>
+
+      {selectedCountryCode === 'US' && (
+        <div>
+          <label htmlFor="province">State:</label>
+          <Controller
+            name="province"
+            control={control}
+            defaultValue=""
+            render={({ field }) => <input type="text" {...field} />}
+          />
+        </div>
+      )}
+
+      <div>
+        <label htmlFor="postalCode">Postal Code:</label>
+        <Controller
+          name="postalCode"
+          control={control}
+          defaultValue=""
+          render={({ field }) => <input type="text" {...field} />}
+          rules={{
+            pattern: {
+              value: /^\d{5}(-\d{4})?$/,
+              message: 'Invalid postal code',
+            },
+            required: 'Postal code is required',
+          }}
+        />
+        {errors.postalCode && (
+          <span style={{ color: 'red' }}>{errors.postalCode.message}</span>
+        )}
+      </div>
+
+      <div>
+        <label htmlFor="countryCode">Country:</label>
+        <Controller
+          name="countryCode"
+          control={control}
+          defaultValue=""
+          rules={{ required: 'Country is required' }}
+          render={({ field }) => (
+            <Autocomplete
+              getItemValue={(option) => option.label}
+              items={countryOptions}
+              renderItem={(option, isHighlighted) => (
+                <div
+                  key={option.value}
+                  style={{
+                    background: isHighlighted ? 'lightgray' : 'white',
+                    cursor: 'pointer',
+                    padding: '0.5rem',
+                  }}
+                >
+                  {option.label}
+                </div>
+              )}
+              renderInput={(props) => (
+                <input
+                  {...props}
+                  type="text"
+                  placeholder="Country"
+                  autoComplete="off"
+                />
+              )}
+              value={
+                field.value &&
+                countryOptions.find((option) => option.value === field.value)?.label
+                  ? field.value
+                  : ''
+              }
+              onChange={(event) => field.onChange(event.target.value)}
+              onSelect={(value) => field.onChange(value)}
+            />
           )}
-          />
-    <div>
-  <label htmlFor="acceptUpdates">
-    <input
-      type="checkbox"
-      id="acceptUpdates"
-      checked={acceptUpdates}
-      onChange={() => setAcceptUpdates(!acceptUpdates)}
-    />
-    Accept Product Updates and Newsletters
-  </label>
-</div>
-
-<div>
-  <label htmlFor="address1">Address:</label>
-  <Controller
-    name="address1"
-    control={control}
-    defaultValue=""
-    render={({ field }) => (
-      <input
-        type="text"
-        {...field}
-      />
-    )}
-    rules={{ required: 'Address is required' }}
-  />
-  {errors.address1 && (
-    <span style={{ color: 'red' }}>{errors.address1.message}</span>
-  )}
-</div>
-
-<div>
-  <label htmlFor="city">City:</label>
-  <Controller
-    name="city"
-    control={control}
-    defaultValue=""
-    render={({ field }) => (
-      <input
-        type="text"
-        {...field}
-      />
-    )}
-    rules={{ required: 'City is required' }}
-  />
-  {errors.city && (
-    <span style={{ color: 'red' }}>{errors.city.message}</span>
-  )}
-</div>
-
-<div>
-  <label htmlFor="province">Province:</label>
-  <Controller
-    name="province"
-    control={control}
-    defaultValue=""
-    render={({ field }) => (
-      <input
-        type="text"
-        {...field}
-      />
-    )}
-  />
-</div>
-
-<div>
-  <label htmlFor="postalCode">Postal Code:</label>
-  <Controller
-    name="postalCode"
-    control={control}
-    defaultValue=""
-    render={({ field }) => (
-      <input
-        type="text"
-        {...field}
-      />
-    )}
-    rules={{
-      pattern: {
-        value: /^\d{5}(-\d{4})?$/,
-        message: 'Invalid postal code',
-      },
-      required: 'Postal code is required',
-    }}
-  />
-  {errors.postalCode && (
-    <span style={{ color: 'red' }}>{errors.postalCode.message}</span>
-  )}
-</div>
-<div>
-  <label htmlFor="countryCode">Country:</label>
-  <Controller
-    name="countryCode"
-    control={control}
-    defaultValue=""
-    rules={{ required: 'Country is required' }}
-    render={({ field }) => (
-      <Autocomplete
-        {...field}
-        renderInput={(params) => (
-          <input
-            {...params}
-            type="text"
-            placeholder="Country"
-            autoComplete="off"
-          />
+        />
+        {errors.countryCode && (
+          <span style={{ color: 'red' }}>{errors.countryCode.message}</span>
         )}
-        renderItem={(item, isHighlighted) => (
-          <div
-            key={item.value}
-            style={{ background: isHighlighted ? 'lightgray' : 'white' }}
-          >
-            {item.label}
-          </div>
+      </div>
+
+      <div>
+        <label htmlFor="phone">Phone:</label>
+        <Controller
+          name="phone"
+          control={control}
+          defaultValue=""
+          render={({ field }) => <input type="text" {...field} />}
+          rules={{
+            pattern: {
+              value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
+              message: 'Invalid phone number',
+            },
+            required: 'Phone is required',
+          }}
+        />
+        {errors.phone && (
+          <span style={{ color: 'red' }}>{errors.phone.message}</span>
         )}
-        getItemValue={(item) => item.label}
-        items={countryOptions}
-      />
-    )}
-  />
-  {errors.countryCode && (
-    <span style={{ color: 'red' }}>{errors.countryCode.message}</span>
-  )}
-</div>
+      </div>
 
-<div>
-  <label htmlFor="phone">Phone:</label>
-  <Controller
-    name="phone"
-    control={control}
-    defaultValue=""
-    rules={{
-      pattern: {
-        value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
-        message: 'Invalid phone number',
-      },
-      required: 'Phone is required',
-    }}
-    render={({ field }) => (
-      <input
-        {...field}
-        type="text"
-      />
-    )}
-  />
-  {errors.phone && (
-    <span style={{ color: 'red' }}>{errors.phone.message}</span>
-  )}
-</div>
-
-<div>
-  <label htmlFor="company">Company:</label>
-  <Controller
-    name="company"
-    control={control}
-    defaultValue=""
-    rules={{ minLength: { value: 3, message: 'Company name must be at least 3 characters long' } }}
-    render={({ field }) => (
-      <input
-        {...field}
-        type="text"
-      />
-    )}
-  />
-  {errors.company && (
-    <span style={{ color: 'red' }}>{errors.company.message}</span>
-  )}
-</div>
-   {/* Add more form fields here */}
-      
+      <div>
+        <label htmlFor="company">Company:</label>
+        <Controller
+          name="company"
+          control={control}
+          defaultValue=""
+          rules={{
+            minLength: { value: 3, message: 'Company name must be at least 3 characters long' },
+          }}
+          render={({ field }) => <input type="text" {...field} />}
+        />
+        {errors.company && (
+          <span style={{ color: 'red' }}>{errors.company.message}</span>
+        )}
+      </div>
+      {/* Add more form fields here */}
     </>
   );
 };
