@@ -7,25 +7,19 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Cart from 'components/cart';
 
-type CreditCardData = {
-  card_number: string;
-  exp_month: string;
-  exp_year: string;
-  cvv: string;
-};
-
-type PaypalData = {
-  email: string;
-};
-
-type CryptoData = {
-  wallet_address: string;
-};
-
-type PaymentMethod = {
-  credit_card: CreditCardData;
-  paypal: PaypalData;
-  crypto: CryptoData;
+const PaymentMethod = {
+  credit_card: {
+    card_number: '',
+    exp_month: '',
+    exp_year: '',
+    cvv: '',
+  },
+  paypal: {
+    email: '',
+  },
+  crypto: {
+    wallet_address: '',
+  },
 };
 
 
@@ -106,6 +100,7 @@ interface Props {
         ...PaymentMethod[selectedPaymentMethod],
       },
     };
+
     await medusa.carts.setPaymentSession(cart.id, paymentData);
     const { type, data } = await medusa.carts.complete(cart.id);
     console.log('Checkout Completed:', type, data);
@@ -119,6 +114,7 @@ interface Props {
     setLoading(false);
   }
 };
+   
   const handleApplyCoupon = useCallback(async () => {
     if (!medusa || !couponCode) {
       return;
