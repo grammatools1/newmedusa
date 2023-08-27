@@ -13,18 +13,17 @@ interface Props {
   onComplete: () => void;
 }
 
-interface CombinedFormData {
+export interface CombinedFormData {
   firstName: string;
   lastName: string;
   email: string;
   address1: string;
   city: string;
-  province?: string;
+  province: string | undefined;
   countryCode: string;
   postalCode: string;
   phone: string;
   company?: string;
-  acceptUpdates?: boolean;
 }
 
 const validationSchema = yup.object().shape({
