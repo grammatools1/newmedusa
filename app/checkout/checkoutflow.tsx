@@ -1,243 +1,348 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import Medusa from "@medusajs/medusa-js";
-import ShippingForm from './ShippingAddressForm'; // Import the ShippingForm component
+import Medusa from '@medusajs/medusa-js';
+import ShippingForm from './ShippingAddressForm';
+import Cart from './cart';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-
-interface CartItem {
-  id: string;
-  product: {
-    title: string;
-    // Other product properties
-  };
-  quantity: number;
-  total: number;
-  // Other cart item properties
-}
-
-const CheckoutFlow = () => {
-  const [medusa, setMedusa] = useState<Medusa | null>(null);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState('');
-  const [couponCode, setCouponCode] = useState('');
-  const [giftCardCode, setGiftCardCode] = useState('');
-  const [orderTotal, setOrderTotal] = useState(0);
-  const [step, setStep] = useState(1);
+interface PaymentMethod {
+    credit_card: {
+      card_number: string;
+      exp_month: string;
+      exp_year: string;
+      cvv: string;
+    };
+    paypal: {
+      email: string;
+    };
+    crypto: {
+      wallet_address: string;
+    };
+    [key: string]: {
+      [key: string]: string;
+    };
+  }
   
-  useEffect(() => {
-    const initializeMedusa = async () => {
-      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API; // Make sure this is properly defined
-      if (!medusaBaseUrl) {
-        console.error('Medusa base URL is not defined.');
+  interface Props {
+    cart: {
+      id: string;
+      items: CartItem[];
+      total: number;
+    };
+  }
+  
+  function CheckoutFlow({ cart }: Props) {
+    const [medusa, setMedusa] = useState<Medusa | null>(null);
+    const [loading, setLoading] = useState(false);
+    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof PaymentMethod>('credit_card');
+    const [couponCode, setCouponCode] = useState('');
+    const [giftCardCode, setGiftCardCode] = useState('');
+    const [orderTotal, setOrderTotal] = useState(cart.total);
+    const [cartItems, setCartItems] = useState(cart.items);
+    const [step, setStep] = useState(1);
+  
+    useEffect(() => {
+      const initializeMedusa = async () => {
+        const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+        if (!medusaBaseUrl) {
+          console.error('Medusa base URL is not defined.');
+          return;
+        }
+  
+        const initializedMedusa = new Medusa({
+          baseUrl: medusaBaseUrl,
+          maxRetries: 3,
+        });
+        setMedusa(initializedMedusa);
+      };
+  
+      initializeMedusa();
+    }, []);
+  
+    useEffect(() => {
+      fetchCartItems();
+    }, [cart]);
+  
+    const fetchCartItems = async () => {
+      if (!medusa) return;
+  
+      try {
+        setLoading(true);
+        const { cart } = await medusa.carts.retrieve(cart.id);
+        setOrderTotal(cart.total);
+        setCartItems(cart.items);
+      } catch (error) {
+        console.error('Error fetching cart items:', error);
+        toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    const handleShippingComplete = () => {
+      setStep(2);
+    };
+  
+    const handlePaymentComplete = () => {
+      setStep(3);
+    };
+  
+    const handlePlaceOrder = async () => {
+      if (!medusa) return;
+  
+      try {
+        setLoading(true);
+        const paymentData = {
+          provider_id: selectedPaymentMethod,
+          data: {
+            ...PaymentMethod[selectedPaymentMethod],
+          },
+        };
+  
+        await medusa.carts.setPaymentSession(cart.id, paymentData);
+        const { type, data } = await medusa.carts.complete(cart.id);
+        console.log('Checkout Completed:', type, data);
+        toast.success('Your order has been successfully placed!', { autoClose: 3000 });
+        // TODO: Display order confirmation or handle any further actions
+      } catch (error) {
+        console.error('Error completing checkout:', error);
+        toast.error('Failed to place order. Please try again or contact support.', { autoClose: 3000 });
+      } finally {
+        setLoading(false);
+      }
+    };
+  
+    const handleApplyCoupon = async () => {
+      if (!medusa || !couponCode) {
         return;
       }
-
-      const initializedMedusa = new Medusa({
-        baseUrl: medusaBaseUrl,
-        maxRetries: 3,
-      });
-      setMedusa(initializedMedusa);
+  
+      setLoading(true);
+      try {
+        const { cart } = await medusa.carts.update(cart.id, {
+          discounts: [{ code: couponCode }],
+        });
+        setOrderTotal(cart.total);
+        setCouponCode('');
+        toast.info('Coupon applied successfully!', { autoClose: 3000 });
+      } catch (error) {
+        console.error('Error applying discount code:', error);
+        toast.error('Failed to apply coupon code. Please try again or contact support.', { autoClose: 3000 });
+      } finally {
+        setLoading(false);
+      }
     };
-
-    initializeMedusa();
-  }, []);
   
- const cartId = localStorage.getItem("cart_id");
+    const handleApplyGiftCard = async () => {
+      if (!medusa || !giftCardCode) {
+        return;
+      }
   
-  const fetchCartItems = () => {
-    if (medusa && cartId) {
-      medusa.carts
-        .retrieve(cartId)
-        .then(({ cart }) => {
-          setCartItems(cart.items);
-          setOrderTotal(cart.total);
-        })
-        .catch((error) => {
-          console.error('Error fetching cart items:', error);
+      setLoading(true);
+      try {
+        const { cart } = await medusa.carts.update(cart.id, {
+          gift_cards: [{ code: giftCardCode }],
         });
-    }
-  };
-
-  useEffect(() => {
-    fetchCartItems();
-  }, [medusa]); // Refetch when medusa changes
+        setOrderTotal(cart.total);
+        setGiftCardCode('');
+        toast.info('Gift card applied successfully!', { autoClose: 3000 });
+      } catch (error) {
+        console.error('Error applying gift card:', error);
+        toast.error('Failed to apply gift card. Please try again or contact support.', { autoClose: 3000 });
+      } finally {
+        setLoading(false);
+      }
+    };
   
-  const handleShippingComplete = () => {
-    setStep(2);
-  };
-
-  const handlePaymentComplete = () => {
-    setStep(3);
-  };
-
-  const handlePlaceOrder = () => {
-    if (medusa && cartId) {
-      const paymentData = {
-        provider_id: selectedPaymentMethod,
-        data: {
-          // Add any required payment data for the selected method (e.g., crypto wallet address)
-        },
-      };
-
-      medusa.carts
-        .setPaymentSession(cartId, paymentData)
-        .then(() => {
-          return medusa.carts.complete(cartId);
-        })
-        .then(({ type, data }) => {
-          console.log('Checkout Completed:', type, data);
-          // Display order confirmation or handle any further actions
-        })
-        .catch((error) => {
-          console.error('Error completing checkout:', error);
-        });
-    }
-  };
-
-  const handleApplyCoupon = () => {
-    if (medusa && cartId && couponCode) {
-      // Apply the discount code to the cart
-      medusa.carts
-        .update(cartId, {
-          discounts: [
-            {
-              code: couponCode,
-            },
-          ],
-        })
-        .then(({ cart }) => {
-          console.log(cart.discounts);
-          setOrderTotal(cart.total);
-        })
-        .catch((error) => {
-          console.error('Error applying discount code:', error);
-          // Display an error to the customer
-          alert('Discount is invalid');
-        });
-    }
-  };
-
-  const handleApplyGiftCard = () => {
-    if (medusa && cartId && giftCardCode) {
-      // Redeem the gift card and update the cart with the gift card
-      medusa.carts
-        .update(cartId, {
-          gift_cards: [
-            {
-              code: giftCardCode,
-            },
-          ],
-        })
-        .then(({ cart }) => {
-          console.log(cart.gift_cards.length);
-          setOrderTotal(cart.total);
-        })
-        .catch((error) => {
-          console.error('Error applying gift card:', error);
-          // Handle the case where the gift card doesn't exist or is disabled
-        });
-    }
-  };
-
-  return (
-    <div>
-      {step === 1 && (
-        <div>
-          {/* Step 1: Cart Review */}
-          <h1>Step 1: Cart Review</h1>
-          <div>
-            {/* Display your cart items here */}
-            {cartItems.length > 0 ? (
-             cartItems.map((item) => (
-             <div key={item.id}>
-              <p>Product: {item.product.title}</p>
-              <p>Quantity: {item.quantity}</p>
-              <p>Total Price: ${item.total}</p>
-            </div>
-          ))
-        ) : (
-          <p>Your cart is empty.</p>
+    const handleGoBack = () => {
+      setStep(step - 1);
+    };
+  
+    const handleNextStep = () => {
+      setStep(step + 1);
+    };
+  
+    return (
+      <>
+        <ToastContainer position="top-right" />
+  
+        {loading && <div className="loader">Loading...</div>}
+  
+        {!loading && (
+          <div className="checkout-flow">
+            {step === 1 && (
+              <div>
+                {/* Step 1: Cart Review */}
+                <h1>Step 1: Cart Review</h1>
+                <CartItems items={cartItems} total={orderTotal} />
+                <div className="coupon-gift">
+                  <div>
+                    <label htmlFor="coupon">Coupon Code:</label>
+                    <input
+                      id="coupon"
+                      type="text"
+                      placeholder="Enter coupon code"
+                      value={couponCode}
+                      onChange={(e) => setCouponCode(e.target.value)}
+                    />
+                    <button onClick={handleApplyCoupon}>Apply Coupon</button>
+                  </div>
+                  <div>
+                    <label htmlFor="gift-card">Gift Card Code:</label>
+                    <input
+                      id="gift-card"
+                      type="text"
+                      placeholder="Enter gift card code"
+                      value={giftCardCode}
+                      onChange={(e) => setGiftCardCode(e.target.value)}
+                    />
+                    <button onClick={handleApplyGiftCard}>Apply Gift Card</button>
+                  </div>
+                </div>
+                <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
+                <ShippingForm onComplete={handleShippingComplete} />
+              </div>
+            )}
+            {step === 2 && (
+              <div>
+                {/* Step 2: Shipping Information */}
+                <h1>Step 2: Shipping Information</h1>
+                <button onClick={handleGoBack}>Go back</button>
+                <ShippingForm onComplete={handleNextStep} />
+              </div>
+            )}
+            {step === 3 && (
+              <div>
+                {/* Step 3: Payment Method Selection */}
+                <h1>Step 3: Payment Method Selection</h1>
+                <button onClick={handleGoBack}>Go back</button>
+                <div className="payment-methods">
+                  <label>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="credit_card"
+                      checked={selectedPaymentMethod === 'credit_card'}
+                      onChange={() => setSelectedPaymentMethod('credit_card')}
+                    />
+                    Credit Card
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="paypal"
+                      checked={selectedPaymentMethod === 'paypal'}
+                      onChange={() => setSelectedPaymentMethod('paypal')}
+                    />
+                    PayPal
+                  </label>
+                  <label>
+                    <input
+                      type="radio"
+                      name="paymentMethod"
+                      value="crypto"
+                      checked={selectedPaymentMethod === 'crypto'}
+                      onChange={() => setSelectedPaymentMethod('crypto')}
+                    />
+                    Crypto
+                  </label>
+                </div>
+                <button onClick={handlePaymentComplete}>Proceed to Order Review</button>
+              </div>
+            )}
+            {step === 4 && (
+              <div>
+                {/* Step 4: Order Review */}
+                <h1>Step 4: Order Review</h1>
+                <button onClick={handleGoBack}>Go back</button>
+                <div className="order-summary">
+                  {/* Display order summary */}
+                  <p>Selected Payment Method: {selectedPaymentMethod}</p>
+                  {/* Display other order details like shipping method, total price, etc. */}
+                </div>
+                <button onClick={handlePlaceOrder}>Place Order</button>
+              </div>
+            )}
+          </div>
         )}
-            <div>
-              <label>Coupon Code:</label>
-              <input
-                type="text"
-                value={couponCode}
-                onChange={(e) => setCouponCode(e.target.value)}
-              />
-              <button onClick={handleApplyCoupon}>Apply Coupon</button>
-            </div>
-            <div>
-              <label>Gift Card Code:</label>
-              <input
-                type="text"
-                value={giftCardCode}
-                onChange={(e) => setGiftCardCode(e.target.value)}
-              />
-              <button onClick={handleApplyGiftCard}>Apply Gift Card</button>
-            </div>
-            <p>Order Total: ${orderTotal}</p>
-            </div>
-        </div>
-      )}
-      <ShippingForm />
-      {step === 3 && (
-        <div>
-          {/* Step 3: Payment Method Selection */}
-          <h1>Step 3: Payment Method Selection</h1>
-          <div>
-            {/* Display payment method options */}
-            <label>
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="credit_card"
-                checked={selectedPaymentMethod === 'credit_card'}
-                onChange={() => setSelectedPaymentMethod('credit_card')}
-              />
-              Credit Card
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="paypal"
-                checked={selectedPaymentMethod === 'paypal'}
-                onChange={() => setSelectedPaymentMethod('paypal')}
-              />
-              PayPal
-            </label>
-            <label>
-              <input
-                type="radio"
-                name="paymentMethod"
-                value="crypto"
-                checked={selectedPaymentMethod === 'crypto'}
-                onChange={() => setSelectedPaymentMethod('crypto')}
-              />
-              Cryptocurrency
-            </label>
-            {/* Add more payment method options */}
-          </div>
-          <button onClick={handlePaymentComplete}>Proceed to Order Review</button>
-        </div>
-      )}
-       {step === 4 && (
-        <div>
-          {/* Step 4: Order Review */}
-          <h1>Step 4: Order Review</h1>
-          <div>
-            {/* Display order summary */}
-            <p>Selected Payment Method: {selectedPaymentMethod}</p>
-            {/* Display other order details like shipping method, total price, etc. */}
-          </div>
-          <button onClick={handlePlaceOrder}>Place Order</button>
-        </div>
-      )}
-    </div>
-  );
-};
-
-
-export default CheckoutFlow;
+      </>
+    );
+  }
+  
+  export default CheckoutFlow;
+  
+  
+  
+  // Cart.tsx
+  
+  import { createCart, getCart } from 'lib/medusa';
+  import { Cookies } from 'react-cookie';
+  import CartModal from './CartModal';
+  
+  const cookies = new Cookies();
+  
+  export default async function Cart() {
+    const cartId = cookies.get('cartId');
+    let cart;
+  
+    if (cartId) {
+      cart = await getCart(cartId);
+    }
+  
+    // If the `cartId` from the cookie is not set or the cart is empty
+    // (old carts become null when you checkout), then create a new `cartId`
+    // and re-fetch the cart.
+    if (!cartId || !cart) {
+      cart = await createCart();
+      cookies.set('cartId', cart.id);
+    }
+  
+    return <CartModal cart={cart} />;
+  }
+  // CartModal.tsx
+  
+  import React from 'react';
+  import { formatPrice } from 'lib/utils';
+  import { Cart } from '@medusajs/medusa-react';
+  import 'styles/cart-modal.css';
+  
+  interface Props {
+    cart: {
+      id: string;
+      items: any[];
+      total: number;
+    };
+  }
+  
+  function CartModal({ cart }: Props) {
+    return (
+      <div className="cart-modal">
+        <Cart
+          cart={cart}
+          render={({ items, total }) => (
+            <>
+              <h3>Your Cart</h3>
+              {items.map((item) => (
+                <div key={item.id} className="cart-item">
+                  <div className="cart-item__image">
+                    <img src={item.image_url} alt={item.title} />
+                  </div>
+                  <div className="cart-item__details">
+                    <p className="cart-item__title">{item.title}</p>
+                    <p className="cart-item__quantity">{item.quantity}</p>
+                    <p className="cart-item__price">{formatPrice(item.total)}</p>
+                  </div>
+                </div>
+              ))}
+              <p className="cart-total">Total: {formatPrice(total)}</p>
+            </>
+          )}
+        />
+      </div>
+    );
+  }
+  
+  export default CartModal;
