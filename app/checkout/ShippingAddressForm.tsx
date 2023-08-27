@@ -13,18 +13,18 @@ interface Props {
   onComplete: () => void;
 }
 
-export interface CombinedFormData {
-  firstName: string;
-  lastName: string;
-  email: string;
-  address1: string;
-  city: string;
-  province: string | undefined;
-  countryCode: string;
-  postalCode: string;
-  phone: string;
-  company: string;
-}
+const validationSchema = Yup.object().shape({
+  firstName: Yup.string().required(),
+  lastName: Yup.string().required(),
+  email: Yup.string().email().required(),
+  address1: Yup.string().required(),
+  city: Yup.string().required(),
+  province: Yup.string(),
+  countryCode: Yup.string().required(),
+  postalCode: Yup.string().required(),
+  phone: Yup.string().required(),
+  company: Yup.string().notRequired(),
+});
 
 const validationSchema = yup.object().shape({
   firstName: yup.string().required('First Name is required'),
@@ -56,8 +56,35 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   const [acceptUpdates, setAcceptUpdates] = useState(false);
 
   const { control, handleSubmit, formState } = useForm<CombinedFormData>({
-    resolver: yupResolver(validationSchema),
-  });
+  resolver: async (data: CombinedFormData, context: any, options: any) => {
+    try {
+      // Cast the data object to the expected type - this will throw 
+      // an error if any required fields are missing
+      const values = await validationSchema.validate(data, {
+        abortEarly: false,
+        stripUnknown: true,
+      }) as CombinedFormData;
+      
+      // If validation succeeds, we can return the validated data object
+      return {
+        values,
+        errors: {},
+      };
+    
+    } catch (errors) {
+      // If there are any validation errors, return them
+      return {
+        values: {},
+        errors: errors.inner.reduce((allErrors, currentError) => {
+          return {
+            ...allErrors,
+            [currentError.path as string]: currentError.message,
+          };
+        }, {}),
+      };
+    }
+  },
+});
 
   const { errors } = formState;
 
