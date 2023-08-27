@@ -200,8 +200,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         });
 
         onComplete();
-      }
-    } } catch (error) {
+      }catch (error) {
   if (error instanceof YupValidationError) {
     setError(new Error('Validation error: ' + error.message) as unknown as FormErrors);
   } else {
