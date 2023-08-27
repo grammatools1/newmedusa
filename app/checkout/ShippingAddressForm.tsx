@@ -43,6 +43,7 @@ const validationSchema = yup.object().shape({
     .matches(/^\+(?:[0-9] ?){6,14}[0-9]$/, 'Invalid phone number')
     .required('Phone is required'),
   company: yup.string().min(3, 'Company name must be at least 3 characters long'),
+  province: yup.string(),
 });
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
