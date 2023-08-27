@@ -84,7 +84,6 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         };
       }
     },
-    defaultValues: { ... },
     mode: 'onChange',
     shouldUnregister: true,
     errors: {} as FormErrors,  // Type the 'errors' property as 'FormErrors'
@@ -134,7 +133,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
       try {
         if (!medusa) {
           console.error('Medusa not initialized');
-          return
+          return;
         }
 
         const { shipping_options } = await medusa.shippingOptions.list();
@@ -213,6 +212,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
             name="countryCode"
             control={control}
             defaultValue=""
+            rules={{ required: true }}  // Add validation rules here
             render={({ field }) => (
               <select {...field}>
                 <option value="" disabled>
@@ -230,18 +230,21 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
             name="address1"
             control={control}
             defaultValue=""
+            rules={{ required: true }}  // Add validation rules here
             render={({ field }) => <input {...field} placeholder="Address" />}
           />
           <Controller
             name="city"
             control={control}
             defaultValue=""
+            rules={{ required: true }}  // Add validation rules here
             render={({ field }) => <input {...field} placeholder="City" />}
           />
           <Controller
             name="postalCode"
             control={control}
             defaultValue=""
+            rules={{ required: true }}  // Add validation rules here
             render={({ field }) => <input {...field} placeholder="Postal Code" />}
           />
           {selectedCountryCode === 'US' && (
@@ -249,6 +252,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
               name="province"
               control={control}
               defaultValue=""
+              rules={{ required: true }}  // Add validation rules here
               render={({ field }) => <input {...field} placeholder="State" />}
             />
           )}
@@ -256,24 +260,28 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
             name="phone"
             control={control}
             defaultValue=""
+            rules={{ required: true }}  // Add validation rules here
             render={({ field }) => <input {...field} placeholder="Phone" />}
           />
           <Controller
             name="firstName"
             control={control}
             defaultValue=""
+            rules={{ required: true }}  // Add validation rules here
             render={({ field }) => <input {...field} placeholder="First Name" />}
           />
           <Controller
             name="lastName"
             control={control}
             defaultValue=""
+            rules={{ required: true }}  // Add validation rules here
             render={({ field }) => <input {...field} placeholder="Last Name" />}
           />
           <Controller
             name="email"
             control={control}
             defaultValue=""
+            rules={{ required: true }}  // Add validation rules here
             render={({ field }) => <input {...field} placeholder="Email" />}
           />
           <Controller
