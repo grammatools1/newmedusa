@@ -15,7 +15,7 @@ export default function Cart() {
   // (old carts becomes `null` when you checkout), then get a new `cartId`
   // and re-fetch the cart.
   if (!cartId || !cart) {
-    cart = await createCart();
+    cart = createCart();
     document.cookie = `cartId=${cart.id}; path=/`;
     localStorage.setItem('cart_id', cart.id);
   }
