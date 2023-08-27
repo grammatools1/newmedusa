@@ -33,7 +33,7 @@ const validationSchema = yup.object().shape({
   email: yup.string().email('Invalid email address').required('Email is required'),
   address1: yup.string().required('Address is required'),
   city: yup.string().required('City is required'),
-  province: yup.string(),
+  province: yup.string().notRequired(),
   countryCode: yup.string().required('Country is required'),
   postalCode: yup
     .string()
