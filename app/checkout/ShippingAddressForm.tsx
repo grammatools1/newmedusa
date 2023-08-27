@@ -27,16 +27,16 @@ export interface CombinedFormData {
 }
 
 const validationSchema = Yup.object().shape({
-  firstName: Yup.string().required(),
-  lastName: Yup.string().required(),
-  email: Yup.string().email().required(),
-  address1: Yup.string().required(),
-  city: Yup.string().required(),
-  province: Yup.string(),
-  countryCode: Yup.string().required(),
-  postalCode: Yup.string().required(),
-  phone: Yup.string().required(),
-  company: Yup.string().notRequired(),
+  firstName: yup.string().required(),
+  lastName: yup.string().required(),
+  email: yup.string().email().required(),
+  address1: yup.string().required(),
+  city: yup.string().required(),
+  province: yup.string(),
+  countryCode: yup.string().required(),
+  postalCode: yup.string().required(),
+  phone: yup.string().required(),
+  company: yup.string().notRequired(),
 });
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
