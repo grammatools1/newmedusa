@@ -1,4 +1,5 @@
 "use client"
+
 import React, { useState, useEffect } from 'react';
 import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import Medusa from '@medusajs/medusa-js';
@@ -79,7 +80,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         // If there are any validation errors, return them
         return {
           values: {},
-          errors: errors?.errors ?? {}, // Use the nullish coalescing operator to ensure that 'errors' is an object, regardless of what 'validate()' returns
+          errors: (errors as any)?.errors ?? {}, // Cast 'errors' as 'any' to bypass TypeScript type checking
         };
       }
     },
