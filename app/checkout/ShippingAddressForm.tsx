@@ -33,6 +33,7 @@ const validationSchema = yup.object().shape({
   email: yup.string().email('Invalid email address').required('Email is required'),
   address1: yup.string().required('Address is required'),
   city: yup.string().required('City is required'),
+  province: yup.string(),
   countryCode: yup.string().required('Country is required'),
   postalCode: yup
     .string()
@@ -43,7 +44,6 @@ const validationSchema = yup.object().shape({
     .matches(/^\+(?:[0-9] ?){6,14}[0-9]$/, 'Invalid phone number')
     .required('Phone is required'),
   company: yup.string().min(3, 'Company name must be at least 3 characters long'),
-  province: yup.string(),
 });
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
