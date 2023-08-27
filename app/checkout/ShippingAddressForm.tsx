@@ -13,6 +13,9 @@ interface Props {
   onComplete: () => void;
 }
 
+interface FormErrors {
+  [key: string]: string;
+}
 export interface CombinedFormData {
   firstName: string;
   lastName: string;
