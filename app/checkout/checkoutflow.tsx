@@ -117,7 +117,7 @@ interface Props {
    
  const handleApplyCoupon = async () => {
     if (!medusa || !cart || !couponCode) return;
-
+         let cartData = cart;
     try {
       // rename cart to cartData
       let cartData = cart;
