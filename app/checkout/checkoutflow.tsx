@@ -180,7 +180,6 @@ const CheckoutFlow = () => {
             <p>Order Total: ${orderTotal}</p>
           </div>
            <ShippingForm onComplete={handleShippingComplete} />
-          <button onClick={handleShippingComplete}>Proceed to Shipping</button>
         </div>
       )}
       {step === 2 && (<ShippingForm  onComplete={handleShippingComplete} />
