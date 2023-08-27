@@ -141,18 +141,18 @@ interface Props {
       return;
     }
 
-    try {
-      const { cart } = await medusa.carts.update(cart.id, {
-        gift_cards: [{ code: giftCardCode }],
-      });
-      setOrderTotal(cart.total);
-      setGiftCardCode('');
-      toast.info('Gift card applied successfully!', { autoClose: 3000 });
-    } catch (error) {
-      console.error('Error applying gift card:', error);
-      toast.error('Failed to apply gift card. Please try again or contact support.', { autoClose: 3000 });
-    }
-  }, [cart, giftCardCode, medusa]);
+   try {
+  const { cart: updatedCart } = await medusa.carts.update(cart.id, {
+    gift_cards: [{ code: giftCardCode }],
+  });
+  setOrderTotal(updatedCart.total);
+
+  toast.success("Gift card applied!", { autoClose: 3000 });
+} catch (error) {
+  console.error("Error applying gift card:", error);
+  toast.error("Failed to apply gift card. Please try again or contact support.", { autoClose: 3000 });
+} 
+}, [cart, giftCardCode, medusa]);
 
   const validateForm = (formValues: any) => {
     const errors: any = {};
