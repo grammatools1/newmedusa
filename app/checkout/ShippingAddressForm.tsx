@@ -1,5 +1,4 @@
 "use client"
-
 import React, { useState, useEffect } from 'react';
 import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
 import Medusa from '@medusajs/medusa-js';
@@ -80,9 +79,21 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         // If there are any validation errors, return them
         return {
           values: {},
-          errors: (errors as ValidationError)?.errors || {},  // Use `(errors as ValidationError)?.errors || {}` to access the `errors` property if it exists, otherwise an empty object
+          errors: errors?.errors ?? {}, // Use the nullish coalescing operator to ensure that 'errors' is an object, regardless of what 'validate()' returns
         };
       }
+    },
+    defaultValues: {            
+      firstName: "",
+      lastName: "",
+      email: "",
+      address1: "",
+      city: "",
+      province: "",
+      countryCode: "",
+      postalCode: "",
+      phone: "",
+      company: "",
     },
     mode: 'onChange',
     shouldUnregister: true,
@@ -212,7 +223,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
             name="countryCode"
             control={control}
             defaultValue=""
-            rules={{ required: true }}  // Add validation rules here
+            rules={{ required: true }}
             render={({ field }) => (
               <select {...field}>
                 <option value="" disabled>
@@ -230,21 +241,21 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
             name="address1"
             control={control}
             defaultValue=""
-            rules={{ required: true }}  // Add validation rules here
+            rules={{ required: true }}
             render={({ field }) => <input {...field} placeholder="Address" />}
           />
           <Controller
             name="city"
             control={control}
             defaultValue=""
-            rules={{ required: true }}  // Add validation rules here
+            rules={{ required: true }}
             render={({ field }) => <input {...field} placeholder="City" />}
           />
           <Controller
             name="postalCode"
             control={control}
             defaultValue=""
-            rules={{ required: true }}  // Add validation rules here
+            rules={{ required: true }}
             render={({ field }) => <input {...field} placeholder="Postal Code" />}
           />
           {selectedCountryCode === 'US' && (
@@ -252,7 +263,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
               name="province"
               control={control}
               defaultValue=""
-              rules={{ required: true }}  // Add validation rules here
+              rules={{ required: true }}
               render={({ field }) => <input {...field} placeholder="State" />}
             />
           )}
@@ -260,28 +271,28 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
             name="phone"
             control={control}
             defaultValue=""
-            rules={{ required: true }}  // Add validation rules here
+            rules={{ required: true }}
             render={({ field }) => <input {...field} placeholder="Phone" />}
           />
           <Controller
             name="firstName"
             control={control}
             defaultValue=""
-            rules={{ required: true }}  // Add validation rules here
+            rules={{ required: true }}
             render={({ field }) => <input {...field} placeholder="First Name" />}
           />
           <Controller
             name="lastName"
             control={control}
             defaultValue=""
-            rules={{ required: true }}  // Add validation rules here
+            rules={{ required: true }}
             render={({ field }) => <input {...field} placeholder="Last Name" />}
           />
           <Controller
             name="email"
             control={control}
             defaultValue=""
-            rules={{ required: true }}  // Add validation rules here
+            rules={{ required: true }}
             render={({ field }) => <input {...field} placeholder="Email" />}
           />
           <Controller
