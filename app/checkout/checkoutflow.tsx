@@ -22,7 +22,7 @@ const PaymentMethod = {
   },
 };
 
-
+type PaymentMethodKey = keyof typeof PaymentMethod;
 
 interface Props {
   cart: any;
