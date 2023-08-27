@@ -8,7 +8,7 @@ export default function Cart() {
   let cart;
 
   if (cartId) {
-    cart = await getCart(cartId);
+    cart = getCart(cartId);
   }
 
   // If the `cartId` from the cookie is not set or the cart is empty
