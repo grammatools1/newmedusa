@@ -13,18 +13,17 @@ interface Props {
   onComplete: () => void;
 }
 
-interface CombinedFormData {
+export interface CombinedFormData {
   firstName: string;
   lastName: string;
   email: string;
   address1: string;
   city: string;
-  province?: string;
+  province: string | undefined;
   countryCode: string;
   postalCode: string;
   phone: string;
-  company?: string;
-  acceptUpdates?: boolean;
+  company: string;
 }
 
 interface ValidationError {
@@ -36,7 +35,7 @@ interface CustomError {
   [key: string]: string;
 }
 
-type FormErrors = CustomError | ValidationError[];
+type FormErrors = CustomError | ValidationError[] | Error;
 
 const validationSchema = yup.object().shape({
   firstName: yup.string().required(),
@@ -200,13 +199,14 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
         });
 
         onComplete();
-      }catch (error) {
-  if (error instanceof YupValidationError) {
-    setError(new Error('Validation error: ' + error.message) as unknown as FormErrors);
-  } else {
-    setError(new Error('An error occurred while updating shipping information.') as unknown as FormErrors);
-  }
-} finally {
+      }
+    } catch (error) {
+      if (error instanceof YupValidationError) {
+        setError(new Error('Validation error: ' + error.message) as FormErrors);
+      } else {
+        setError(error as FormErrors);
+      }
+    } finally {
       setIsLoading(false);
     }
   };
