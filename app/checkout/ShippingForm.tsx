@@ -221,7 +221,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
       {isLoading && <div>Loading...</div>}
       {!isLoading && (
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <ShippingFormFields
+          <FormFields
             control={control}
             acceptUpdates={acceptUpdates}
             setAcceptUpdates={setAcceptUpdates}
