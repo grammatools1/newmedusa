@@ -16,7 +16,7 @@ export interface CombinedFormData {
   company: string;
 }
 
-export type ShippingFormFieldsProps = {
+export type FormFieldsProps = {
   control: Control<CombinedFormData>;
   acceptUpdates: boolean;
   setAcceptUpdates: (value: boolean) => void;
@@ -30,7 +30,7 @@ export type CountryOption = {
   label: string;
 };
 
-const ShippingFormFields = ({
+const FormFields = ({
   control,
   acceptUpdates,
   setAcceptUpdates,
