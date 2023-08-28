@@ -319,7 +319,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
           </div>
           {error && (
             <div style={{ color: 'red' }}>
-              {typeof error === 'string' ? error : error.message}
+              {typeof error === 'string' ? error : (error instanceof Error ? error.message : '')}
             </div>
           )}
           <button type="submit">Save Shipping Address</button>
