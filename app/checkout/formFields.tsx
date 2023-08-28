@@ -1,5 +1,5 @@
 import React from 'react';
-import { Controller, Control, FieldError,useWatch } from 'react-hook-form';
+import { Controller, Control, FieldError,useForm } from 'react-hook-form';
 import Autocomplete from 'react-autocomplete';
 const countryList = require('country-list');
 
@@ -39,7 +39,8 @@ const FormFields = ({
   onSelectCountryCode,
   countryOptions,
 }: FormFieldsProps) => {
-  const selectedCountryCode = control.watch('countryCode');
+  const { watch } = useForm<CombinedFormData>();
+  const selectedCountryCode = watch('countryCode');
 
   return (
     <>
