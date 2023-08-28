@@ -250,7 +250,7 @@ interface Props {
                     </div>
                   </div>
                   <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
-                  <ShippingForm onComplete={handleShippingComplete} />
+                  <ShippingForm cart={cart} onComplete={handleShippingComplete} />
                 </>
               )}
             </div>
