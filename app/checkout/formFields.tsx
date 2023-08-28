@@ -38,7 +38,7 @@ const FormFields = ({
   errors,
   onSelectCountryCode,
   countryOptions,
-}: ShippingFormFieldsProps) => {
+}: FormFieldsProps) => {
   const selectedCountryCode = control.watch('countryCode');
 
   return (
@@ -257,4 +257,4 @@ const FormFields = ({
   );
 };
 
-export default ShippingFormFields;
+export default FormFields;
