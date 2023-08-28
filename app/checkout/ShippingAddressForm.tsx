@@ -6,7 +6,8 @@ import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ValidationError as YupValidationError } from 'yup';
-import ShippingFormFields from './ShippingFormFields';
+import Autocomplete from 'react-autocomplete';
+import ShippingFormFields, { CountryOption } from './ShippingFormFields';
 
 interface Props {
   cart: any; // Replace 'any' with your actual cart type
@@ -19,12 +20,11 @@ interface CombinedFormData {
   email: string;
   address1: string;
   city: string;
-  province?: string;
+  province: string | undefined;
   countryCode: string;
   postalCode: string;
   phone: string;
-  company?: string;
-  acceptUpdates?: boolean;
+  company: string;
 }
 
 interface ValidationError {
@@ -53,11 +53,6 @@ const validationSchema = yup.object().shape({
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
-
-interface CountryOption {
-  value: string;
-  label: string;
-}
 
 const ShippingForm = ({ cart, onComplete }: Props) => {
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
@@ -225,98 +220,13 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
       {isLoading && <div>Loading...</div>}
       {!isLoading && (
         <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <Controller
-            name="countryCode"
+          <ShippingFormFields
             control={control}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field }) => (
-              <select {...field}>
-                <option value="" disabled>
-                  Select country
-                </option>
-                {countryOptions.map((option: CountryOption) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </select>
-            )}
+            acceptUpdates={acceptUpdates}
+            setAcceptUpdates={setAcceptUpdates}
+            errors={errors}
+            countryOptions={countryOptions}
           />
-          <Controller
-            name="address1"
-            control={control}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field }) => <input {...field} placeholder="Address" />}
-          />
-          <Controller
-            name="city"
-            control={control}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field }) => <input {...field} placeholder="City" />}
-          />
-          <Controller
-            name="postalCode"
-            control={control}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field }) => <input {...field} placeholder="Postal Code" />}
-          />
-          {selectedCountryCode === 'US' && (
-            <Controller
-              name="province"
-              control={control}
-              defaultValue=""
-              rules={{ required: true }}
-              render={({ field }) => <input {...field} placeholder="State" />}
-            />
-          )}
-          <Controller
-            name="phone"
-            control={control}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field }) => <input {...field} placeholder="Phone" />}
-          />
-          <Controller
-            name="firstName"
-            control={control}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field }) => <input {...field} placeholder="First Name" />}
-          />
-          <Controller
-            name="lastName"
-            control={control}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field }) => <input {...field} placeholder="Last Name" />}
-          />
-          <Controller
-            name="email"
-            control={control}
-            defaultValue=""
-            rules={{ required: true }}
-            render={({ field }) => <input {...field} placeholder="Email" />}
-          />
-          <Controller
-            name="company"
-            control={control}
-            defaultValue=""
-            render={({ field }) => <input {...field} placeholder="Company" />}
-          />
-          <div>
-            <input
-              type="checkbox"
-              checked={acceptUpdates}
-              onChange={() => setAcceptUpdates(!acceptUpdates)}
-            />
-            <label htmlFor="acceptUpdates">
-              Receive product updates and newsletters
-            </label>
-          </div>
           {error && (
             <div style={{ color: 'red' }}>
               {typeof error === 'string' ? error : (error instanceof Error ? error.message : '')}
