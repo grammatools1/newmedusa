@@ -1,8 +1,7 @@
 "use client"
 
-import React, { useEffect } from 'react';
+import React, { useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
-import useClient from '@data/use-client';
 import { useRouter } from 'next/router';
 
 const Checkoutflow = dynamic(
@@ -11,20 +10,21 @@ const Checkoutflow = dynamic(
   { ssr: false }
 );
 
+import { client } from '@data/client';
+
 function Checkout() {
-  const { getCart, isAuthenticated } = useClient();
   const router = useRouter();
 
   useEffect(() => {
     const handleAuth = async () => {
-      if (!isAuthenticated()) {
+      if (!client.isAuthenticated()) {
         router.push('/auth/login');
       }
     };
     handleAuth();
   }, []);
 
-  const cart = getCart();
+  const cart = client.getCart();
 
   return (
     <>
