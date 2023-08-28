@@ -54,6 +54,11 @@ const validationSchema = yup.object().shape({
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 const medusa = medusaBaseUrl ? new Medusa({ baseUrl: medusaBaseUrl, maxRetries: 3 }) : null;
 
+interface CountryOption {
+  value: string;
+  label: string;
+}
+
 const ShippingForm = ({ cart, onComplete }: Props) => {
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
@@ -103,7 +108,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
 
   const { errors } = formState;
 
-  const countryOptions = React.useMemo(() => {
+  const countryOptions: CountryOption[] = React.useMemo(() => {
     const countries = require('country-list').getNameList();
     return countries.map((countryCode: string) => ({
       value: countryCode,
@@ -230,7 +235,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
                 <option value="" disabled>
                   Select country
                 </option>
-                {countryOptions.map((option) => (
+                {countryOptions.map((option: CountryOption) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
