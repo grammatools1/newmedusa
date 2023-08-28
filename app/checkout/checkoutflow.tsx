@@ -260,7 +260,7 @@ interface Props {
               {/* Step 2: Shipping Information */}
               <h1>Step 2: Shipping Information</h1>
               <button onClick={handleGoBack}>Go back</button>
-              <ShippingForm onComplete={handleNextStep} />
+              <ShippingForm cart={cart} onComplete={handleNextStep} />
             </div>
           )}
           {step === 3 && (
