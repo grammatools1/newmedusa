@@ -7,7 +7,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { ValidationError as YupValidationError } from 'yup';
 import Autocomplete from 'react-autocomplete';
-import ShippingFormFields from './formFields';
+import FormFields from './formFields';
 
 interface Props {
   cart: any; // Replace 'any' with your actual cart type
