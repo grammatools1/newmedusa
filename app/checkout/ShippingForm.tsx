@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Controller, SubmitHandler, useForm, useWatch } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm, useWatch, FieldError} from 'react-hook-form';
 import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
