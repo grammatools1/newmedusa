@@ -17,7 +17,7 @@ export default function Checkout() {
     <>
       {/* Use Suspense to wrap the Checkoutflow component */}
       <Suspense fallback={<div>Loading...</div>}>
-        <Checkoutflow />
+        <Checkoutflow cart={cart} />
       </Suspense>
     </>
   );
