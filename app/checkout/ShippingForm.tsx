@@ -227,6 +227,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
             setAcceptUpdates={setAcceptUpdates}
             errors={errors as Record<keyof CombinedFormData, FieldError>}
             countryOptions={countryOptions}
+            onSelectCountryCode={() => {}}
           />
           {error && (
             <div style={{ color: 'red' }}>
