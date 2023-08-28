@@ -1,18 +1,29 @@
-import Checkoutflow from './checkoutflow';
-import { Suspense } from 'react';
+import React, { useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import useClient from '@data/use-client';
+import { useRouter } from 'next/router';
 
-export const runtime = 'edge';
+const Checkoutflow = dynamic(
+  () =>
+    import('@components/checkout/Checkoutflow').then((mod) => mod.Checkoutflow),
+  { ssr: false }
+);
 
-export const revalidate = 43200; // 12 hours
+function Checkout() {
+  const { getCart, isAuthenticated } = useClient();
+  const router = useRouter();
 
-export const metadata = {
-  description: 'High-performance ecommerce store.',
-  openGraph: {
-    type: 'website'
-  }
-};
+  useEffect(() => {
+    const handleAuth = async () => {
+      if (!isAuthenticated()) {
+        router.push('/auth/login');
+      }
+    };
+    handleAuth();
+  }, []);
 
-export default function Checkout() {
+  const cart = getCart();
+
   return (
     <>
       {/* Use Suspense to wrap the Checkoutflow component */}
@@ -22,3 +33,5 @@ export default function Checkout() {
     </>
   );
 }
+
+export default Checkout;
