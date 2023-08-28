@@ -10,21 +10,10 @@ const Checkoutflow = dynamic(
   { ssr: false }
 );
 
-import { client } from '@data/client';
-
 function Checkout() {
   const router = useRouter();
 
-  useEffect(() => {
-    const handleAuth = async () => {
-      if (!client.isAuthenticated()) {
-        router.push('/auth/login');
-      }
-    };
-    handleAuth();
-  }, []);
-
-  const cart = client.getCart();
+  const cart = getCart();
 
   return (
     <>
