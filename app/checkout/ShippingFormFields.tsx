@@ -1,7 +1,7 @@
 import React from 'react';
-import { Controller, Control } from 'react-hook-form';
+import { Controller, Control, FieldError } from 'react-hook-form';
 import Autocomplete from 'react-autocomplete';
-const countryListModule = require('country-list');
+const countryList = require('country-list');
 
 export interface CombinedFormData {
   firstName: string;
@@ -16,15 +16,16 @@ export interface CombinedFormData {
   company: string;
 }
 
-type ShippingFormFieldsProps = {
+export type ShippingFormFieldsProps = {
   control: Control<CombinedFormData>;
   acceptUpdates: boolean;
   setAcceptUpdates: (value: boolean) => void;
-  errors: any; // Replace with your error type
-  countryOptions: CountryOption[]; // Replace with your country options type
+  errors: Record<keyof CombinedFormData, FieldError>;
+  onSelectCountryCode: (value: string) => void;
+  countryOptions: CountryOption[];
 };
 
-type CountryOption = {
+export type CountryOption = {
   value: string;
   label: string;
 };
@@ -34,9 +35,9 @@ const ShippingFormFields = ({
   acceptUpdates,
   setAcceptUpdates,
   errors,
+  onSelectCountryCode,
   countryOptions,
 }: ShippingFormFieldsProps) => {
-  const countryList = countryListModule.default();
   const selectedCountryCode = control.watch('countryCode');
 
   return (
@@ -216,7 +217,10 @@ const ShippingFormFields = ({
                   : ''
               }
               onChange={(event) => field.onChange(event.target.value)}
-              onSelect={(value) => field.onChange(value)}
+              onSelect={(value) => {
+                field.onChange(value);
+                onSelectCountryCode(value);
+              }}
             />
           )}
         />
