@@ -4,28 +4,9 @@ import React, { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { CheckoutFlow } from './checkoutflow';
 
-const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-const CheckoutFlow = dynamic(
-  () => import('./checkoutflow').then((mod) => mod.CheckoutFlow),
-  { ssr: false }
-);
-
-function Checkout() {
-  const [cart, setCart] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    async function fetchCart() {
-      setLoading(true);
-      const response = await fetch('medusaBaseUrl/store/carts'); // Replace with your API endpoint
-      const data = await response.json();
-      setCart(data);
-      setLoading(false);
-    }
-
-    fetchCart();
-  }, []);
+const CheckoutFlowDynamic = dynamic(() => import('./checkoutflow'), { ssr: false });
 
   return (
     <>
