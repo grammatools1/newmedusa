@@ -331,3 +331,4 @@ interface Props {
     </>
   );
 }
+export default CheckoutFlow;
