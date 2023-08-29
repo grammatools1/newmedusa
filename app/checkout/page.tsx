@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import CheckoutFlow from './checkoutflow';
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
- 
+    
 function Checkout() {
 const [loading, setLoading] = useState(true);
 const [cart, setCart] = useState(null);
