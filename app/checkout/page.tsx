@@ -6,9 +6,9 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { CheckoutFlow } from './checkoutflow';
 
-const Checkout(){
+function Checkout() {
 const CheckoutFlowDynamic = dynamic(() => import('./checkoutflow'), { ssr: false });
-}
+    
   return (
     <>
       <ToastContainer position="top-right" />
