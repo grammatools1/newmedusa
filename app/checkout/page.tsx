@@ -13,7 +13,7 @@ const Checkout = () => {
   return (
     <>
       <Suspense fallback={<div>Loading...</div>}>
-        <Checkoutflow cart={cart} />
+        <CheckoutFlow cart={cart} />
       </Suspense>
     </>
   );
