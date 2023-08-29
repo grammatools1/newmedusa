@@ -8,8 +8,6 @@ import Checkoutflow from './checkoutflow';
 const Checkout = () => {
   const router = useRouter();
 
-  const cart = getCart();
-
   return (
     <>
       <Suspense fallback={<div>Loading...</div>}>
