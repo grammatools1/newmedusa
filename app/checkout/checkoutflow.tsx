@@ -28,7 +28,7 @@ interface Props {
   cart: any;
 }
 
- function CheckoutFlow(props: Props) {
+  export function CheckoutFlow(props: Props) {
   const { cart } = props;
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
@@ -331,5 +331,3 @@ interface Props {
     </>
   );
 }
-
-export default CheckoutFlow;
