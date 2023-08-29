@@ -4,6 +4,7 @@ import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
 
+
 // Assuming Checkoutflow is located in the same directory as Checkout
 const Checkoutflow = dynamic(
   () => import('./app/checkout/Checkoutflow').then((mod) => mod.Checkoutflow),
