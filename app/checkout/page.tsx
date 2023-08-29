@@ -8,6 +8,7 @@ import { CheckoutFlow } from './checkoutflow';
 
 function Checkout() {
 const CheckoutFlowDynamic = dynamic(() => import('./checkoutflow'), { ssr: false });
+
     
   return (
     <>
