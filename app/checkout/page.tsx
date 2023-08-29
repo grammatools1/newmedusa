@@ -7,8 +7,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { CheckoutFlow } from './checkoutflow';
 
 function Checkout() {
-const CheckoutFlowDynamic = dynamic(() => import('./checkoutflow'), { ssr: false });
-
+const CheckoutFlow = dynamic(
+  () => import('./checkoutflow').then((mod) => mod.CheckoutFlow),
+  { ssr: false }
+);
     
   return (
     <>
@@ -18,7 +20,7 @@ const CheckoutFlowDynamic = dynamic(() => import('./checkoutflow'), { ssr: false
 
       {!loading && cart && (
         <div className="checkout-container">
-         <CheckoutFlowDynamic cart={cart} />;
+         <CheckoutFlow cart={cart} />;
         </div>
       )}
     </>
