@@ -12,7 +12,7 @@ const CheckoutFlow = dynamic(
   () => import('./checkoutflow').then((mod) => mod.CheckoutFlow),
   { ssr: false }
 );
-    
+  
   return (
     <>
       <ToastContainer position="top-right" />
