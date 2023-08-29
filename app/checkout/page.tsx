@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 
 // Assuming Checkoutflow is located in the same directory as Checkout
 const Checkoutflow = dynamic(
-  () => import('./Checkoutflow.tsx').then((mod) => mod.Checkoutflow),
+  () => import('./Checkoutflow').then((mod) => mod.Checkoutflow),
   { ssr: false }
 );
 
