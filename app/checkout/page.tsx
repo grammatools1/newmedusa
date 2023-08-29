@@ -6,7 +6,6 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-
 const CheckoutFlow = dynamic(
   () => import('./checkoutflow').then((mod) => mod.CheckoutFlow),
   { ssr: false }
