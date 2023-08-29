@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { CheckoutFlow } from './checkoutflow';
 
 function Checkout() {
+const [loading, setLoading] = useState(true);
 const CheckoutFlow = dynamic(
   () => import('./checkoutflow').then((mod) => mod.CheckoutFlow),
   { ssr: false }
