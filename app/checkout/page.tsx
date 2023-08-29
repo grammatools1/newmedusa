@@ -3,7 +3,7 @@
 import React, { Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { useRouter } from 'next/router';
-import Checkoutflow from './Checkoutflow';
+import Checkoutflow from './checkoutflow';
 
 
 // Assuming Checkoutflow is located in the same directory as Checkout
