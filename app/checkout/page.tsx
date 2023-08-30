@@ -20,7 +20,7 @@ const [cart, setCart] = useState(null);
       const response = await fetch('medusaBaseUrl/store/carts/'); // Replace with your API endpoint
       const data = await response.json();
       setCart(data);
-      setLoading(false);
+      setLoading(false); 
     }
 
     fetchCart();
