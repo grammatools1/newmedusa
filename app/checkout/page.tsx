@@ -9,7 +9,7 @@ import 'react-toastify/dist/ReactToastify.css';
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
 const CheckoutFlow = dynamic(
-  () => import('./CheckoutFlow').then((mod) => mod.CheckoutFlow),
+  () => import('./CheckoutFlow').then((mod) => mod.CheckoutFlow), 
   { ssr: false }
    );
      
