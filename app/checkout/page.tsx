@@ -12,7 +12,7 @@ const CheckoutFlow = dynamic(
   () => import('./CheckoutFlow').then((mod) => mod.CheckoutFlow),
   { ssr: false }
    );
-  
+     
     
 function Checkout() {
 const [loading, setLoading] = useState(true);
