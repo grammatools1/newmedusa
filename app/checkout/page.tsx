@@ -8,12 +8,8 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
-const CheckoutFlow = dynamic(
-  () => import("app/checkout/CheckoutFlow").then((mod) => mod.CheckoutFlow), 
-  { ssr: false }
-   );
-     
-    
+const CheckoutFlow = dynamic(() => import('./CheckoutFlow'), { ssr: false });
+ 
 function Checkout() {
 const [loading, setLoading] = useState(true);
 const [cart, setCart] = useState(null);
