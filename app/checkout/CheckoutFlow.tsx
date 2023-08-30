@@ -5,7 +5,7 @@ import Medusa from '@medusajs/medusa-js';
 import ShippingForm from './ShippingForm';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import Cart from 'components/cart';
+
 
 const PaymentMethod = {
   credit_card: {
