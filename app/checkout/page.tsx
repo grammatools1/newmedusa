@@ -4,12 +4,12 @@ import React, { useState, useEffect, Suspense } from 'react';
 import dynamic from 'next/dynamic';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import CheckoutFlow from './checkoutflow';
+import CheckoutFlow from './CheckoutFlow';
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
 const CheckoutFlow = dynamic(
-  () => import('./checkoutflow').then((mod) => mod.CheckoutFlow),
+  () => import('./CheckoutFlow').then((mod) => mod.CheckoutFlow),
   { ssr: false }
    );
   
