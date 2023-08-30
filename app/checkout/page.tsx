@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
-const CheckoutFlow = dynamic(() => import('./CheckoutFlow'), { ssr: true });
+const CheckoutFlow = dynamic(() => import('./CheckoutFlow'), { ssr: false });
  
 function Checkout() {
 const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ const [cart, setCart] = useState(null);
   useEffect(() => {
     async function fetchCart() {
       setLoading(true);
-      const response = await fetch('medusaBaseUrl/store/carts/'); // Replace with your API endpoint
+      const response = await fetch('medusaBaseUrl/store/carts/$cartid'); // Replace with your API endpoint
       const data = await response.json();
       setCart(data);
       setLoading(false); 
