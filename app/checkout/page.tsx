@@ -12,6 +12,7 @@ import CheckoutFlow from './CheckoutFlow';
 function Checkout() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(false);
+   const [medusa, setMedusa] = useState<Medusa | null>(null);
 
   useEffect(() => {
     const initializeMedusa = async () => {
