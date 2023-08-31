@@ -1,18 +1,16 @@
 "use client"
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Medusa from '@medusajs/medusa-js';
-import CheckoutFlow from './CheckoutFlow'; 
-
-
+import CheckoutFlow from './CheckoutFlow';
 
 function Checkout() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(false);
-   const [medusa, setMedusa] = useState<Medusa | null>(null);
+  const [medusa, setMedusa] = useState<Medusa | null>(null);
 
   useEffect(() => {
     const initializeMedusa = async () => {
@@ -32,29 +30,31 @@ function Checkout() {
     initializeMedusa();
   }, []);
 
- 
   useEffect(() => {
-    fetchCartItems(cart);
+    if (cart) {
+      fetchCartItems(cart);
+    }
   }, [cart]);
 
   const fetchCartItems = async (cart: { id: string }) => {
-  if (!medusa) {
-    console.error('Medusa not initialized');
-    return;
-  }
+    if (!medusa) {
+      console.error('Medusa not initialized');
+      return;
+    }
 
-  try {
-    setLoading(true);
-    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-    setOrderTotal(updatedCart.total);
+    try {
+      setLoading(true);
+      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+      setOrderTotal(updatedCart.total);
     setCartItems(updatedCart.items);
-  } catch (error) {
-    console.error('Error fetching cart items:', error);
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
     toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
-  } finally {
-    setLoading(false);
-  }
-};
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <ToastContainer position="top-right" />
@@ -71,4 +71,3 @@ function Checkout() {
 }
 
 export default Checkout;
-
