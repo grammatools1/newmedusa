@@ -11,8 +11,8 @@ function Checkout() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(false);
   const [medusa, setMedusa] = useState<Medusa | null>(null);
-   const [orderTotal, setOrderTotal] = useState(cart.total);
-  const [cartItems, setCartItems] = useState(cart.items);
+  const [orderTotal, setOrderTotal] = useState<number | null>(null);
+  const [cartItems, setCartItems] = useState<any[] | null>(null);
 
   useEffect(() => {
     const initializeMedusa = async () => {
@@ -48,10 +48,10 @@ function Checkout() {
       setLoading(true);
       const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
       setOrderTotal(updatedCart.total);
-    setCartItems(updatedCart.items);
+      setCartItems(updatedCart.items);
     } catch (error) {
       console.error('Error fetching cart items:', error);
-    toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
+      toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
     } finally {
       setLoading(false);
     }
@@ -63,7 +63,7 @@ function Checkout() {
 
       {loading && <div className="loader">Loading...</div>}
 
-      {!loading && cart && (
+      {!loading && cart && orderTotal !== null && cartItems !== null && (
         <div className="checkout-container">
           <CheckoutFlow cart={cart} />
         </div>
