@@ -20,6 +20,11 @@ module.exports = {
         hostname: 'medusa-server-testing.s3.amazonaws.com',
         pathname: '/**'
       }
+      {
+        protocol: 'https',
+        hostname: 'https://minio.stylishslacks.cfd',
+        pathname: '/**'
+      }
     ]
   }
 };
