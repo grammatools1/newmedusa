@@ -9,7 +9,7 @@ import CheckoutFlow from './CheckoutFlow';
 
 
 
-function Checkout({ cartId }) {
+function Checkout() {
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(false);
 
