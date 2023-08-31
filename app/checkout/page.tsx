@@ -1,51 +1,42 @@
 "use client"
 
 import React, { useState, useEffect, Suspense } from 'react';
-import { cookies } from 'next/headers';
-import { getCart } from '../lib/medusa';
-import CheckoutFlow from './CheckoutFlow';
-import CartModal from 'components/cart/CartModal';
+import dynamic from 'next/dynamic';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-function Checkout() {
-  const [loading, setLoading] = useState(true);
-  const [cart, setCart] = useState();
+const CheckoutFlow = dynamic(() => import('./CheckoutFlow'), { ssr: false });
+
+function Checkout({ cartId }) {
+  const [cart, setCart] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    const fetchCart = async () => {
+    async function fetchCart() {
       setLoading(true);
-
-      // Get the cart ID from cookies
-      const cartId = cookies(document.cookie).get('cartId')?.value;
-
-      // If no cart ID is found, set `loading` state to `false`
-      if (!cartId) {
-        setLoading(false);
-        return;
-      }
-
-      try {
-        // Retrieve the cart using the `getCart` function
-        const retrievedCart = await getCart(cartId);
-        setCart(retrievedCart);
-        setLoading(false);
-      } catch (error) {
-        console.log('Error retrieving cart:', error);
-      }
-    };
+      const response = await fetch(`/api/cart/${cartId}`); // Use the appropriate API endpoint
+      const data = await response.json();
+      setCart(data);
+      setLoading(false);
+    }
 
     fetchCart();
-  }, []);
-
-  if (loading) {
-    return <div className="loader">Loading...</div>;
-  }
+  }, [cartId]);
 
   return (
     <>
-      <CartModal cart={cart} />
-      <CheckoutFlow cart={cart} />
+      <ToastContainer position="top-right" />
+
+      {loading && <div className="loader">Loading...</div>}
+
+      {!loading && cart && (
+        <div className="checkout-container">
+          <CheckoutFlow cart={cart} />
+        </div>
+      )}
     </>
   );
 }
 
 export default Checkout;
+
