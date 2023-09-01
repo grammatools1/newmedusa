@@ -37,7 +37,6 @@ interface Props {
   const [giftCardCode, setGiftCardCode] = useState('');
  /* const [orderTotal, setOrderTotal] = useState(cart.total);
   const [cartItems, setCartItems] = useState(cart.items);*/
-  const [cart, setCart] = useState({});
   const [orderTotal, setOrderTotal] = useState(0);
   const [cartItems, setCartItems] = useState([]);
   const [step, setStep] = useState(1);
