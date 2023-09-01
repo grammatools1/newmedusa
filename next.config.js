@@ -27,7 +27,7 @@ module.exports = withStoreConfig({
       },
       {
         protocol: 'https',
-        hostname: 'https://minio.stylishslacks.cfd',
+        hostname: 'minio.stylishslacks.cfd',
         pathname: '/**'
       }
     ]
