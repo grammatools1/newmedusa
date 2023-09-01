@@ -221,7 +221,7 @@ interface Props {
                   <ul>
                     {cartItems.map((item: any) => (
                       <li key={item.id}>
-                        {item.quantity} x {item.product.title} - ${item.total.toFixed(2)}
+                        {item.quantity} x {item.merchandise.title} - ${item.total.toFixed(2)}
                       </li>
                     ))}
                   </ul>
