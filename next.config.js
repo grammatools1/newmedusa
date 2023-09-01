@@ -1,12 +1,17 @@
 /** @type {import('next').NextConfig} */
-module.exports = {
+
+const { withStoreConfig } = require("./store-config")
+
+module.exports = withStoreConfig({
   eslint: {
     // Disabling on production builds because we're running checks on PRs via GitHub Actions.
-    ignoreDuringBuilds: true
+    ignoreDuringBuilds: false
   },
   experimental: {
-    serverActions: true
+    serverActions: false
   },
+  reactStrictMode: true,
+  swcMinify: true,
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
@@ -26,5 +31,5 @@ module.exports = {
         pathname: '/**'
       }
     ]
-  }
-};
+  },
+})
