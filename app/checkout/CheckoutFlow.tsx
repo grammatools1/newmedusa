@@ -76,12 +76,14 @@ interface Props {
 
 const cartId = getCartIdFromCookie(); // retrieve the cart ID from the cookie
 
-  useEffect(() => {
-  fetchCartItems(cartId);
-}, [cart, medusa]); // Include medusa in the dependencies array
+ useEffect(() => {
+  if (cartId) {
+    fetchCartItems(cartId);
+  }
+}, [cartId, medusa]);
 
-const fetchCartItems = async (cartId: string ) => {
-  console.log('cart:', cart);
+const fetchCartItems = async (cartId: string) => {
+  console.log('cartId:', cartId);
   
   if (!medusa) {
     console.error('Medusa not initialized');
@@ -108,8 +110,6 @@ const fetchCartItems = async (cartId: string ) => {
     setLoading(false);
   }
 };
-
-
 
   const handleShippingComplete = () => {
     setStep(2);
