@@ -28,7 +28,7 @@ type Props = {
       cartId?: string | null | undefined;
     };
 
-  function CheckoutFlow() {
+  function CheckoutFlow({ cart, onComplete, cartId }: Props) {
   const [cartId, setCartId] = useState<string | null | undefined>(null);
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
