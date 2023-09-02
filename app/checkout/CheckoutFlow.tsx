@@ -27,10 +27,9 @@ type PaymentMethodKey = keyof typeof PaymentMethod;
 interface Props {
   cart: any;
 }
-
+ const [medusa, setMedusa] = useState<Medusa | null>(null);
   function CheckoutFlow(props: Props) {
   const { cart } = props;
-  const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
   const [couponCode, setCouponCode] = useState('');
@@ -101,8 +100,8 @@ useEffect(() => {
     console.log('updatedCart:', updatedCart);
     setOrderTotal(updatedCart.total);
     console.log('orderTotal:', updatedCart.total);
-    setCartItems(items);
-    console.log('cartItems:', cartItems);
+    setCartItems(updatedCart.items);
+    console.log('cartItems:', updatedCart.items);
   } catch (error) {
     console.error('Error fetching cart items:', error);
     toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
