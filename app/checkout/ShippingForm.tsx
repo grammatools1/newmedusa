@@ -143,76 +143,32 @@ const countryOptions: CountryOption[] = React.useMemo(() => {
 }, []);
 
 useEffect(() => {
-  const fetchData = async () => {
-    try {
-      if (medusa && medusa.cart && medusa.cart.id) {
-        setIsLoading(true);
-        const data = await fetchCartItems(medusa.cart);
-        console.log('Cart items:', data);
-      }
-    } catch (error) {
-      console.error('Error fetching cart items:', error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  fetchCartItems(cart);
+}, [cart, medusa]);
+    
 
-  const throttledFetchData = throttle(fetchData, 1000);
-
-  throttledFetchData();
-
-  return () => {
-    throttledFetchData.cancel();
-  };
-}, [medusa, medusa && medusa.cart && medusa.cart.id]);
-
-const updateQuantity = async (item: any, quantity: number) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-      
-      if (!updatedCart) {
-        reject(new Error('Cart data is undefined or null.'));
-        return;
-      }
-
-      const itemToUpdate = updatedCart.items.find((i: any) => i.id === item.id);
-
-      if (!itemToUpdate) {
-        reject(new Error('Item data is undefined or null.'));
-        return;
-      }
-
-      const hasQuantityChanged = quantity !== itemToUpdate.quantity;
-      const shouldDeleteItem = quantity === 0;
-
-      if (!hasQuantityChanged && !shouldDeleteItem) {
-        resolve(cart);
-        return;
-      }
-
-      const { cart: updatedCart2 } = await medusa.carts.update(cart.id, {
-        items: [
-          {
-            ...itemToUpdate,
-            quantity,
-          },
-        ],
-      });
-
-      if (!updatedCart2) {
-        reject(new Error('Cart data is undefined or null.'));
-        return;
-      }
-
-      resolve(updatedCart2);
-    } catch (error) {
-      console.error('Error updating cart:', error);
-      reject(error);
-    }
-  });
-};
+const fetchCartItems = async (cart: { id: string }) => {
+  console.log('cart:', cart);
   
+  // Check if medusa is not initialized
+  if (!medusa) {
+    console.error('Medusa not initialized');
+    return;
+  }
+
+  try {
+        setIsLoading(true);
+        const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+        // Replace below `console.log` statements with your own custom logic
+      } catch (error) {
+        console.error('Error fetching cart items:', error);
+        // Replace below `toast` statement with your own custom logic
+        console.error('Failed to fetch cart items. Please refresh the page.');
+      } finally {
+        setIsLoading(false);
+      }
+};
+    
   useEffect(() => {
     const fetchShippingOptions = async () => {
       try {
