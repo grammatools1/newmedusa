@@ -20,8 +20,13 @@ const PaymentMethod = {
     wallet_address: '',
   },
 };
-
 type PaymentMethodKey = keyof typeof PaymentMethod;
+
+type Props = {
+  cart: Medusa.Cart;
+  onComplete: () => void;
+  cartId?: string | null; // make cartId an optional prop and allow null values
+};
 
 function CheckoutFlow() {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
