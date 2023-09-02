@@ -90,7 +90,7 @@ const fetchCartItems = async (cartId: string ) => {
 
   try {
     setLoading(true);
-    const { cart: updatedCart } = await medusa.carts.retrieve(cartid);
+    const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
     
     if (!updatedCart) {
       console.error('Cart data is undefined or null');
