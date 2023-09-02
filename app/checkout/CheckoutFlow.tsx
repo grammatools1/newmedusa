@@ -58,8 +58,7 @@ interface Props {
     };
 
     initializeMedusa();
-  }, []);
-
+  }, []); 
  
   useEffect(() => {
     fetchCartItems(cart);
@@ -67,8 +66,8 @@ interface Props {
 
   const fetchCartItems = async (cart: { id: string }) => {
   if (!medusa) {
-    console.error('Medusa not initialized');
-    return;
+   /* console.error('Medusa not initialized');*/
+   return <div>Loading...</div>;
   }
 
   try {
