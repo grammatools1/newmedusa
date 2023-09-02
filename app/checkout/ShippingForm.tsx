@@ -166,26 +166,52 @@ useEffect(() => {
   };
 }, [medusa, medusa && medusa.cart && medusa.cart.id]);
 
-const fetchCartItems = async (cart: { id: string }) => {
-  return new Promise((resolve, reject) => {
-    if (!medusa) {
-      reject(new Error('Medusa not initialized.'));
-    }
-
+const updateQuantity = async (item: any, quantity: number) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);    
+      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
       
       if (!updatedCart) {
-         reject(new Error('Cart data is undefined or null.'));
-      } else {
-         resolve(updatedCart); 
+        reject(new Error('Cart data is undefined or null.'));
+        return;
       }
-      
+
+      const itemToUpdate = updatedCart.items.find((i: any) => i.id === item.id);
+
+      if (!itemToUpdate) {
+        reject(new Error('Item data is undefined or null.'));
+        return;
+      }
+
+      const hasQuantityChanged = quantity !== itemToUpdate.quantity;
+      const shouldDeleteItem = quantity === 0;
+
+      if (!hasQuantityChanged && !shouldDeleteItem) {
+        resolve(cart);
+        return;
+      }
+
+      const { cart: updatedCart2 } = await medusa.carts.update(cart.id, {
+        items: [
+          {
+            ...itemToUpdate,
+            quantity,
+          },
+        ],
+      });
+
+      if (!updatedCart2) {
+        reject(new Error('Cart data is undefined or null.'));
+        return;
+      }
+
+      resolve(updatedCart2);
     } catch (error) {
-       reject(error);
-    } 
+      console.error('Error updating cart:', error);
+      reject(error);
+    }
   });
-}
+};
   
   useEffect(() => {
     const fetchShippingOptions = async () => {
