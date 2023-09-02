@@ -8,11 +8,11 @@ import * as yup from 'yup';
 import { ValidationError as YupValidationError } from 'yup';
 import Autocomplete from 'react-autocomplete';
 import FormFields, { CountryOption } from './formFields';
-import { throttle } from 'lodash';
 
-interface Props {
+ type Props = {
   cart: any; // Replace 'any' with your actual cart type
   onComplete: () => void;
+  cartId?: string; // make cartId an optional prop
 }
 
 interface CombinedFormData {
@@ -52,13 +52,6 @@ const validationSchema = yup.object().shape({
   phone: yup.string().required(),
   company: yup.string().notRequired(),
 });
-
-
-  type Props = {
-  cart: any; // Replace 'any' with your actual cart type
-  onComplete: () => void;
-  cartId?: string; // make cartId an optional prop
-}
 
   const ShippingForm = ({ cart, onComplete, cartId }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null); 
