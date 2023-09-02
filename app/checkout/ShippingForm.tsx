@@ -9,12 +9,6 @@ import { ValidationError as YupValidationError } from 'yup';
 import Autocomplete from 'react-autocomplete';
 import FormFields, { CountryOption } from './formFields';
 
- type Props = {
-  cart: any; // Replace 'any' with your actual cart type
-  onComplete: () => void;
-  cartId?: string; // make cartId an optional prop
-}
-
 interface CombinedFormData {
   firstName: string;
   lastName: string;
@@ -52,6 +46,11 @@ const validationSchema = yup.object().shape({
   phone: yup.string().required(),
   company: yup.string().notRequired(),
 });
+
+ interface Props {
+  cart: any; // Replace 'any' with your actual cart type
+  onComplete: () => void;
+  cartId?: string; /
 
   const ShippingForm = ({ cart, onComplete, cartId }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null); 
