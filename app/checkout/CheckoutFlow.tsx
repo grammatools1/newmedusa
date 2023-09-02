@@ -65,12 +65,22 @@ interface Props {
 
   initializeMedusa();
 }, []);
-    
+
+  const getCartIdFromCookie = () => {
+  const cookie = document.cookie.split(';').find((c) => c.trim().startsWith('cartId='));
+  if (!cookie) {
+    return null; // no cart ID cookie found
+  }
+  return cookie.split('=')[1]; // extract the value of the cart ID cookie
+};
+
+const cartId = getCartIdFromCookie(); // retrieve the cart ID from the cookie
+
   useEffect(() => {
   fetchCartItems(cart);
 }, [cart, medusa]); // Include medusa in the dependencies array
 
-const fetchCartItems = async (cart: { id: string }) => {
+const fetchCartItems = async (cart: { cartId: string }) => {
   console.log('cart:', cart);
   
   if (!medusa) {
@@ -80,7 +90,7 @@ const fetchCartItems = async (cart: { id: string }) => {
 
   try {
     setLoading(true);
-    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+    const { cart: updatedCart } = await medusa.carts.retrieve(cartid);
     
     if (!updatedCart) {
       console.error('Cart data is undefined or null');
