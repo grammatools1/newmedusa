@@ -6,7 +6,6 @@ import ShippingForm from './ShippingForm';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-
 const PaymentMethod = {
   credit_card: {
     card_number: '',
@@ -24,88 +23,85 @@ const PaymentMethod = {
 
 type PaymentMethodKey = keyof typeof PaymentMethod;
 
- 
-  function CheckoutFlow() {
+function CheckoutFlow() {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
   const [couponCode, setCouponCode] = useState('');
   const [giftCardCode, setGiftCardCode] = useState('');
- /* const [orderTotal, setOrderTotal] = useState(cart.total);
-  const [cartItems, setCartItems] = useState(cart.items);*/
   const [orderTotal, setOrderTotal] = useState(0);
   const [cartItems, setCartItems] = useState([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
- useEffect(() => {
-  const initializeMedusa = async () => {
-    const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+  const getCartIdFromCookie = () => {
+    const cookie = document.cookie.split(';').find((c) => c.trim().startsWith('cartId='));
+    if (!cookie) {
+      return null; // no cart ID cookie found
+    }
+    return cookie.split('=')[1]; // extract the value of the cart ID cookie
+  };
 
-    if (!medusaBaseUrl) {
-      console.error('Medusa base URL is not defined.');
+  const cartId = getCartIdFromCookie(); // retrieve the cart ID from the cookie
+
+  useEffect(() => {
+    const initializeMedusa = async () => {
+      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+
+      if (!medusaBaseUrl) {
+        console.error('Medusa base URL is not defined.');
+        return;
+      }
+
+      try {
+        const initializedMedusa = new Medusa({
+          baseUrl: medusaBaseUrl,
+          maxRetries: 3,
+        });
+        console.log('Initialized Medusa:', initializedMedusa);
+        setMedusa(initializedMedusa);
+      } catch (error) {
+        console.error('Error initializing Medusa:', error);
+      }
+    };
+
+    initializeMedusa();
+  }, []);
+
+  useEffect(() => {
+    if (cartId) {
+      fetchCartItems(cartId);
+    }
+  }, [cartId, medusa]);
+
+  const fetchCartItems = async (cartId: string) => {
+    console.log('cartId:', cartId);
+  
+    if (!medusa) {
+      console.error('Medusa not initialized');
       return;
     }
 
     try {
-      const initializedMedusa = new Medusa({
-        baseUrl: medusaBaseUrl,
-        maxRetries: 3,
-      });
-      console.log('Initialized Medusa:', initializedMedusa);
-      setMedusa(initializedMedusa);
+      setLoading(true);
+      const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
+    
+      if (!updatedCart) {
+        console.error('Cart data is undefined or null');
+        return;
+      }
+
+      setOrderTotal(updatedCart.total);
+      console.log('orderTotal:', updatedCart.total);
+      setCartItems(updatedCart.items);
+      console.log('cartItems:', updatedCart.items);
     } catch (error) {
-      console.error('Error initializing Medusa:', error);
+      console.error('Error fetching cart items:', error);
+      toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
+    } finally {
+      setLoading(false);
     }
   };
-
-  initializeMedusa();
-}, []);
-
-  const getCartIdFromCookie = () => {
-  const cookie = document.cookie.split(';').find((c) => c.trim().startsWith('cartId='));
-  if (!cookie) {
-    return null; // no cart ID cookie found
-  }
-  return cookie.split('=')[1]; // extract the value of the cart ID cookie
-};
-
-const cartId = getCartIdFromCookie(); // retrieve the cart ID from the cookie
-
- useEffect(() => {
-  if (cartId) {
-    fetchCartItems(cartId);
-  }
-}, [cartId, medusa]);
-
-const fetchCartItems = async (cartId: string) => {
-  console.log('cartId:', cartId);
-  
-  if (!medusa) {
-    console.error('Medusa not initialized');
-    return;
-  }
-
-  try {
-    setLoading(true);
-    const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
-    
-    if (!updatedCart) {
-      console.error('Cart data is undefined or null');
-      return;
-    }
-
-    setOrderTotal(updatedCart.total);
-    console.log('orderTotal:', updatedCart.total);
-    setCartItems(updatedCart.items);
-    console.log('cartItems:', updatedCart.items);
-  } catch (error) {
-    console.error('Error fetching cart items:', error);
-    toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
-  } finally {
-    setLoading(false);
-  }
-};
 
   const handleShippingComplete = () => {
     setStep(2);
@@ -115,70 +111,64 @@ const fetchCartItems = async (cartId: string) => {
     setStep(3);
   };
 
- const handlePlaceOrder = async () => {
-  if (!medusa) return;
+  const handlePlaceOrder = async () => {
+    if (!medusa || !cartId) return;
 
-  try {
-    setLoading(true);
-    const paymentData = {
-      provider_id: selectedPaymentMethod,
-      data: {
-        ...PaymentMethod[selectedPaymentMethod],
-      },
-    };
+    try {
+      setLoading(true);
+      const paymentData = {
+        provider_id: selectedPaymentMethod,
+        data: {
+          ...PaymentMethod[selectedPaymentMethod],
+        },
+      };
 
-    await medusa.carts.setPaymentSession(cart.id, paymentData);
-    const { type, data } = await medusa.carts.complete(cart.id);
-    console.log('Checkout Completed:', type, data);
-    toast.success('Your order has been successfully placed!', { autoClose: 3000 });
-    setConfirmOrder(false);
-    // TODO: Display order confirmation or handle any further actions
-  } catch (error) {
-    console.error('Error completing checkout:', error);
-    toast.error('Failed to place order. Please try again or contact support.', { autoClose: 3000 });
-  } finally {
-    setLoading(false);
-  }
-};
-   
- const handleApplyCoupon = async () => {
-  if (!medusa || !cart || !couponCode) return;
-
-  try {
-    let cartData = cart;
-    const { cart: updatedCartData } = await medusa.carts.update(cartData.id, {
-      discounts: [{ code: couponCode }],
-    });
-    setOrderTotal(updatedCartData.total);
-    setCouponCode("");
-
-    toast.success("Coupon applied!", { autoClose: 3000 });
-  } catch (error) {
-    console.error("Error applying coupon:", error);
-    toast.error("Failed to apply coupon. Please try again or contact support.", { autoClose: 3000 });
-  }
-};
-
-
-
-   
-  const handleApplyGiftCard = useCallback(async () => {
-    if (!medusa || !giftCardCode) {
-      return;
+      await medusa.carts.setPaymentSession(cartId, paymentData);
+      const { type, data } = await medusa.carts.complete(cartId);
+      console.log('Checkout Completed:', type, data);
+      toast.success('Your order has been successfully placed!', { autoClose: 3000 });
+      setConfirmOrder(false);
+      // TODO: Display order confirmation or handle any further actions
+    } catch (error) {
+      console.error('Error completing checkout:', error);
+      toast.error('Failed to place order. Please try again or contact support.', { autoClose: 3000 });
+    } finally {
+      setLoading(false);
     }
+  };
+   
+  const handleApplyCoupon = async () => {
+    if (!medusa || !cartId || !couponCode) return;
+
+    try {
+      const { cart: updatedCartData } = await medusa.carts.update(cartId, {
+        discounts: [{ code: couponCode }],
+      });
+      setOrderTotal(updatedCartData.total);
+      setCouponCode("");
+
+      toast.success("Coupon applied!", { autoClose: 3000 });
+    } catch (error) {
+      console.error("Error applying coupon:", error);
+      toast.error("Failed to apply coupon. Please try again or contact support.", { autoClose: 3000 });
+    }
+  };
+
+  const handleApplyGiftCard = useCallback(async () => {
+    if (!medusa || !cartId || !giftCardCode) return;
 
    try {
-  const { cart: updatedCart } = await medusa.carts.update(cart.id, {
-    gift_cards: [{ code: giftCardCode }],
-  });
-  setOrderTotal(updatedCart.total);
+      const { cart: updatedCart } = await medusa.carts.update(cartId, {
+        gift_cards: [{ code: giftCardCode }],
+      });
+      setOrderTotal(updatedCart.total);
 
-  toast.success("Gift card applied!", { autoClose: 3000 });
-} catch (error) {
-  console.error("Error applying gift card:", error);
-  toast.error("Failed to apply gift card. Please try again or contact support.", { autoClose: 3000 });
-} 
-}, [cart, giftCardCode, medusa]);
+      toast.success("Gift card applied!", { autoClose: 3000 });
+    } catch (error) {
+      console.error("Error applying gift card:", error);
+      toast.error("Failed to apply gift card. Please try again or contact support.", { autoClose: 3000 });
+    } 
+  }, [cartId, giftCardCode, medusa]);
 
   const validateForm = (formValues: any) => {
     const errors: any = {};
@@ -211,9 +201,9 @@ const fetchCartItems = async (cartId: string) => {
   };
 
   const handleCreditCardChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
-  const { name, value } = e.currentTarget;
-  setSelectedPaymentMethod('credit_card');
-}, []);
+    const { name, value } = e.currentTarget;
+    setSelectedPaymentMethod('credit_card');
+  }, []);
 
   const handlePaypalChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
@@ -250,7 +240,7 @@ const fetchCartItems = async (cartId: string) => {
                         {item.quantity} x {item.product ? item.product.title : 'Product Title Not Available'} - ${item.total.toFixed(2)}
                       </li>
                     ))}
-                    </ul>
+                  </ul>
                   <div className="coupon-gift">
                     <div>
                       <label htmlFor="coupon">Coupon Code:</label>
@@ -276,7 +266,7 @@ const fetchCartItems = async (cartId: string) => {
                     </div>
                   </div>
                   <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
-                  <ShippingForm cart={cart} onComplete={handleShippingComplete} />
+                  <ShippingForm cartId={cartId} onComplete={handleShippingComplete} />
                 </>
               )}
             </div>
@@ -286,7 +276,7 @@ const fetchCartItems = async (cartId: string) => {
               {/* Step 2: Shipping Information */}
               <h1>Step 2: Shipping Information</h1>
               <button onClick={handleGoBack}>Go back</button>
-              <ShippingForm cart={cart} onComplete={handleNextStep} />
+              <ShippingForm cartId={cartId} onComplete={handleNextStep} />
             </div>
           )}
           {step === 3 && (
@@ -357,4 +347,5 @@ const fetchCartItems = async (cartId: string) => {
     </>
   );
 }
+
 export default CheckoutFlow;
