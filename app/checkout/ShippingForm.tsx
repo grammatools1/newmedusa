@@ -141,35 +141,48 @@ const countryOptions: CountryOption[] = React.useMemo(() => {
   initializeMedusa();
 }, []);
 
-   useEffect(() => {
-  fetchCartItems(cart);
-}, [cart, medusa]); // Include medusa in the dependencies array
+ useEffect(() => {
+  const fetchData = async () => {
+    try {
+      if (!medusa?.cart?.id) {
+        console.error('Medusa cart ID not found.');
+        return;
+      }
+
+      setIsLoading(true);
+      const data = await fetchCartItems(medusa.cart);
+      console.log('Cart items:', data);
+
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  fetchData();
+}, [medusa, medusa?.cart?.id]);
 
 const fetchCartItems = async (cart: { id: string }) => {
-  console.log('cart:', cart);
-  
-  if (!medusa) {
-    console.error('Medusa not initialized');
-    return;
-  }
-
-  try {
-   setIsLoading(true);
-    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-    
-    if (!updatedCart) {
-      console.error('Cart data is undefined or null');
-      return;
+  return new Promise((resolve, reject) => {
+    if (!medusa) {
+      reject(new Error('Medusa not initialized.'));
     }
 
-  } catch (error) {
-     console.error('Error fetching cart items:', error);
+    try {
+      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);    
       
-    console.error('Failed to fetch cart items. Please refresh the page.');
-  } finally {
-   setIsLoading(false);
-  }
-};
+      if (!updatedCart) {
+         reject(new Error('Cart data is undefined or null.'));
+      } else {
+         resolve(updatedCart); 
+      }
+      
+    } catch (error) {
+       reject(error);
+    } 
+  });
+}
   
   useEffect(() => {
     const fetchShippingOptions = async () => {
