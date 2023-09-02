@@ -29,7 +29,7 @@ type Props = {
     };
 
   function CheckoutFlow({ cart, onComplete, cartId }: Props) {
-  const [userCartId, setUserCartId] = useState<string | null | undefined>(cartId);
+  const [userCartId, setUserCartId] = useState<string | undefined>(cartId);
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
