@@ -27,9 +27,10 @@ type PaymentMethodKey = keyof typeof PaymentMethod;
 interface Props {
   cart: any;
 }
- const [medusa, setMedusa] = useState<Medusa | null>(null);
+ 
   function CheckoutFlow(props: Props) {
   const { cart } = props;
+  const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
   const [couponCode, setCouponCode] = useState('');
@@ -40,6 +41,11 @@ interface Props {
   const [cartItems, setCartItems] = useState([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
+
+    useEffect(() => {
+  setMedusa(MEDUSA_ENDPOINT);
+  console.log('Medusa endpoint set:', medusa);
+  }, []);
 
 useEffect(() => {
   const initializeMedusa = async () => {
