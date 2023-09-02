@@ -286,7 +286,9 @@ type Props = {
               {/* Step 2: Shipping Information */}
               <h1>Step 2: Shipping Information</h1>
               <button onClick={handleGoBack}>Go back</button>
-              <ShippingForm cartId={cartId} onComplete={handleNextStep} />
+              {cartId !== null && (
+            <ShippingForm cartId={cartId} onComplete={handleNextStep} />
+          )}
             </div>
           )}
           {step === 3 && (
