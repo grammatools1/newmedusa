@@ -54,7 +54,13 @@ const validationSchema = yup.object().shape({
 });
 
 
-  const ShippingForm = ({ cart, onComplete }: Props) => {
+  type Props = {
+  cart: any; // Replace 'any' with your actual cart type
+  onComplete: () => void;
+  cartId?: string; // make cartId an optional prop
+}
+
+  const ShippingForm = ({ cart, onComplete, cartId }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null); 
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
@@ -104,89 +110,68 @@ const validationSchema = yup.object().shape({
 
   const { errors } = formState;
 
-const countryOptions: CountryOption[] = React.useMemo(() => {
-  const countryList = require('country-list');
-  const countries = countryList.getNameList();
-  
-  if (!Array.isArray(countries)) {
-    return [];
-  }
+  const countryOptions: CountryOption[] = React.useMemo(() => {
+    const countryList = require('country-list');
+    const countries = countryList.getNameList();
+    
+    if (!Array.isArray(countries)) {
+      return [];
+    }
 
-  return countries.map((countryCode: string) => ({
-    value: countryCode,
-    label: countryList.getName(countryCode),
-  }));
-}, []);
+    return countries.map((countryCode: string) => ({
+      value: countryCode,
+      label: countryList.getName(countryCode),
+    }));
+  }, []);
 
   useEffect(() => {
-  const initializeMedusa = async () => {
-  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+    const initializeMedusa = async () => {
+    const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
-    if (!medusaBaseUrl) {
-      console.error('Medusa base URL is not defined.');
-      return;
-    }
-
-    try {
-      const initializedMedusa = new Medusa({
-        baseUrl: medusaBaseUrl,
-        maxRetries: 3,
-      });
-      console.log('Initialized Medusa:', initializedMedusa);
-      setMedusa(initializedMedusa);
-    } catch (error) {
-      console.error('Error initializing Medusa:', error);
-    }
-  };
-
-  initializeMedusa();
-}, []);
-
-useEffect(() => {
-  fetchCartItems(cart);
-}, [cart, medusa]);
-    
-
-const fetchCartItems = async (cart: { id: string }) => {
-  console.log('cart:', cart);
-  
-  // Check if medusa is not initialized
-  if (!medusa) {
-    console.error('Medusa not initialized');
-    return;
-  }
-
-  try {
-        setIsLoading(true);
-        const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-        // Replace below `console.log` statements with your own custom logic
-      } catch (error) {
-        console.error('Error fetching cart items:', error);
-        // Replace below `toast` statement with your own custom logic
-        console.error('Failed to fetch cart items. Please refresh the page.');
-      } finally {
-        setIsLoading(false);
+      if (!medusaBaseUrl) {
+        console.error('Medusa base URL is not defined.');
+        return;
       }
-};
-    
-  useEffect(() => {
-    const fetchShippingOptions = async () => {
-      try {
-        if (!medusa) {
-          console.error('Medusa not initialized');
-          return;
-        }
 
-        const { shipping_options } = await medusa.shippingOptions.list();
-        setShippingOptions(shipping_options);
+      try {
+        const initializedMedusa = new Medusa({
+          baseUrl: medusaBaseUrl,
+          maxRetries: 3,
+        });
+        console.log('Initialized Medusa:', initializedMedusa);
+        setMedusa(initializedMedusa);
       } catch (error) {
-        console.error('Error retrieving shipping options', error);
-        setError(error as FormErrors);
+        console.error('Error initializing Medusa:', error);
       }
     };
 
-    fetchShippingOptions();
+    initializeMedusa();
   }, []);
+
+  useEffect(() => {
+    if (cartId) {
+      fetchCartItems(cartId);
+    }
+  }, [cartId, medusa]);
+
+  useEffect(() => {
+      const fetchShippingOptions = async () => {
+        try {
+          if (!medusa) {
+            console.error('Medusa not initialized');
+            return;
+          }
+
+          const { shipping_options } = await medusa.shippingOptions.list();
+          setShippingOptions(shipping_options);
+        } catch (error) {
+          console.error('Error retrieving shipping options', error);
+          setError(error as FormErrors);
+        }
+      };
+
+      fetchShippingOptions();
+    }, []);
 
   const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
     const {
@@ -239,6 +224,28 @@ const fetchCartItems = async (cart: { id: string }) => {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const fetchCartItems = async (cartId: string) => {
+    console.log('cartId:', cartId);
+  
+    // Check if medusa is not initialized
+    if (!medusa) {
+      console.error('Medusa not initialized');
+      return;
+    }
+
+    try {
+          setIsLoading(true);
+          const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
+          // Replace below `console.log` statements with your own custom logic
+        } catch (error) {
+          console.error('Error fetching cart items:', error);
+          // Replace below `toast` statement with your own custom logic
+          console.error('Failed to fetch cart items. Please refresh the page.');
+        } finally {
+          setIsLoading(false);
+        }
   };
 
   const selectedCountryCode = useWatch({ control, name: 'countryCode' });
