@@ -103,17 +103,17 @@ const validationSchema = yup.object().shape({
 
   const { errors } = formState;
 
- const countryOptions: CountryOption[] = React.useMemo(() => {
-  const { getNameList, getName } = require('country-list');
-
-  const countries = getNameList();
-  if (countries === undefined) {
-    return []; // handle the error by returning an empty array or some default value
+const countryOptions: CountryOption[] = React.useMemo(() => {
+  const countryList = require('country-list');
+  const countries = countryList.getNameList();
+  
+  if (!Array.isArray(countries)) {
+    return [];
   }
 
   return countries.map((countryCode: string) => ({
     value: countryCode,
-    label: getName(countryCode),
+    label: countryList.getName(countryCode),
   }));
 }, []);
 
