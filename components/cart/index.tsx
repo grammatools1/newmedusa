@@ -1,7 +1,7 @@
 import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CartModal from './modal';
-import CheckoutFlow from 'app/checkout/CheckoutFlow';
+
 
 
 export default async function Cart() {
@@ -18,11 +18,9 @@ export default async function Cart() {
   if (!cartId || !cart) {
     cart = await createCart();
   }
-  const checkoutFlowComponent = <CheckoutFlow cart={cart} />;
   return (
     <>
       <CartModal cart={cart} />
-       {checkoutFlowComponent}
     </>
   );
 }
