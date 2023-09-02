@@ -29,7 +29,7 @@ type Props = {
     };
 
   function CheckoutFlow({ cart, onComplete, cartId }: Props) {
-  const [cartId, setCartId] = useState<string | null | undefined>(null);
+  const [userCartId, setUserCartId] = useState<string | null | undefined>(cartId);
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
@@ -50,7 +50,7 @@ type Props = {
 
   useEffect(() => {
     const id = getCartIdFromCookie();
-    setCartId(id || null); // set cartId to null or the retrieved ID
+    setUserCartId(id || null); // set cartId to null or the retrieved ID
   }, []);
 
   useEffect(() => {
@@ -275,7 +275,7 @@ type Props = {
                     </div>
                   </div>
                   <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
-                  <ShippingForm cartId={cartId} onComplete={handleShippingComplete} />
+                  <ShippingForm cartId={userCartId} onComplete={handleShippingComplete} />
 
                 </>
               )}
