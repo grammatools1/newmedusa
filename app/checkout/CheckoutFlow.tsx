@@ -77,10 +77,10 @@ interface Props {
 const cartId = getCartIdFromCookie(); // retrieve the cart ID from the cookie
 
   useEffect(() => {
-  fetchCartItems(cart);
+  fetchCartItems(cartid);
 }, [cart, medusa]); // Include medusa in the dependencies array
 
-const fetchCartItems = async (cart: { cartId: string }) => {
+const fetchCartItems = async (cartId: string ) => {
   console.log('cart:', cart);
   
   if (!medusa) {
