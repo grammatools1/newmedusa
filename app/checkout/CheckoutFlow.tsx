@@ -50,7 +50,7 @@ type Props = {
 
   useEffect(() => {
     const id = getCartIdFromCookie();
-    setUserCartId(id || null); // set cartId to null or the retrieved ID
+     setUserCartId(id != null ? id : undefined);  // set cartId to null or the retrieved ID
   }, []);
 
   useEffect(() => {
