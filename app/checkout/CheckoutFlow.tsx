@@ -275,7 +275,7 @@ type Props = {
                     </div>
                   </div>
                   <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
-                  <ShippingForm cartId={cartId || undefined} onComplete={handleShippingComplete} />
+                  <ShippingForm cartId={cartId} onComplete={handleShippingComplete} />
 
                 </>
               )}
