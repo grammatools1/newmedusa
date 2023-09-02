@@ -66,8 +66,9 @@ interface Props {
 
   const fetchCartItems = async (cart: { id: string }) => {
   if (!medusa) {
-   /* console.error('Medusa not initialized');*/
-   return <div>Loading...</div>;
+    console.error('Medusa not initialized');
+   return 
+   /*<div>Loading...</div>;*/
   }
 
   try {
