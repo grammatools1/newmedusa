@@ -65,29 +65,7 @@ interface Props {
 
   initializeMedusa();
 }, []);
-
     
-
-  /*useEffect(() => {
-    const initializeMedusa = async () => {
-      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-      if (!medusaBaseUrl) {
-        console.error('Medusa base URL is not defined.');
-        return;
-      }
-
-      const initializedMedusa = new Medusa({
-        baseUrl: medusaBaseUrl,
-        maxRetries: 3,
-      });
-      setMedusa(initializedMedusa);
-    };
-
-    initializeMedusa();
-  }, []); */
-
-    
-   
   useEffect(() => {
   fetchCartItems(cart);
 }, [cart, medusa]); // Include medusa in the dependencies array
@@ -261,12 +239,12 @@ const fetchCartItems = async (cart: { id: string }) => {
               ) : (
                 <>
                   <ul>
-                    {cartItems.map((item: any) => (
+                   {cartItems.map((item: any) => (
                       <li key={item.id}>
-                        {item.quantity} x {item.product.title} - ${item.total.toFixed(2)}
+                        {item.quantity} x {item.product ? item.product.title : 'Product Title Not Available'} - ${item.total.toFixed(2)}
                       </li>
                     ))}
-                  </ul>
+                    </ul>
                   <div className="coupon-gift">
                     <div>
                       <label htmlFor="coupon">Coupon Code:</label>
