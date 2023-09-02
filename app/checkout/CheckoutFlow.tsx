@@ -89,16 +89,16 @@ interface Props {
     
    
   useEffect(() => {
-    fetchCartItems(cart);
-  }, [cart]);
+  fetchCartItems(cart);
+}, [cart, medusa]); // Include medusa in the dependencies array
 
-
- const fetchCartItems = async (cart: { id: string }) => {
+const fetchCartItems = async (cart: { id: string }) => {
   console.log('cart:', cart);
+  
+  // Check if medusa is not initialized
   if (!medusa) {
     console.error('Medusa not initialized');
-   return 
-   /*<div>Loading...</div>;*/
+    return;
   }
 
   try {
@@ -116,6 +116,7 @@ interface Props {
     setLoading(false);
   }
 };
+
 
   const handleShippingComplete = () => {
     setStep(2);
