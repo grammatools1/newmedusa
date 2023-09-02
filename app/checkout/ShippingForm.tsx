@@ -142,18 +142,14 @@ const countryOptions: CountryOption[] = React.useMemo(() => {
   initializeMedusa();
 }, []);
 
- useEffect(() => {
+useEffect(() => {
   const fetchData = async () => {
     try {
-      if (!medusa?.cart?.id) {
-        console.error('Medusa cart ID not found.');
-        return;
+      if (medusa && medusa.cart && medusa.cart.id) {
+        setIsLoading(true);
+        const data = await fetchCartItems(medusa.cart);
+        console.log('Cart items:', data);
       }
-
-      setIsLoading(true);
-      const data = await fetchCartItems(medusa.cart);
-      console.log('Cart items:', data);
-
     } catch (error) {
       console.error('Error fetching cart items:', error);
     } finally {
@@ -161,17 +157,14 @@ const countryOptions: CountryOption[] = React.useMemo(() => {
     }
   };
 
-  fetchData();
-}, [medusa, medusa?.cart?.id]);
-
-const throttledFetchData = throttle(fetchData, 1000); // Adjust throttle time here
+  const throttledFetchData = throttle(fetchData, 1000);
 
   throttledFetchData();
 
   return () => {
     throttledFetchData.cancel();
   };
-}, [medusa, medusa?.cart?.id])  
+}, [medusa, medusa && medusa.cart && medusa.cart.id]);
 
 const fetchCartItems = async (cart: { id: string }) => {
   return new Promise((resolve, reject) => {
