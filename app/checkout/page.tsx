@@ -39,9 +39,11 @@ function Checkout() {
 }, []);
 
 
- useEffect(() => {
-  fetchCartItems(cart);
-}, [cart, medusa]); // Include medusa in the dependencies array
+useEffect(() => {
+  if (cart) {
+    fetchCartItems(cart);
+  }
+}, [cart, medusa]);
 
 const fetchCartItems = async (cart: { id: string }) => {
   console.log('cart:', cart);
