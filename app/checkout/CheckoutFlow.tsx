@@ -24,12 +24,8 @@ const PaymentMethod = {
 
 type PaymentMethodKey = keyof typeof PaymentMethod;
 
-interface Props {
-  cart: any;
-}
  
-  function CheckoutFlow(props: Props) {
-  const { cart } = props;
+  function CheckoutFlow() {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
