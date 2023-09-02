@@ -22,7 +22,14 @@ const PaymentMethod = {
 };
 type PaymentMethodKey = keyof typeof PaymentMethod;
 
-function CheckoutFlow() {
+type Props = {
+      cart: string;
+      onComplete: () => void;
+      cartId?: string | null | undefined;
+    };
+
+  function CheckoutFlow() {
+  const [cartId, setCartId] = useState<string | null | undefined>(null);
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
@@ -33,7 +40,7 @@ function CheckoutFlow() {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
-  const getCartIdFromCookie = () => {
+    const getCartIdFromCookie = () => {
     const cookie = document.cookie.split(';').find((c) => c.trim().startsWith('cartId='));
     if (!cookie) {
       return null; // no cart ID cookie found
@@ -41,7 +48,10 @@ function CheckoutFlow() {
     return cookie.split('=')[1]; // extract the value of the cart ID cookie
   };
 
-  const cartId = getCartIdFromCookie(); // retrieve the cart ID from the cookie
+  useEffect(() => {
+    const id = getCartIdFromCookie();
+    setCartId(id || null); // set cartId to null or the retrieved ID
+  }, []);
 
   useEffect(() => {
     const initializeMedusa = async () => {
