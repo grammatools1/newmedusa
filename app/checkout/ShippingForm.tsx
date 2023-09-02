@@ -47,20 +47,19 @@ const validationSchema = yup.object().shape({
   company: yup.string().notRequired(),
 });
 
+type Props = {
+  cartId: string | undefined;
+  onComplete: () => void;
+};
 
-
-  type Props = {
-    cartId: string | undefined;
-    onComplete: () => void;
-  };
-
-  const ShippingForm = ({onComplete, cartId }: Props) => {
+const ShippingForm = ({onComplete, cartId }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null); 
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<FormErrors>();
   const [acceptUpdates, setAcceptUpdates] = useState(false);
+  const [cart, setCart] = useState<{ id: string } | null>(null); // Define cart as a state variable
 
   const { control, handleSubmit, formState } = useForm<CombinedFormData>({
     resolver: async (data: CombinedFormData, context: any, options: any) => {
@@ -120,7 +119,7 @@ const validationSchema = yup.object().shape({
 
   useEffect(() => {
     const initializeMedusa = async () => {
-    const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
       if (!medusaBaseUrl) {
         console.error('Medusa base URL is not defined.');
@@ -149,23 +148,23 @@ const validationSchema = yup.object().shape({
   }, [cartId, medusa]);
 
   useEffect(() => {
-      const fetchShippingOptions = async () => {
-        try {
-          if (!medusa) {
-            console.error('Medusa not initialized');
-            return;
-          }
-
-          const { shipping_options } = await medusa.shippingOptions.list();
-          setShippingOptions(shipping_options);
-        } catch (error) {
-          console.error('Error retrieving shipping options', error);
-          setError(error as FormErrors);
+    const fetchShippingOptions = async () => {
+      try {
+        if (!medusa) {
+          console.error('Medusa not initialized');
+          return;
         }
-      };
 
-      fetchShippingOptions();
-    }, []);
+        const { shipping_options } = await medusa.shippingOptions.list();
+        setShippingOptions(shipping_options);
+      } catch (error) {
+        console.error('Error retrieving shipping options', error);
+        setError(error as FormErrors);
+      }
+    };
+
+    fetchShippingOptions();
+  }, []);
 
   const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
     const {
@@ -187,7 +186,7 @@ const validationSchema = yup.object().shape({
       setError(undefined);
 
       if (medusa && cart && cart.id) {
-        const cartId = cart.id as string; // Type assertion
+        const cartId = cart.id as string; // Use cart as a state variable here
 
         // Update shipping address and method
         await medusa.carts.update(cartId, {
@@ -230,16 +229,21 @@ const validationSchema = yup.object().shape({
     }
 
     try {
-          setIsLoading(true);
-          const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
-          // Replace below `console.log` statements with your own custom logic
-        } catch (error) {
-          console.error('Error fetching cart items:', error);
-          // Replace below `toast` statement with your own custom logic
-          console.error('Failed to fetch cart items. Please refresh the page.');
-        } finally {
-          setIsLoading(false);
-        }
+      setIsLoading(true);
+      const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
+      
+      if (!updatedCart) {
+        console.error('Cart data is undefined or null');
+        return;
+      }
+
+      setCart(updatedCart); // Update cart state variable here
+    } catch (error) {
+      console.error('Error fetching cart:', error);
+      setError(error as FormErrors);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const selectedCountryCode = useWatch({ control, name: 'countryCode' });
