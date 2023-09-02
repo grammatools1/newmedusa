@@ -86,13 +86,14 @@ useEffect(() => {
     fetchCartItems(cart);
   }, [cart]);
 
+  /*  
   const fetchCartItems = async (cart: { id: string }) => {
   if (!medusa) {
     console.error('Medusa not initialized');
    return 
    /*<div>Loading...</div>;*/
   }
-
+/*
   try {
     setLoading(true);
     const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
@@ -105,6 +106,29 @@ useEffect(() => {
     setLoading(false);
   }
 };
+*/
+const fetchCartItems = async (cart: { id: string }) => {
+  if (!medusa) {
+     console.error('Medusa not initialized');
+     return;
+  }
+  
+  try {
+    setLoading(true);
+    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+    console.log('updatedCart:', updatedCart);
+    setOrderTotal(updatedCart.total);
+    console.log('orderTotal:', updatedCart.total);
+    setCartItems(updatedCart.items);
+    console.log('cartItems:', updatedCart.items);
+  } catch (error) {
+    console.error('Error fetching cart items:', error);
+    toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
+  } finally {
+    setLoading(false);
+  }
+};
+    
   const handleShippingComplete = () => {
     setStep(2);
   };
