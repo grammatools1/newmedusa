@@ -42,24 +42,30 @@ interface Props {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
-  useEffect(() => {
+ useEffect(() => {
   const initializeMedusa = async () => {
     const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+
     if (!medusaBaseUrl) {
       console.error('Medusa base URL is not defined.');
       return;
     }
 
-    const initializedMedusa = new Medusa({
-      baseUrl: medusaBaseUrl,
-      maxRetries: 3,
-    });
-    console.log('Initialized Medusa:', initializedMedusa);
-    setMedusa(initializedMedusa);
+    try {
+      const initializedMedusa = new Medusa({
+        baseUrl: medusaBaseUrl,
+        maxRetries: 3,
+      });
+      console.log('Initialized Medusa:', initializedMedusa);
+      setMedusa(initializedMedusa);
+    } catch (error) {
+      console.error('Error initializing Medusa:', error);
+    }
   };
 
   initializeMedusa();
 }, []);
+
     
 
   /*useEffect(() => {
@@ -84,7 +90,7 @@ interface Props {
    
   useEffect(() => {
     fetchCartItems(cart);
-  }, [cart]);
+  }, [cart, medusa]);
 
 
  const fetchCartItems = async (cart: { id: string }) => {
