@@ -58,7 +58,6 @@ const validationSchema = yup.object().shape({
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<FormErrors>();
   const [acceptUpdates, setAcceptUpdates] = useState(false);
 
@@ -149,7 +148,7 @@ const fetchCartItems = async (cart: { id: string }) => {
   }
 
   try {
-    setLoading(true);
+   setIsLoading(true);
     const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
     
     if (!updatedCart) {
@@ -157,15 +156,12 @@ const fetchCartItems = async (cart: { id: string }) => {
       return;
     }
 
-    setOrderTotal(updatedCart.total);
-    console.log('orderTotal:', updatedCart.total);
-    setCartItems(updatedCart.items);
-    console.log('cartItems:', updatedCart.items);
   } catch (error) {
-    console.error('Error fetching cart items:', error);
-    toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
+     console.error('Error fetching cart items:', error);
+      
+    console.error('Failed to fetch cart items. Please refresh the page.');
   } finally {
-    setLoading(false);
+   setIsLoading(false);
   }
 };
   
