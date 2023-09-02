@@ -23,13 +23,13 @@ const PaymentMethod = {
 type PaymentMethodKey = keyof typeof PaymentMethod;
 
 type Props = {
-      cart: string;
-      onComplete: () => void;
-      cartId?: string | null | undefined;
-    };
+  cart: string | undefined;
+  onComplete: () => void;
+  cartId?: string | null | undefined;
+};
 
   function CheckoutFlow({ cart, onComplete, cartId }: Props) {
-  const [userCartId, setUserCartId] = useState<string | undefined>(cartId);
+  const [userCartId, setUserCartId] = useState<string | undefined>(cartId ?? '')
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
