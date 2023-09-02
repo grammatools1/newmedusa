@@ -95,7 +95,6 @@ interface Props {
 const fetchCartItems = async (cart: { id: string }) => {
   console.log('cart:', cart);
   
-  // Check if medusa is not initialized
   if (!medusa) {
     console.error('Medusa not initialized');
     return;
@@ -104,7 +103,12 @@ const fetchCartItems = async (cart: { id: string }) => {
   try {
     setLoading(true);
     const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-    console.log('updatedCart:', updatedCart);
+    
+    if (!updatedCart) {
+      console.error('Cart data is undefined or null');
+      return;
+    }
+
     setOrderTotal(updatedCart.total);
     console.log('orderTotal:', updatedCart.total);
     setCartItems(updatedCart.items);
@@ -116,6 +120,7 @@ const fetchCartItems = async (cart: { id: string }) => {
     setLoading(false);
   }
 };
+
 
 
   const handleShippingComplete = () => {
