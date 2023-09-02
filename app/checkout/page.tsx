@@ -14,48 +14,65 @@ function Checkout() {
   const [orderTotal, setOrderTotal] = useState(0);
   const [cartItems, setCartItems] = useState([]);
 
-  useEffect(() => {
-    const initializeMedusa = async () => {
-      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-      if (!medusaBaseUrl) {
-        console.error('Medusa base URL is not defined.');
-        return;
-      }
+ useEffect(() => {
+  const initializeMedusa = async () => {
+    const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
+    if (!medusaBaseUrl) {
+      console.error('Medusa base URL is not defined.');
+      return;
+    }
+
+    try {
       const initializedMedusa = new Medusa({
         baseUrl: medusaBaseUrl,
         maxRetries: 3,
       });
+      console.log('Initialized Medusa:', initializedMedusa);
       setMedusa(initializedMedusa);
-    };
+    } catch (error) {
+      console.error('Error initializing Medusa:', error);
+    }
+  };
 
-    initializeMedusa();
-  }, []);
+  initializeMedusa();
+}, []);
+
 
   useEffect(() => {
     if (cart) {
       fetchCartItems(cart);
     }
-  }, [cart]);
+  }, [cart, medusa]);
 
-  const fetchCartItems = async (cart: { id: string }) => {
-    if (!medusa) {
-      console.error('Medusa not initialized');
+ const fetchCartItems = async (cart: { id: string }) => {
+  console.log('cart:', cart);
+  
+  if (!medusa) {
+    console.error('Medusa not initialized');
+    return;
+  }
+
+  try {
+    setLoading(true);
+    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+    
+    if (!updatedCart) {
+      console.error('Cart data is undefined or null');
       return;
     }
 
-    try {
-      setLoading(true);
-      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-      setOrderTotal(updatedCart.total);
-      setCartItems(updatedCart.items);
-    } catch (error) {
-      console.error('Error fetching cart items:', error);
-      toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
-    } finally {
-      setLoading(false);
-    }
-  };
+    setOrderTotal(updatedCart.total);
+    console.log('orderTotal:', updatedCart.total);
+    setCartItems(updatedCart.items);
+    console.log('cartItems:', updatedCart.items);
+  } catch (error) {
+    console.error('Error fetching cart items:', error);
+    toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
+  } finally {
+    setLoading(false);
+  }
+};
 
   return (
     <>
