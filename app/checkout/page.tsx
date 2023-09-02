@@ -1,4 +1,4 @@
-"use client"
+ "use client"
 
 import React, { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
@@ -38,7 +38,6 @@ function Checkout() {
   initializeMedusa();
 }, []);
 
-const cart = {
 useEffect(() => {
   if (cart) {
     fetchCartItems(cart);
@@ -73,7 +72,7 @@ const fetchCartItems = async (cart: { id: string }) => {
     setLoading(false);
   }
  };
-};
+
   return (
     <>
       <ToastContainer position="top-right" />
