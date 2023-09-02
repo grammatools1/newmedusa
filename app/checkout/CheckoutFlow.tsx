@@ -87,7 +87,7 @@ useEffect(() => {
   }, [cart]);
 
 
-  const fetchCartItems = async (cart: { id: string }) => {
+ export const fetchCartItems = async (cart: { id: string }) => {
   console.log('cart:', cart);
   if (!medusa) {
     console.error('Medusa not initialized');
