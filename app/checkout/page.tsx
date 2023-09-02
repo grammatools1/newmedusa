@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import dynamic from 'next/dynamic';
 import { ToastContainer, toast  } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
 import Medusa from '@medusajs/medusa-js';
