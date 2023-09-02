@@ -42,12 +42,7 @@ interface Props {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
-    useEffect(() => {
-  setMedusa(MEDUSA_ENDPOINT);
-  console.log('Medusa endpoint set:', medusa);
-  }, []);
-
-useEffect(() => {
+  useEffect(() => {
   const initializeMedusa = async () => {
     const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
     if (!medusaBaseUrl) {
