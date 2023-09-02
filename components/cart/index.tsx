@@ -18,8 +18,8 @@ export default async function Cart() {
   if (!cartId || !cart) {
     cart = await createCart();
   }
- <CheckoutFlow cart={cart} />;
- return (
+  const checkoutFlowComponent = <CheckoutFlow cart={cart} />;
+  return (
     <>
       <CartModal cart={cart} />
     </>
