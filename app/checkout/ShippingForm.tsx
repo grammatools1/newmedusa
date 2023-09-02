@@ -52,7 +52,7 @@ const validationSchema = yup.object().shape({
   onComplete: () => void;
   cartId?: string;
 
-  const ShippingForm = ({ cart, onComplete, cartId }: Props) => {
+  function ShippingForm({ cart, onComplete, cartId }: Props) {
   const [medusa, setMedusa] = useState<Medusa | null>(null); 
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
