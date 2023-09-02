@@ -6,8 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Medusa from '@medusajs/medusa-js';
 import CheckoutFlow from './CheckoutFlow';
 
-function Checkout() {
-  const [cart, setCart] = useState<string | undefined>(undefined);
+const [cart, setCart] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [orderTotal, setOrderTotal] = useState(0);
