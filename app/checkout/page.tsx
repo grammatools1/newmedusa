@@ -38,7 +38,7 @@ function Checkout() {
   initializeMedusa();
 }, []);
 
-
+const cart = {
 useEffect(() => {
   if (cart) {
     fetchCartItems(cart);
@@ -72,8 +72,8 @@ const fetchCartItems = async (cart: { id: string }) => {
   } finally {
     setLoading(false);
   }
+ };
 };
-
   return (
     <>
       <ToastContainer position="top-right" />
