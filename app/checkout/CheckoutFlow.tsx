@@ -90,7 +90,7 @@ interface Props {
    
   useEffect(() => {
     fetchCartItems(cart);
-  }, [cart, medusa]);
+  }, [cart]);
 
 
  const fetchCartItems = async (cart: { id: string }) => {
