@@ -8,6 +8,7 @@ import * as yup from 'yup';
 import { ValidationError as YupValidationError } from 'yup';
 import Autocomplete from 'react-autocomplete';
 import FormFields, { CountryOption } from './formFields';
+import { throttle } from 'lodash';
 
 interface Props {
   cart: any; // Replace 'any' with your actual cart type
@@ -162,6 +163,15 @@ const countryOptions: CountryOption[] = React.useMemo(() => {
 
   fetchData();
 }, [medusa, medusa?.cart?.id]);
+
+const throttledFetchData = throttle(fetchData, 1000); // Adjust throttle time here
+
+  throttledFetchData();
+
+  return () => {
+    throttledFetchData.cancel();
+  };
+}, [medusa, medusa?.cart?.id])  
 
 const fetchCartItems = async (cart: { id: string }) => {
   return new Promise((resolve, reject) => {
