@@ -18,11 +18,11 @@ export default async function Cart() {
   if (!cartId || !cart) {
     cart = await createCart();
   }
-
+const cartComponent = <CheckoutFlow cart={cart} />;
  return (
     <>
       <CartModal cart={cart} />
-      <CheckoutFlow cart={cart} />
+     {cartComponent}
     </>
   );
 }
