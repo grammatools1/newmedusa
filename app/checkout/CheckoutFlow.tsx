@@ -22,11 +22,11 @@ const PaymentMethod = {
 };
 type PaymentMethodKey = keyof typeof PaymentMethod;
 
-type Props = {
+interface Props {
   cartId: string;
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
-};
+}
 
 function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [userCartId, setUserCartId] = useState<string | undefined>(cartId ?? '')
