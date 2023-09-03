@@ -49,6 +49,7 @@ useEffect(() => {
       .then((response) => response.json())
       .then((data) => {
         const { cartId } = data;
+        console.log(cartId);
         setUserCartId(cartId); // Set userCartId in your React component's state
       })
       .catch((error) => {
