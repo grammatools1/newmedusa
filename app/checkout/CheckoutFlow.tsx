@@ -23,12 +23,12 @@ const PaymentMethod = {
 type PaymentMethodKey = keyof typeof PaymentMethod;
 
 type Props = {
-  cart: string | undefined;
+  cartId: string;
   onComplete: () => void;
-  cartId?: string | null | undefined;
+  onCartUpdate: (cart: { id: string }) => void;
 };
 
-  function CheckoutFlow({ cart, onComplete, cartId }: Props) {
+function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [userCartId, setUserCartId] = useState<string | undefined>(cartId ?? '')
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
@@ -40,7 +40,7 @@ type Props = {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
-    const getCartIdFromCookie = () => {
+  const getCartIdFromCookie = () => {
     const cookie = document.cookie.split(';').find((c) => c.trim().startsWith('cartId='));
     if (!cookie) {
       return null; // no cart ID cookie found
@@ -50,7 +50,7 @@ type Props = {
 
   useEffect(() => {
     const id = getCartIdFromCookie();
-     setUserCartId(id != null ? id : undefined);  // set cartId to null or the retrieved ID
+    setUserCartId(id != null ? id : undefined);  // set cartId to null or the retrieved ID
   }, []);
 
   useEffect(() => {
@@ -104,6 +104,7 @@ type Props = {
       console.log('orderTotal:', updatedCart.total);
       setCartItems(updatedCart.items);
       console.log('cartItems:', updatedCart.items);
+      onCartUpdate({ id: cartId }); // Update cart state in parent component using onCartUpdate prop
     } catch (error) {
       console.error('Error fetching cart items:', error);
       toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
@@ -276,7 +277,6 @@ type Props = {
                   </div>
                   <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
                   <ShippingForm cartId={userCartId} onComplete={handleShippingComplete} />
-
                 </>
               )}
             </div>
@@ -286,9 +286,7 @@ type Props = {
               {/* Step 2: Shipping Information */}
               <h1>Step 2: Shipping Information</h1>
               <button onClick={handleGoBack}>Go back</button>
-              {cartId !== null && (
-            <ShippingForm cartId={cartId} onComplete={handleNextStep} />
-          )}
+              <ShippingForm cartId={cartId} onComplete={handlePaymentComplete} onCartUpdate={onCartUpdate} />
             </div>
           )}
           {step === 3 && (
