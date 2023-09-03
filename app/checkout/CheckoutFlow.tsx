@@ -44,7 +44,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
 
 useEffect(() => {
     // Make a request to your server-side API route to get the cartId
-    fetch("api/unicookie")
+    fetch("api/getCartId")
       .then((response) => response.json())
       .then((data) => {
          console.log(data);
