@@ -42,20 +42,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   
   const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
-useEffect(() => {
-    // Make a request to your server-side API route to get the cartId
-    fetch("api/getCartId")
-      .then((response) => response.json())
-      .then((data) => {
-         console.log(data);
-        const { cartId } = data;
-        setUserCartId(cartId); // Set userCartId in your React component's state
-        console.log(cartId);
-      })
-      .catch((error) => {
-        console.error('Error fetching cartId:', error);
-      });
-  }, []);
+
   
   useEffect(() => {
     const initializeMedusa = async () => {
