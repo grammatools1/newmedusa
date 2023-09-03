@@ -45,7 +45,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   
 useEffect(() => {
     // Make a request to your server-side API route to get the cartId
-    fetch('app/api/newCartId') // Replace with the actual route
+    fetch('medusaBaseUrl/store/carts') // Replace with the actual route
       .then((response) => response.json())
       .then((data) => {
         const { cartId } = data;
