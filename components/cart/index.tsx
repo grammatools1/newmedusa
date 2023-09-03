@@ -22,7 +22,7 @@ export default async function Cart() {
   return (
     <>
       <CartModal cart={cart} />
-       <CheckoutFlow cartId={cartId || '' onComplete={onComplete} onCartUpdate={onCartUpdate} />
+       <CheckoutFlow cartId={cartId || ''} onComplete={onComplete} onCartUpdate={onCartUpdate} />
     </>
   );
 }
