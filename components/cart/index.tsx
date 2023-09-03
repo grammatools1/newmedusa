@@ -2,7 +2,7 @@ import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CartModal from './modal';
 import CheckoutFlow from 'app/checkout/CheckoutFlow';
-import { Cart, CartUpdateFunction } from 'app/types';
+
 
 interface Props {
   cart: Cart;
