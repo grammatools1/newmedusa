@@ -5,7 +5,6 @@ import CheckoutFlow from 'app/checkout/CheckoutFlow';
 
 
 interface Props {
-  cart: Cart;
   cartId: string | null;
   onComplete: () => void;
   onCartUpdate: CartUpdateFunction;
