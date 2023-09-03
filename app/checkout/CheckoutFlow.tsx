@@ -45,8 +45,8 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   
   if (cookies?.length) {
     for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i].trim();
-      if (cookie.startsWith('cartId=')) {
+      const cookie = cookies[i]?.trim(); // Add the safe navigation operator here
+      if (cookie && cookie.startsWith('cartId=')) {
         // Extract and return the cartId value
         return cookie.substring('cartId='.length, cookie.length);
       }
