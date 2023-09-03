@@ -46,7 +46,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
 
   const Id = Cookies.get('cartId');
   setUserCartId(Id);
-  conssole.log(Id);
+  console.log(Id);
   
   useEffect(() => {
     const initializeMedusa = async () => {
