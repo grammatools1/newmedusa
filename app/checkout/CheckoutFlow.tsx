@@ -41,15 +41,15 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [confirmOrder, setConfirmOrder] = useState(false);
 
  function getCartIdFromCookie() {
-  const cookies = (document.cookie || '').split(';');
+ if (cookies) {
   for (let i = 0; i < cookies.length; i++) {
     const cookie = cookies[i].trim();
-    // Check if this cookie has the name 'cartId'
     if (cookie.startsWith('cartId=')) {
       // Extract and return the cartId value
       return cookie.substring('cartId='.length, cookie.length);
     }
   }
+ }
   // Return null if 'cartId' cookie is not found
   return null;
 }
