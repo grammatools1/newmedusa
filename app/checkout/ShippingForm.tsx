@@ -47,10 +47,11 @@ const validationSchema = yup.object().shape({
   company: yup.string().notRequired(),
 });
 
-type Props = {
+interface Props {
   cartId: string | undefined;
   onComplete: () => void;
-};
+  onCartUpdate: (cart: { id: string }) => void;
+}
 
 const ShippingForm = ({onComplete, cartId }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null); 
