@@ -47,8 +47,8 @@ useEffect(() => {
     fetch(`medusaBaseUrl/store/carts/${cartId}`)
       .then((response) => response.json())
       .then((data) => {
-        const { Id } = data;
-        setUserCartId(Id); // Set userCartId in your React component's state
+        const { cartId } = data;
+        setUserCartId(cartId); // Set userCartId in your React component's state
       })
       .catch((error) => {
         console.error('Error fetching cartId:', error);
