@@ -22,7 +22,7 @@ const PaymentMethod = {
 };
 type PaymentMethodKey = keyof typeof PaymentMethod;
 
-type Props {
+interface Props {
   cartId: string;
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
@@ -40,18 +40,28 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
-  const getCartIdFromCookie = () => {
-    const cookie = document.cookie.split(';').find((c) => c.trim().startsWith('cartId='));
-    if (!cookie) {
-      return null; // no cart ID cookie found
+ function getCartIdFromCookie() {
+  const cookies = document.cookie.split(';');
+  for (let i = 0; i < cookies.length; i++) {
+    const cookie = cookies[i].trim();
+    // Check if this cookie has the name 'cartId'
+    if (cookie.startsWith('cartId=')) {
+      // Extract and return the cartId value
+      return cookie.substring('cartId='.length, cookie.length);
     }
-    return cookie.split('=')[1]; // extract the value of the cart ID cookie
-  };
+  }
+  // Return null if 'cartId' cookie is not found
+  return null;
+}
 
   useEffect(() => {
-    const id = getCartIdFromCookie();
-    
-    setUserCartId(id != null ? id : undefined);  // set cartId to null or the retrieved ID
+  const id = getCartIdFromCookie()
+ if (id) {
+  console.log('Cart ID:', id);
+  } else {
+  console.log('Cart ID not found in the cookie.');
+   }
+  setUserCartId(id != null ? id : undefined);  // set cartId to null or the retrieved ID
   }, []);
 
   useEffect(() => {
