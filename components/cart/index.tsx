@@ -2,8 +2,14 @@ import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CartModal from './modal';
 import CheckoutFlow from 'app/checkout/CheckoutFlow';
+import { Cart, CartUpdateFunction } from 'app/types';
 
-
+interface Props {
+  cart: Cart;
+  cartId: string | null;
+  onComplete: () => void;
+  onCartUpdate: CartUpdateFunction;
+}
 
 export default async function Cart() {
   const cartId = cookies().get('cartId')?.value;
@@ -19,6 +25,13 @@ export default async function Cart() {
   if (!cartId || !cart) {
     cart = await createCart();
   }
+  const handleComplete = () => {
+    // do something when the checkout is complete
+  };
+
+  const handleCartUpdate = (updatedCart: Cart) => {
+    // do something when the cart is updated
+  };
   return (
     <>
       <CartModal cart={cart} />
