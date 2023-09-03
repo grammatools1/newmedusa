@@ -51,7 +51,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   useEffect(() => {
     const id = getCartIdFromCookie();
     console.log(id);
-    setUserCartId(id != null ? id : undefined);  // set cartId to null or the retrieved ID
+    setUserCartId(cart_01H88SMQFPQCRY7TVFW56GJVDB != null ? id : undefined);  // set cartId to null or the retrieved ID
   }, []);
 
   useEffect(() => {
