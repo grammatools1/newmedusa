@@ -39,37 +39,25 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [cartItems, setCartItems] = useState([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
-
- const getCartIdFromCookie = () => {
-  const cookies = (document.cookie || '').split(';');
   
-  if (cookies?.length) {
-    for (let i = 0; i < cookies.length; i++) {
-      const cookie = cookies[i]?.trim(); // Add the safe navigation operator here
-      if (cookie && cookie.startsWith('cartId=')) {
-        // Extract and return the cartId value
-        return cookie.substring('cartId='.length, cookie.length);
-      }
-    }
-  }
-  
-  return null; // No cartId cookie found
-};
+  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
-  useEffect(() => {
-  const id = getCartIdFromCookie()
- if (id) {
-  console.log('Cart ID:', id);
-  } else {
-  console.log('Cart ID not found in the cookie.');
-   }
-  setUserCartId(id != null ? id : undefined);  // set cartId to null or the retrieved ID
+useEffect(() => {
+    // Make a request to your server-side API route to get the cartId
+    fetch(`medusaBaseUrl/store/carts/${cartId}`
+      .then((response) => response.json())
+      .then((data) => {
+        const { Id } = data;
+        setUserCartId(Id); // Set userCartId in your React component's state
+      })
+      .catch((error) => {
+        console.error('Error fetching cartId:', error);
+      });
   }, []);
-
+  
   useEffect(() => {
     const initializeMedusa = async () => {
-      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-
+     
       if (!medusaBaseUrl) {
         console.error('Medusa base URL is not defined.');
         return;
