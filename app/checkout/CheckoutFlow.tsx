@@ -41,7 +41,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [confirmOrder, setConfirmOrder] = useState(false);
 
   const getCartIdFromCookie = () => {
-    const cookie = document.cookie.split(';').find((c) => c.trim().startsWith('cart_id='));
+    const cookie = document.cookie.split(';').find((c) => c.trim().startsWith('cartId='));
     if (!cookie) {
       return null; // no cart ID cookie found
     }
