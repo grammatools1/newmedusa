@@ -1,17 +1,19 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { ToastContainer, toast  } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import Medusa from '@medusajs/medusa-js';
 import CheckoutFlow from './CheckoutFlow';
+import useClient from '../hooks/useClient';
 
 function Checkout() {
-const [cart, setCart] = useState<string | undefined>(undefined);
+  const [cart, setCart] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [orderTotal, setOrderTotal] = useState(0);
   const [cartItems, setCartItems] = useState([]);
+  const client = useClient();
 
   useEffect(() => {
     const initializeMedusa = async () => {
@@ -23,9 +25,8 @@ const [cart, setCart] = useState<string | undefined>(undefined);
       }
 
       try {
-        const initializedMedusa = new Medusa({
-          baseUrl: medusaBaseUrl,
-          maxRetries: 3,
+        const initializedMedusa = await client({
+          endpoint: `${medusaBaseUrl}/medusa`,
         });
         console.log('Initialized Medusa:', initializedMedusa);
         setMedusa(initializedMedusa);
@@ -45,7 +46,7 @@ const [cart, setCart] = useState<string | undefined>(undefined);
 
   const fetchCartItems = async (cartId: string) => {
     console.log('cartId:', cartId);
-    
+
     if (!medusa) {
       console.error('Medusa not initialized');
       return;
@@ -54,7 +55,7 @@ const [cart, setCart] = useState<string | undefined>(undefined);
     try {
       setLoading(true);
       const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
-      
+
       if (!updatedCart) {
         console.error('Cart data is undefined or null');
         return;
@@ -77,6 +78,10 @@ const [cart, setCart] = useState<string | undefined>(undefined);
     setCart(cart.id);
   };
 
+  const handleCheckoutComplete = () => {
+    console.log('Checkout completed successfully!');
+  };
+
   return (
     <>
       <ToastContainer position="top-right" />
@@ -91,5 +96,7 @@ const [cart, setCart] = useState<string | undefined>(undefined);
     </>
   );
 }
+
+export default Checkout;
 
 export default Checkout;
