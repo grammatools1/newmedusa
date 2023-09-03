@@ -39,24 +39,13 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [cartItems, setCartItems] = useState([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
+  import Cookies from 'js-cookie';
   
   const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
-  
-useEffect(() => {
-    // Make a request to your server-side API route to get the cartId
-    fetch('medusaBaseUrl/store/carts') // Replace with the actual route
-      .then((response) => response.json())
-      .then((data) => {
-        const { cartId } = data;
-        console.log(cartId);
-        setUserCartId(cartId); // Set userCartId in your React component's state
-      })
-      .catch((error) => {
-        console.error('Error fetching cartId:', error);
-      });
-  }, []);
-
+  const cartId = Cookies.get('cartId');
+  Cookies.setUserCartId('cartId', '123456', { expires: 7 });
+  Cookies.remove('cartId');
   
   useEffect(() => {
     const initializeMedusa = async () => {
