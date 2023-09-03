@@ -13,7 +13,6 @@ function Checkout() {
   const [orderTotal, setOrderTotal] = useState(0);
   const [cartItems, setCartItems] = useState([]);
 
-
   useEffect(() => {
     const initializeMedusa = async () => {
       const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
@@ -24,8 +23,9 @@ function Checkout() {
       }
 
       try {
-        const initializedMedusa = await client({
-          endpoint: `${medusaBaseUrl}/medusa`,
+        const initializedMedusa = new Medusa({
+          baseUrl: medusaBaseUrl,
+          maxRetries: 3,
         });
         console.log('Initialized Medusa:', initializedMedusa);
         setMedusa(initializedMedusa);
