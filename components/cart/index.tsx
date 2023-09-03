@@ -3,12 +3,6 @@ import { cookies } from 'next/headers';
 import CartModal from './modal';
 import CheckoutFlow from 'app/checkout/CheckoutFlow';
 
-
-interface Props {
-  cartId: string | null;
-  onComplete: () => void;
-}
-
 export default async function Cart() {
   const cartId = cookies().get('cartId')?.value;
   let cart;
@@ -23,17 +17,11 @@ export default async function Cart() {
   if (!cartId || !cart) {
     cart = await createCart();
   }
-  const handleComplete = () => {
-    // do something when the checkout is complete
-  };
-
-  const handleCartUpdate = (updatedCart: Cart) => {
-    // do something when the cart is updated
-  };
+  
   return (
     <>
       <CartModal cart={cart} />
-       <CheckoutFlow cartId={cartId || ''} onComplete={onComplete} onCartUpdate={onCartUpdate} />
+       <CheckoutFlow cartId={cartId || ''} />
     </>
   );
 }
