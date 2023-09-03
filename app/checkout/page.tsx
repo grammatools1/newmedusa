@@ -85,7 +85,7 @@ const [cart, setCart] = useState<string | undefined>(undefined);
 
       {!loading && cart && orderTotal !== null && cartItems !== null && (
         <div className="checkout-container">
-          <CheckoutFlow cartId={cart} onCartUpdate={handleCartUpdate} />
+          <CheckoutFlow cartId={cart} onCartUpdate={handleCartUpdate} onComplete={handleCheckoutComplete} />
         </div>
       )}
     </>
