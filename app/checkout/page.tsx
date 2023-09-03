@@ -5,7 +5,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Medusa from '@medusajs/medusa-js';
 import CheckoutFlow from './CheckoutFlow';
-import useClient from '../hooks/useClient';
 
 function Checkout() {
   const [cart, setCart] = useState<string | undefined>(undefined);
@@ -13,7 +12,7 @@ function Checkout() {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [orderTotal, setOrderTotal] = useState(0);
   const [cartItems, setCartItems] = useState([]);
-  const client = useClient();
+
 
   useEffect(() => {
     const initializeMedusa = async () => {
