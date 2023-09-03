@@ -276,7 +276,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
                     </div>
                   </div>
                   <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
-                  <ShippingForm cartId={userCartId} onComplete={handleShippingComplete} />
+                  <ShippingForm cartId={userCartId} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate} /> {/* pass onCartUpdate prop to ShippingForm */}
                 </>
               )}
             </div>
@@ -286,7 +286,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
               {/* Step 2: Shipping Information */}
               <h1>Step 2: Shipping Information</h1>
               <button onClick={handleGoBack}>Go back</button>
-              <ShippingForm cartId={cartId} onComplete={handlePaymentComplete} onCartUpdate={onCartUpdate} />
+              <ShippingForm cartId={cartId} onComplete={handlePaymentComplete} onCartUpdate={onCartUpdate} /> {/* pass onCartUpdate prop to ShippingForm */}
             </div>
           )}
           {step === 3 && (
