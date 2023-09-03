@@ -44,9 +44,9 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   
   const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
-  const cartId = Cookies.get('cartId');
-  Cookies.setUserCartId('cartId', '123456', { expires: 7 });
-  Cookies.remove('cartId');
+  const Id = Cookies.get('cartId');
+  setUserCartId(Id);
+  conssole.log(Id);
   
   useEffect(() => {
     const initializeMedusa = async () => {
