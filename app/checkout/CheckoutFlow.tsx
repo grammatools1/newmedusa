@@ -42,7 +42,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
 
  function getCartIdFromCookie() {
   const cookies = (document.cookie || '').split(';');
-  if (cookies && cookies.length) {
+  if (cookies?.length) {
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim();
       if (cookie.startsWith('cartId=')) {
@@ -54,7 +54,6 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   // if no cartId cookie found, return null
   return null;
 }
-
 
   useEffect(() => {
   const id = getCartIdFromCookie()
