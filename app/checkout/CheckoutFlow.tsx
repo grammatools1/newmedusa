@@ -22,7 +22,7 @@ const PaymentMethod = {
 };
 type PaymentMethodKey = keyof typeof PaymentMethod;
 
-interface Props {
+type Props {
   cartId: string;
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
