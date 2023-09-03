@@ -40,8 +40,9 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
- function getCartIdFromCookie() {
+ const getCartIdFromCookie = () => {
   const cookies = (document.cookie || '').split(';');
+  
   if (cookies?.length) {
     for (let i = 0; i < cookies.length; i++) {
       const cookie = cookies[i].trim();
@@ -51,9 +52,9 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
       }
     }
   }
-  // if no cartId cookie found, return null
-  return null;
-}
+  
+  return null; // No cartId cookie found
+};
 
   useEffect(() => {
   const id = getCartIdFromCookie()
