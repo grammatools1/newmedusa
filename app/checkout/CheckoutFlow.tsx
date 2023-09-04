@@ -44,7 +44,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   
   const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
-  const Id = cookies().get('cartId')?.value;
+  const Id = Cookies().get('cartId')?.value;
   setUserCartId(Id);
   console.log(Id);
   
