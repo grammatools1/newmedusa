@@ -1,4 +1,4 @@
-"use server"
+"use client"
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Medusa from '@medusajs/medusa-js';
