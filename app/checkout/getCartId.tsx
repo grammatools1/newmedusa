@@ -6,7 +6,14 @@ export default async function GetcartId() {
   console.log(cartId);
   return (
     <>
-      <CheckoutFlow cartId={cartId || ''} />
+    <CheckoutFlow cartId={cartId || ''}
+  onComplete={() => {
+   alert("Checkout completed! Thank you for your order."); 
+  }}
+  onCartUpdate={(cart) => {
+     console.log("Cart updated:", cart);
+  }}
+/>
     </>
   );
 }
