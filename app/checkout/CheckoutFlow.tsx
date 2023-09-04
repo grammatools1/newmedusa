@@ -26,11 +26,10 @@ type Props = {
   onCartUpdate: (cart: { id: string }) => void;
 }
 
+function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
 console.log('cartId:', cartId);
 console.log('onComplete:', onComplete);
 console.log('onCartUpdate:', onCartUpdate);
-
-function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
@@ -41,7 +40,8 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
-  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+ const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+  
 
   useEffect(() => {
     const initializeMedusa = async () => {
