@@ -3,7 +3,7 @@ import { Controller, Control, FieldError,useForm } from 'react-hook-form';
 import Autocomplete from 'react-autocomplete';
 const countryList = require('country-list');
 
-interface CombinedFormData {
+type CombinedFormData = {
   firstName: string;
   lastName: string;
   email: string;
