@@ -1,11 +1,11 @@
-"use client"
+"use server"
 
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Medusa from '@medusajs/medusa-js';
 import ShippingForm from './ShippingForm';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css'; 
-import Cookies from 'js-cookie';
+import { cookies } from 'next/headers';
 
 const PaymentMethod = {
   credit_card: {
@@ -44,9 +44,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   
   const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
-  const Id = Cookies.get('cartId');
-  Cookies.set('Id', '123456', { expires: 7 });
-  Cookies.remove('Id');
+  const Id = cookies().get('cartId')?.value;
   setUserCartId(Id);
   console.log(Id);
   
