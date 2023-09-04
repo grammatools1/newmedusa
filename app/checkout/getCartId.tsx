@@ -4,6 +4,7 @@ import CheckoutFlow from './CheckoutFlow';
 
 export default function GetcartId() {
   const cartId = cookies().get('cartId')?.value;
+  console.log(cartId);
 
   return (
     <CheckoutFlow
