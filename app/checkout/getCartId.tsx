@@ -6,7 +6,7 @@ export default async function GetcartId() {
   console.log(cartId);
   return (
     <>
-      <CheckoutFlow cartId={cartId} />
+      <CheckoutFlow cartId={cartId || ''} />
     </>
   );
 }
