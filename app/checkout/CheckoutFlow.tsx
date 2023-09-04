@@ -4,8 +4,7 @@ import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Medusa from '@medusajs/medusa-js';
 import ShippingForm from './ShippingForm';
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Cookies from 'universal-cookie';
+import 'react-toastify/dist/ReactToastify.css';;
 
 const PaymentMethod = {
   credit_card: {
@@ -43,10 +42,6 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
  
   
   const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-  const cookies = new Cookies(); // Create a Cookies instance
-  const Id = cookies.get('cartId')?.value; 
-  setUserCartId(Id);
-  console.log(Id);
   
   useEffect(() => {
     const initializeMedusa = async () => {
