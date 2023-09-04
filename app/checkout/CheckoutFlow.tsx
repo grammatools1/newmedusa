@@ -29,7 +29,6 @@ interface Props {
 }
 
 function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
-  const [userCartId, setUserCartId] = useState<string | undefined>(cartId ?? '')
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
@@ -265,7 +264,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
                     </div>
                   </div>
                   <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
-                  <ShippingForm cartId={userCartId} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate} /> {/* pass onCartUpdate prop to ShippingForm */}
+                  <ShippingForm cartId={cartId} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate} /> {/* pass onCartUpdate prop to ShippingForm */}
                 </>
               )}
             </div>
