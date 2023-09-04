@@ -10,8 +10,10 @@ function Checkout() {
   const [cart, setCart] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [medusa, setMedusa] = useState<Medusa | null>(null);
-  const [orderTotal, setOrderTotal] = useState(0);
-  const [cartItems, setCartItems] = useState([]);
+   const [orderTotal, setOrderTotal] = useState(cart.total);
+  const [cartItems, setCartItems] = useState(cart.items);
+ /* const [orderTotal, setOrderTotal] = useState(0);
+  const [cartItems, setCartItems] = useState([]);*/
 
   useEffect(() => {
     const initializeMedusa = async () => {
