@@ -34,10 +34,8 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
   const [couponCode, setCouponCode] = useState('');
   const [giftCardCode, setGiftCardCode] = useState('');
-  const [orderTotal, setOrderTotal] = useState(cart.total);
-  const [cartItems, setCartItems] = useState(cart.items);
- /*  const [orderTotal, setOrderTotal] = useState(0);
-  const [cartItems, setCartItems] = useState([]);*/
+    const [orderTotal, setOrderTotal] = useState<number | null>(null);
+  const [cartItems, setCartItems] = useState<any[]>([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
  
