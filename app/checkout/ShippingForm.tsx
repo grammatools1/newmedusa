@@ -9,7 +9,7 @@ import { ValidationError as YupValidationError } from 'yup';
 import Autocomplete from 'react-autocomplete';
 import FormFields, { CountryOption } from './formFields';
 
-interface CombinedFormData {
+type CombinedFormData = {
   firstName: string;
   lastName: string;
   email: string;
@@ -23,7 +23,7 @@ interface CombinedFormData {
   acceptUpdates?: boolean;
 }
 
-interface ValidationError {
+type ValidationError = {
   path: string;
   message: string;
 }
@@ -47,7 +47,7 @@ const validationSchema = yup.object().shape({
   company: yup.string().notRequired(),
 });
 
-interface Props {
+type Props = {
   cartId: string | undefined;
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
