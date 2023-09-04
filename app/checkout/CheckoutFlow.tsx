@@ -1,5 +1,7 @@
+"use client"
+
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
-import Medusa from '@medusajs/medusa-js';
+import Medusa, { ApiErrorResponse, OrderData } from '@medusajs/medusa-js';
 import ShippingForm from './ShippingForm';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -18,30 +20,32 @@ const PaymentMethod = {
     wallet_address: '',
   },
 };
+
 type PaymentMethodKey = keyof typeof PaymentMethod;
 
 type Props = {
   cartId: string;
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
-}
+};
 
 function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
-console.log('cartId:', cartId);
-console.log('onComplete:', onComplete);
-console.log('onCartUpdate:', onCartUpdate);
+  console.log('cartId:', cartId);
+  console.log('onComplete:', onComplete);
+  console.log('onCartUpdate:', onCartUpdate);
+
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>('credit_card');
   const [couponCode, setCouponCode] = useState('');
   const [giftCardCode, setGiftCardCode] = useState('');
   const [orderTotal, setOrderTotal] = useState<number | null>(null);
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
+  const [orderData, setOrderData] = useState<OrderData>();
 
- const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-  
+  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
   useEffect(() => {
     const initializeMedusa = async () => {
@@ -105,11 +109,7 @@ console.log('onCartUpdate:', onCartUpdate);
     setStep(2);
   };
 
-  const handlePaymentComplete = () => {
-    setStep(3);
-  };
-
-  const handlePlaceOrder = async () => {
+  const handlePaymentComplete = useCallback(async () => {
     if (!medusa || !cartId) return;
 
     try {
@@ -122,18 +122,40 @@ console.log('onCartUpdate:', onCartUpdate);
       };
 
       await medusa.carts.setPaymentSession(cartId, paymentData);
-      const { type, data } = await medusa.carts.complete(cartId);
-      console.log('Checkout Completed:', type, data);
-      toast.success('Your order has been successfully placed!', { autoClose: 3000 });
-      setConfirmOrder(false);
-      // TODO: Display order confirmation or handle any further actions
+      setStep(3);
+
+      const { order } = await medusa.orders.create({
+        cart_id: cartId,
+        allow_remorse_period: false,
+      });
+      console.log('Order Created:', order);
+      setOrderData(order);
     } catch (error) {
-      console.error('Error completing checkout:', error);
+      console.error('Error completing payment:', error);
+      toast.error('Failed to process payment. Please try again or contact support.', { autoClose: 3000 });
+    } finally {
+      setLoading(false);
+    }
+  }, [cartId, medusa, selectedPaymentMethod]);
+
+  const handlePlaceOrder = useCallback(async () => {
+    if (!medusa || !cartId || !orderData) return;
+
+    try {
+      setLoading(true);
+      const { type, data } = await medusa.orders.complete(orderData.id);
+      console.log('Order Completed:', type, data);
+      setConfirmOrder(false);
+
+      toast.success('Your order has been successfully placed!', { autoClose: 3000 });
+      onComplete();
+    } catch (error) {
+      console.error('Error completing order:', error);
       toast.error('Failed to place order. Please try again or contact support.', { autoClose: 3000 });
     } finally {
       setLoading(false);
     }
-  };
+  }, [cartId, medusa, onComplete, orderData]);
 
   const handleApplyCoupon = async () => {
     if (!medusa || !cartId || !couponCode) return;
@@ -143,12 +165,12 @@ console.log('onCartUpdate:', onCartUpdate);
         discounts: [{ code: couponCode }],
       });
       setOrderTotal(updatedCartData.total);
-      setCouponCode("");
+      setCouponCode('');
 
-      toast.success("Coupon applied!", { autoClose: 3000 });
+      toast.success('Coupon applied!', { autoClose: 3000 });
     } catch (error) {
-      console.error("Error applying coupon:", error);
-      toast.error("Failed to apply coupon. Please try again or contact support.", { autoClose: 3000 });
+      console.error('Error applying coupon:', error);
+      toast.error('Failed to apply coupon. Please try again or contact support.', { autoClose: 3000 });
     }
   };
 
@@ -161,10 +183,10 @@ console.log('onCartUpdate:', onCartUpdate);
       });
       setOrderTotal(updatedCart.total);
 
-      toast.success("Gift card applied!", { autoClose: 3000 });
+      toast.success('Gift card applied!', { autoClose: 3000 });
     } catch (error) {
-      console.error("Error applying gift card:", error);
-      toast.error("Failed to apply gift card. Please try again or contact support.", { autoClose: 3000 });
+      console.error('Error applying gift card:', error);
+      toast.error('Failed to apply gift card. Please try again or contact support.', { autoClose: 3000 });
     }
   }, [cartId, giftCardCode, medusa]);
 
@@ -242,30 +264,16 @@ console.log('onCartUpdate:', onCartUpdate);
                   <div className="coupon-gift">
                     <div>
                       <label htmlFor="coupon">Coupon Code:</label>
-                      <input
-                        id="coupon"
-                        type="text"
-                        placeholder="Enter coupon code"
-                        value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value)}
-                      />
+                      <input id="coupon" type="text" placeholder="Enter coupon code" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} />
                       <button onClick={memoizedHandleApplyCoupon}>Apply Coupon</button>
                     </div>
                     <div>
                       <label htmlFor="gift-card">Gift Card Code:</label>
-                      <input
-                        id="gift-card"
-                        type="text"
-                        placeholder="Enter gift card code"
-                        value={giftCardCode}
-                        onChange={(e) => setGiftCardCode(e.target.value)}
-                      />
+                      <input id="gift-card" type="text" placeholder="Enter gift card code" value={giftCardCode} onChange={(e) => setGiftCardCode(e.target.value)} />
                       <button onClick={memoizedHandleApplyGiftCard}>Apply Gift Card</button>
                     </div>
                   </div>
-                    {orderTotal !== null && (
-                    <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
-                  )}
+                  {orderTotal !== null && <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>}
                   <ShippingForm cartId={cartId} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate} /> {/* pass onCartUpdate prop to ShippingForm */}
                 </>
               )}
@@ -286,33 +294,15 @@ console.log('onCartUpdate:', onCartUpdate);
               <button onClick={handleGoBack}>Go back</button>
               <div className="payment-methods">
                 <label>
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="credit_card"
-                    checked={selectedPaymentMethod === 'credit_card'}
-                    onChange={handleCreditCardChange}
-                  />
+                  <input type="radio" name="paymentMethod" value="credit_card" checked={selectedPaymentMethod === 'credit_card'} onChange={handleCreditCardChange} />
                   Credit Card
                 </label>
                 <label>
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="paypal"
-                    checked={selectedPaymentMethod === 'paypal'}
-                    onChange={handlePaypalChange}
-                  />
+                  <input type="radio" name="paymentMethod" value="paypal" checked={selectedPaymentMethod === 'paypal'} onChange={handlePaypalChange} />
                   PayPal
                 </label>
                 <label>
-                  <input
-                    type="radio"
-                    name="paymentMethod"
-                    value="crypto"
-                    checked={selectedPaymentMethod === 'crypto'}
-                    onChange={handleCryptoChange}
-                  />
+                  <input type="radio" name="paymentMethod" value="crypto" checked={selectedPaymentMethod === 'crypto'} onChange={handleCryptoChange} />
                   Crypto
                 </label>
               </div>
