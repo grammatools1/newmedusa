@@ -28,7 +28,7 @@ type ValidationError = {
   message: string;
 }
 
-interface CustomError {
+type CustomError = {
   [key: string]: string;
 }
 
