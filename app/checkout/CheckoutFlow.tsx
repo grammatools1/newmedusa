@@ -26,6 +26,10 @@ type Props = {
   onCartUpdate: (cart: { id: string }) => void;
 }
 
+console.log('cartId:', cartId);
+console.log('onComplete:', onComplete);
+console.log('onCartUpdate:', onCartUpdate);
+
 function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
