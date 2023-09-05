@@ -46,8 +46,9 @@ interface Props  {
  
   
   useEffect(() => { 
-    const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+    
     const initializeMedusa = async () => {
+    const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
       if (!medusaBaseUrl) {
         console.error('Medusa base URL is not defined.');
         return;
