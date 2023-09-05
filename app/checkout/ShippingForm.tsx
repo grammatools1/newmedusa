@@ -51,9 +51,10 @@ type Props = {
   cartId: string | undefined;
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
+  cart: any;
 }
 
-const ShippingForm = ({onComplete, cartId }: Props) => {
+  const ShippingForm = ({onComplete, cartId, cart }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null); 
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
