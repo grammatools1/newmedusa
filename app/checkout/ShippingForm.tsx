@@ -9,7 +9,7 @@ import { ValidationError as YupValidationError } from 'yup';
 import Autocomplete from 'react-autocomplete';
 import FormFields, { CountryOption } from './formFields';
 
-interface CombinedFormData = {
+interface CombinedFormData {
   firstName: string;
   lastName: string;
   email: string;
