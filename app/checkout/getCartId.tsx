@@ -1,14 +1,21 @@
 import React from 'react';
 import { cookies } from 'next/headers';
 import CheckoutFlow from './CheckoutFlow';
+import { getCart } from 'lib/medusa';
 
-export default function GetcartId() {
+export default async function GetcartId() {
   const cartId = cookies().get('cartId')?.value;
   console.log(cartId);
 
+ let cart;
+
+  if (cartId) {
+    cart = await getCart(cartId);
+  }
+
   return (
     <CheckoutFlow
-      cartId={cartId || ''}
+      cart={cart}
       onComplete={() => {
         alert("Checkout completed! Thank you for your order.");
       }}
