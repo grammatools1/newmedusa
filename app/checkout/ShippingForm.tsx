@@ -51,6 +51,7 @@ interface Props  {
   cart: any;
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
+  cartId?: string;
 }
 
 
