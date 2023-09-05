@@ -268,7 +268,7 @@ type Props = {
                   {orderTotal !== null && (
                     <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
                   )}
-                  <ShippingForm cart={cart} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate} />
+                 <ShippingForm cart={cart} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate} cartId={cart.id} />
                 </>
               )}
             </div>
@@ -278,7 +278,7 @@ type Props = {
               {/* Step 2: Shipping Information */}
               <h1>Step 2: Shipping Information</h1>
               <button onClick={handleGoBack}>Go back</button>
-              <ShippingForm cart={cart} onComplete={handlePaymentComplete} onCartUpdate={onCartUpdate} />
+              <ShippingForm cart={cart} onComplete={handlePaymentComplete} onCartUpdate={onCartUpdate} cartId={cart.id} />
             </div>
           )}
           {step === 3 && (
