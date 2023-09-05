@@ -43,9 +43,10 @@ interface Props  {
     onCartUpdate({ id: updatedCartId });
   }, [onCartUpdate]);
 
-  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+ 
   
-  useEffect(() => {
+  useEffect(() => { 
+    const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
     const initializeMedusa = async () => {
       if (!medusaBaseUrl) {
         console.error('Medusa base URL is not defined.');
