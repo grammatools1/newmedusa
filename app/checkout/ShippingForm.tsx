@@ -47,21 +47,21 @@ const validationSchema = yup.object().shape({
   company: yup.string().notRequired(),
 });
 
-  interface Props  {
+type Props = {
   cartId: string | undefined;
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
   cart: any;
 }
 
-  const ShippingForm = ({onComplete, cartId, cart }: Props) => {
+const ShippingForm = ({onComplete, cartId, cart }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null); 
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<FormErrors>();
   const [acceptUpdates, setAcceptUpdates] = useState(false);
-  const [cart, setCart] = useState<{ id: string } | null>(null); // Define cart as a state variable
+  const [cartState, setCartState] = useState<{ id: string } | null>(null); // Define cart as a state variable
 
   const { control, handleSubmit, formState } = useForm<CombinedFormData>({
     resolver: async (data: CombinedFormData, context: any, options: any) => {
@@ -187,8 +187,8 @@ const validationSchema = yup.object().shape({
       setIsLoading(true);
       setError(undefined);
 
-      if (medusa && cart && cart.id) {
-        const cartId = cart.id as string; // Use cart as a state variable here
+      if (medusa && cartState && cartState.id) {
+        const cartId = cartState.id as string; // Use the cartState variable here
 
         // Update shipping address and method
         await medusa.carts.update(cartId, {
@@ -239,7 +239,7 @@ const validationSchema = yup.object().shape({
         return;
       }
 
-      setCart(updatedCart); // Update cart state variable here
+      setCartState(updatedCart); // Set the cartState instead of the constant cart
     } catch (error) {
       console.error('Error fetching cart:', error);
       setError(error as FormErrors);
