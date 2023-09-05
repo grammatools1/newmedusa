@@ -263,7 +263,9 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
                       <button onClick={memoizedHandleApplyGiftCard}>Apply Gift Card</button>
                     </div>
                   </div>
-                  <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
+                  {orderTotal !== null && (
+                    <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
+                  )}
                   <ShippingForm cartId={cartId} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate} /> {/* pass onCartUpdate prop to ShippingForm */}
                 </>
               )}
