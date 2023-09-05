@@ -51,11 +51,9 @@ interface Props  {
   cart: any;
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
-  cartId?: string;
 }
 
-
-const ShippingForm = ({onComplete, cartId, cart }: Props) => {
+const ShippingForm = ({onComplete, onCartUpdate, cart }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null); 
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
@@ -145,10 +143,10 @@ const ShippingForm = ({onComplete, cartId, cart }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (cartId) {
-      fetchCartItems(cartId);
+    if (cart?.id) {
+      fetchCartItems(cart.id);
     }
-  }, [cartId, medusa]);
+  }, [cart?.id, medusa]);
 
   useEffect(() => {
     const fetchShippingOptions = async () => {
@@ -241,6 +239,7 @@ const ShippingForm = ({onComplete, cartId, cart }: Props) => {
       }
 
       setCartState(updatedCart); // Set the cartState instead of the constant cart
+      onCartUpdate({ id: updatedCart.id });
     } catch (error) {
       console.error('Error fetching cart:', error);
       setError(error as FormErrors);
