@@ -59,6 +59,7 @@ interface Props  {
           baseUrl: medusaBaseUrl,
           maxRetries: 3,
         });
+        console.log('Initialized Medusa:', initializedMedusa);
         setMedusa(initializedMedusa);
       } catch (error) {
         console.error('Error initializing Medusa:', error);
