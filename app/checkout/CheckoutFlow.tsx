@@ -23,10 +23,9 @@ const PaymentMethod = {
 type PaymentMethodKey = keyof typeof PaymentMethod;
 
 type Props = { 
-  cart: any; // Replace '
+  cart: any;
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
-  cartId?: string; // make cartId an optional prop
 }
 
 function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
@@ -39,13 +38,15 @@ function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
- 
   
+  const handleCartIdUpdate = useCallback((updatedCartId: string) => {
+    onCartUpdate({ id: updatedCartId });
+  }, [onCartUpdate]);
+
   const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
   
   useEffect(() => {
     const initializeMedusa = async () => {
-     
       if (!medusaBaseUrl) {
         console.error('Medusa base URL is not defined.');
         return;
@@ -64,13 +65,13 @@ function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
     };
 
     initializeMedusa();
-  }, []);
+  }, [medusaBaseUrl]);
 
   useEffect(() => {
-    if (cartId) {
-      fetchCartItems(cartId);
+    if (cart?.id) {
+      fetchCartItems(cart.id);
     }
-  }, [cartId, medusa]);
+  }, [cart?.id, medusa]);
 
   const fetchCartItems = async (cartId: string) => {
     console.log('cartId:', cartId);
@@ -93,7 +94,7 @@ function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
       console.log('orderTotal:', updatedCart.total);
       setCartItems(updatedCart.items);
       console.log('cartItems:', updatedCart.items);
-      onCartUpdate({ id: cartId }); // Update cart state in parent component using onCartUpdate prop
+      handleCartIdUpdate(updatedCart.id);
     } catch (error) {
       console.error('Error fetching cart items:', error);
       toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
@@ -111,7 +112,7 @@ function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
   };
 
   const handlePlaceOrder = async () => {
-    if (!medusa || !cartId) return;
+    if (!medusa || !cart?.id) return;
 
     try {
       setLoading(true);
@@ -122,8 +123,8 @@ function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
         },
       };
 
-      await medusa.carts.setPaymentSession(cartId, paymentData);
-      const { type, data } = await medusa.carts.complete(cartId);
+      await medusa.carts.setPaymentSession(cart.id, paymentData);
+      const { type, data } = await medusa.carts.complete(cart.id);
       console.log('Checkout Completed:', type, data);
       toast.success('Your order has been successfully placed!', { autoClose: 3000 });
       setConfirmOrder(false);
@@ -137,10 +138,10 @@ function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
   };
    
   const handleApplyCoupon = async () => {
-    if (!medusa || !cartId || !couponCode) return;
+    if (!medusa || !cart?.id || !couponCode) return;
 
     try {
-      const { cart: updatedCartData } = await medusa.carts.update(cartId, {
+      const { cart: updatedCartData } = await medusa.carts.update(cart.id, {
         discounts: [{ code: couponCode }],
       });
       setOrderTotal(updatedCartData.total);
@@ -154,10 +155,10 @@ function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
   };
 
   const handleApplyGiftCard = useCallback(async () => {
-    if (!medusa || !cartId || !giftCardCode) return;
+    if (!medusa || !cart?.id || !giftCardCode) return;
 
    try {
-      const { cart: updatedCart } = await medusa.carts.update(cartId, {
+      const { cart: updatedCart } = await medusa.carts.update(cart.id, {
         gift_cards: [{ code: giftCardCode }],
       });
       setOrderTotal(updatedCart.total);
@@ -167,7 +168,7 @@ function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
       console.error("Error applying gift card:", error);
       toast.error("Failed to apply gift card. Please try again or contact support.", { autoClose: 3000 });
     } 
-  }, [cartId, giftCardCode, medusa]);
+  }, [cart?.id, giftCardCode, medusa]);
 
   const validateForm = (formValues: any) => {
     const errors: any = {};
@@ -267,7 +268,7 @@ function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
                   {orderTotal !== null && (
                     <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
                   )}
-                  <ShippingForm cartId={cartId} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate} /> {/* pass onCartUpdate prop to ShippingForm */}
+                  <ShippingForm cart={cart} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate} />
                 </>
               )}
             </div>
@@ -277,7 +278,7 @@ function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
               {/* Step 2: Shipping Information */}
               <h1>Step 2: Shipping Information</h1>
               <button onClick={handleGoBack}>Go back</button>
-              <ShippingForm cartId={cartId} onComplete={handlePaymentComplete} onCartUpdate={onCartUpdate} /> {/* pass onCartUpdate prop to ShippingForm */}
+              <ShippingForm cart={cart} onComplete={handlePaymentComplete} onCartUpdate={onCartUpdate} />
             </div>
           )}
           {step === 3 && (
