@@ -28,7 +28,7 @@ type Props = {
   onCartUpdate: (cart: { id: string }) => void;
 }
 
-function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
+  const CheckoutFlow: FC<Props> = ({ cart, onComplete, onCartUpdate }) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
