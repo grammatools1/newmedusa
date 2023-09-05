@@ -1,56 +1,52 @@
 "use client"
 
-import React, { useState, useEffect, useCallback, useMemo } from "react";
-import Medusa, OrderResponse from "@medusajs/medusa-js";
-import ShippingForm from "./ShippingForm";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import Medusa from '@medusajs/medusa-js';
+import ShippingForm from './ShippingForm';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const PaymentMethod = {
   credit_card: {
-    card_number: "",
-    exp_month: "",
-    exp_year: "",
-    cvv: "",
+    card_number: '',
+    exp_month: '',
+    exp_year: '',
+    cvv: '',
   },
   paypal: {
-    email: "",
+    email: '',
   },
   crypto: {
-    wallet_address: "",
+    wallet_address: '',
   },
 };
-
 type PaymentMethodKey = keyof typeof PaymentMethod;
 
 type Props = {
   cartId: string;
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
-};
+}
 
 function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
-  console.log("cartId:", cartId);
-  console.log("onComplete:", onComplete);
-  console.log("onCartUpdate:", onCartUpdate);
-
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
-  const [couponCode, setCouponCode] = useState("");
-  const [giftCardCode, setGiftCardCode] = useState("");
+  const [couponCode, setCouponCode] = useState('');
+  const [giftCardCode, setGiftCardCode] = useState('');
   const [orderTotal, setOrderTotal] = useState<number | null>(null);
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
-  const [orderData, setOrderData] = useState<OrderResponse>();
-
+ 
+  
   const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-
+  
   useEffect(() => {
     const initializeMedusa = async () => {
+     
       if (!medusaBaseUrl) {
-        console.error("Medusa base URL is not defined.");
+        console.error('Medusa base URL is not defined.');
         return;
       }
 
@@ -59,10 +55,10 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
           baseUrl: medusaBaseUrl,
           maxRetries: 3,
         });
-        console.log("Initialized Medusa:", initializedMedusa);
+        console.log('Initialized Medusa:', initializedMedusa);
         setMedusa(initializedMedusa);
       } catch (error) {
-        console.error("Error initializing Medusa:", error);
+        console.error('Error initializing Medusa:', error);
       }
     };
 
@@ -76,30 +72,30 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   }, [cartId, medusa]);
 
   const fetchCartItems = async (cartId: string) => {
-    console.log("cartId:", cartId);
-
+    console.log('cartId:', cartId);
+  
     if (!medusa) {
-      console.error("Medusa not initialized");
+      console.error('Medusa not initialized');
       return;
     }
 
     try {
       setLoading(true);
       const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
-
+    
       if (!updatedCart) {
-        console.error("Cart data is undefined or null");
+        console.error('Cart data is undefined or null');
         return;
       }
 
       setOrderTotal(updatedCart.total);
-      console.log("orderTotal:", updatedCart.total);
+      console.log('orderTotal:', updatedCart.total);
       setCartItems(updatedCart.items);
-      console.log("cartItems:", updatedCart.items);
+      console.log('cartItems:', updatedCart.items);
       onCartUpdate({ id: cartId }); // Update cart state in parent component using onCartUpdate prop
     } catch (error) {
-      console.error("Error fetching cart items:", error);
-      toast.error("Failed to fetch cart items. Please refresh the page.", { autoClose: 3000 });
+      console.error('Error fetching cart items:', error);
+      toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
     } finally {
       setLoading(false);
     }
@@ -109,7 +105,11 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
     setStep(2);
   };
 
-  const handlePaymentComplete = useCallback(async () => {
+  const handlePaymentComplete = () => {
+    setStep(3);
+  };
+
+  const handlePlaceOrder = async () => {
     if (!medusa || !cartId) return;
 
     try {
@@ -122,41 +122,19 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
       };
 
       await medusa.carts.setPaymentSession(cartId, paymentData);
-      setStep(3);
-
-      const { order } = await medusa.orders.create({
-        cart_id: cartId,
-        allow_remorse_period: false,
-      });
-      console.log("Order Created:", order);
-      setOrderData(order);
-    } catch (error) {
-      console.error("Error completing payment:", error);
-      toast.error("Failed to process payment. Please try again or contact support.", { autoClose: 3000 });
-    } finally {
-      setLoading(false);
-    }
-  }, [cartId, medusa, selectedPaymentMethod]);
-
-  const handlePlaceOrder = useCallback(async () => {
-    if (!medusa || !cartId || !orderData) return;
-
-    try {
-      setLoading(true);
-      const { type, data } = await medusa.orders.complete(orderData.id);
-      console.log("Order Completed:", type, data);
+      const { type, data } = await medusa.carts.complete(cartId);
+      console.log('Checkout Completed:', type, data);
+      toast.success('Your order has been successfully placed!', { autoClose: 3000 });
       setConfirmOrder(false);
-
-      toast.success("Your order has been successfully placed!", { autoClose: 3000 });
-      onComplete();
+      // TODO: Display order confirmation or handle any further actions
     } catch (error) {
-      console.error("Error completing order:", error);
-      toast.error("Failed to place order. Please try again or contact support.", { autoClose: 3000 });
+      console.error('Error completing checkout:', error);
+      toast.error('Failed to place order. Please try again or contact support.', { autoClose: 3000 });
     } finally {
       setLoading(false);
     }
-  }, [cartId, medusa, onComplete, orderData]);
-
+  };
+   
   const handleApplyCoupon = async () => {
     if (!medusa || !cartId || !couponCode) return;
 
@@ -177,7 +155,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const handleApplyGiftCard = useCallback(async () => {
     if (!medusa || !cartId || !giftCardCode) return;
 
-    try {
+   try {
       const { cart: updatedCart } = await medusa.carts.update(cartId, {
         gift_cards: [{ code: giftCardCode }],
       });
@@ -187,7 +165,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
     } catch (error) {
       console.error("Error applying gift card:", error);
       toast.error("Failed to apply gift card. Please try again or contact support.", { autoClose: 3000 });
-    }
+    } 
   }, [cartId, giftCardCode, medusa]);
 
   const validateForm = (formValues: any) => {
@@ -222,17 +200,17 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
 
   const handleCreditCardChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
-    setSelectedPaymentMethod("credit_card");
+    setSelectedPaymentMethod('credit_card');
   }, []);
 
   const handlePaypalChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
-    setSelectedPaymentMethod("paypal");
+    setSelectedPaymentMethod('paypal');
   }, []);
 
   const handleCryptoChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
-    setSelectedPaymentMethod("crypto");
+    setSelectedPaymentMethod('crypto');
   }, []);
 
   const memoizedHandleApplyCoupon = useMemo(() => handleApplyCoupon, [handleApplyCoupon]);
@@ -255,25 +233,37 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
               ) : (
                 <>
                   <ul>
-                    {cartItems.map((item: any) => (
+                   {cartItems.map((item: any) => (
                       <li key={item.id}>
-                        {item.quantity} x {item.product ? item.product.title : "Product Title Not Available"} - ${item.total.toFixed(2)}
+                        {item.quantity} x {item.product ? item.product.title : 'Product Title Not Available'} - ${item.total.toFixed(2)}
                       </li>
                     ))}
                   </ul>
                   <div className="coupon-gift">
                     <div>
                       <label htmlFor="coupon">Coupon Code:</label>
-                      <input id="coupon" type="text" placeholder="Enter coupon code" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} />
+                      <input
+                        id="coupon"
+                        type="text"
+                        placeholder="Enter coupon code"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
+                      />
                       <button onClick={memoizedHandleApplyCoupon}>Apply Coupon</button>
                     </div>
                     <div>
                       <label htmlFor="gift-card">Gift Card Code:</label>
-                      <input id="gift-card" type="text" placeholder="Enter gift card code" value={giftCardCode} onChange={(e) => setGiftCardCode(e.target.value)} />
+                      <input
+                        id="gift-card"
+                        type="text"
+                        placeholder="Enter gift card code"
+                        value={giftCardCode}
+                        onChange={(e) => setGiftCardCode(e.target.value)}
+                      />
                       <button onClick={memoizedHandleApplyGiftCard}>Apply Gift Card</button>
                     </div>
                   </div>
-                  {orderTotal !== null && <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>}
+                  <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
                   <ShippingForm cartId={cartId} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate} /> {/* pass onCartUpdate prop to ShippingForm */}
                 </>
               )}
@@ -294,15 +284,33 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
               <button onClick={handleGoBack}>Go back</button>
               <div className="payment-methods">
                 <label>
-                  <input type="radio" name="paymentMethod" value="credit_card" checked={selectedPaymentMethod === "credit_card"} onChange={handleCreditCardChange} />
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="credit_card"
+                    checked={selectedPaymentMethod === 'credit_card'}
+                    onChange={handleCreditCardChange}
+                  />
                   Credit Card
                 </label>
                 <label>
-                  <input type="radio" name="paymentMethod" value="paypal" checked={selectedPaymentMethod === "paypal"} onChange={handlePaypalChange} />
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="paypal"
+                    checked={selectedPaymentMethod === 'paypal'}
+                    onChange={handlePaypalChange}
+                  />
                   PayPal
                 </label>
                 <label>
-                  <input type="radio" name="paymentMethod" value="crypto" checked={selectedPaymentMethod === "crypto"} onChange={handleCryptoChange} />
+                  <input
+                    type="radio"
+                    name="paymentMethod"
+                    value="crypto"
+                    checked={selectedPaymentMethod === 'crypto'}
+                    onChange={handleCryptoChange}
+                  />
                   Crypto
                 </label>
               </div>
