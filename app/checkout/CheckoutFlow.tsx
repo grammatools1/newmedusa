@@ -268,7 +268,7 @@ interface Props  {
                   {orderTotal !== null && (
                     <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
                   )}
-                 <ShippingForm cart={cart} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate} cartId={cart.id} />
+                 <ShippingForm cart={cart} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate}/>
                 </>
               )}
             </div>
