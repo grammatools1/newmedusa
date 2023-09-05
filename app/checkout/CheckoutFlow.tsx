@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import Medusa, { Order } from "@medusajs/medusa-js";
+import Medusa, { OrderResponse } from "@medusajs/medusa-js";
 import ShippingForm from "./ShippingForm";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -43,7 +43,7 @@ function CheckoutFlow({ cartId, onComplete, onCartUpdate }: Props) {
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
-  const [orderData, setOrderData] = useState<Order>();
+  const [orderData, setOrderData] = useState<OrderResponse>();
 
   const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
