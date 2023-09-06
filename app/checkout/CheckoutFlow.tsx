@@ -27,7 +27,7 @@ interface Props {
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
 }
-  const CheckoutFlow(props: Props) {
+  const CheckoutFlow(props: Props) => {
   const { cart, onComplete, onCartUpdate} = props;
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
