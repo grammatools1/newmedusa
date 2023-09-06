@@ -28,8 +28,7 @@ interface Props  {
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
 }
- const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-  console.log('Medusa:',  medusaBaseUrl);
+ 
   const CheckoutFlow: FC<Props> = ({ cart, onComplete, onCartUpdate }) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
@@ -40,7 +39,8 @@ interface Props  {
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
-    
+  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+  console.log('Medusa:',  medusaBaseUrl);
   const handleCartIdUpdate = useCallback((updatedCartId: string) => {
     onCartUpdate({ id: updatedCartId });
   }, [onCartUpdate]);
