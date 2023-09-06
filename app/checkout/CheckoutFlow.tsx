@@ -1,6 +1,6 @@
 "use client"
 
-import React, { useState, useEffect, useCallback, useMemo, FC} from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import Medusa from '@medusajs/medusa-js';
 import ShippingForm from './ShippingForm';
 import { ToastContainer, toast } from 'react-toastify';
@@ -21,44 +21,38 @@ const PaymentMethod = {
   },
 };
 type PaymentMethodKey = keyof typeof PaymentMethod;
- 
 
-interface Props  { 
+interface Props {
   cart: any;
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
 }
- 
-  const CheckoutFlow: FC<Props> = ({ cart, onComplete, onCartUpdate }) => {
+
+function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
   const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-  console.log('Medusa:',  medusaBaseUrl);
-    
+ console.log('Medusa:',  medusaBaseUrl);
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
   const [couponCode, setCouponCode] = useState('');
-  const [giftCardCode, setGiftCardCode] = useState('');  
+  const [giftCardCode, setGiftCardCode] = useState('');
   const [orderTotal, setOrderTotal] = useState<number | null>(null);
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
-  
+
   const handleCartIdUpdate = useCallback((updatedCartId: string) => {
     onCartUpdate({ id: updatedCartId });
   }, [onCartUpdate]);
 
- 
-  
   useEffect(() => {
     const initializeMedusa = async () => {
-      
       if (!medusaBaseUrl) {
         console.error('Medusa base URL is not defined.');
         return;
       }
 
       try {
-       
         const initializedMedusa = new Medusa({
           baseUrl: medusaBaseUrl,
           maxRetries: 3,
@@ -80,8 +74,6 @@ interface Props  {
   }, [cart?.id, medusa]);
 
   const fetchCartItems = async (cartId: string) => {
-    console.log('cartId:', cartId);
-  
     if (!medusa) {
       console.error('Medusa not initialized');
       return;
@@ -141,7 +133,7 @@ interface Props  {
       setLoading(false);
     }
   };
-   
+
   const handleApplyCoupon = async () => {
     if (!medusa || !cart?.id || !couponCode) return;
 
@@ -162,7 +154,7 @@ interface Props  {
   const handleApplyGiftCard = useCallback(async () => {
     if (!medusa || !cart?.id || !giftCardCode) return;
 
-   try {
+    try {
       const { cart: updatedCart } = await medusa.carts.update(cart.id, {
         gift_cards: [{ code: giftCardCode }],
       });
@@ -172,7 +164,7 @@ interface Props  {
     } catch (error) {
       console.error("Error applying gift card:", error);
       toast.error("Failed to apply gift card. Please try again or contact support.", { autoClose: 3000 });
-    } 
+    }
   }, [cart?.id, giftCardCode, medusa]);
 
   const validateForm = (formValues: any) => {
@@ -240,7 +232,7 @@ interface Props  {
               ) : (
                 <>
                   <ul>
-                   {cartItems.map((item: any) => (
+                    {cartItems.map((item: any) => (
                       <li key={item.id}>
                         {item.quantity} x {item.product ? item.product.title : 'Product Title Not Available'} - ${item.total.toFixed(2)}
                       </li>
@@ -273,7 +265,7 @@ interface Props  {
                   {orderTotal !== null && (
                     <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
                   )}
-                 <ShippingForm cart={cart} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate}/>
+                  <ShippingForm cart={cart} onComplete={handleShippingComplete} onCartUpdate={onCartUpdate} />
                 </>
               )}
             </div>
@@ -283,7 +275,7 @@ interface Props  {
               {/* Step 2: Shipping Information */}
               <h1>Step 2: Shipping Information</h1>
               <button onClick={handleGoBack}>Go back</button>
-            <ShippingForm cart={cart} onComplete={handlePaymentComplete} onCartUpdate={onCartUpdate} />
+              <ShippingForm cart={cart} onComplete={handlePaymentComplete} onCartUpdate={onCartUpdate} />
             </div>
           )}
           {step === 3 && (
