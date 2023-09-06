@@ -28,7 +28,8 @@ interface Props {
   onCartUpdate: (cart: { id: string }) => void;
 }
 
-function CheckoutFlow({ cart, onComplete, onCartUpdate }: Props) {
+  function CheckoutFlow(props: Props) {
+  const { cart, onComplete, onCartUpdate} = props;
   const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
  console.log('Medusa:',  medusaBaseUrl);
   const [medusa, setMedusa] = useState<Medusa | null>(null);
