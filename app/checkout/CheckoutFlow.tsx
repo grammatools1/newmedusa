@@ -27,11 +27,12 @@ interface Props {
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
 }
+ const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+ console.log('Medusa:',  medusaBaseUrl);
 
   function CheckoutFlow(props: Props) {
   const { cart, onComplete, onCartUpdate} = props;
-  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
- console.log('Medusa:',  medusaBaseUrl);
+ 
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
