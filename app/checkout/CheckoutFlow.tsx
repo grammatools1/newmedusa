@@ -35,12 +35,16 @@ interface Props  {
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
   const [couponCode, setCouponCode] = useState('');
   const [giftCardCode, setGiftCardCode] = useState('');
+
+  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+  console.log('Medusa:',  medusaBaseUrl);
+
+    
     const [orderTotal, setOrderTotal] = useState<number | null>(null);
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
-  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-  console.log('Medusa:',  medusaBaseUrl);
+  
   const handleCartIdUpdate = useCallback((updatedCartId: string) => {
     onCartUpdate({ id: updatedCartId });
   }, [onCartUpdate]);
