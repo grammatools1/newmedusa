@@ -38,7 +38,10 @@ interface Props  {
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
-  
+    
+  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+  console.log('Medusa:',  medusaBaseUrl);
+    
   const handleCartIdUpdate = useCallback((updatedCartId: string) => {
     onCartUpdate({ id: updatedCartId });
   }, [onCartUpdate]);
@@ -47,8 +50,7 @@ interface Props  {
   
   useEffect(() => {
     const initializeMedusa = async () => {
-      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-      console.log('Medusa:',  medusaBaseUrl);
+      
       if (!medusaBaseUrl) {
         console.error('Medusa base URL is not defined.');
         return;
