@@ -30,17 +30,15 @@ interface Props  {
 }
  
   const CheckoutFlow: FC<Props> = ({ cart, onComplete, onCartUpdate }) => {
+  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+  console.log('Medusa:',  medusaBaseUrl);
+    
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
   const [couponCode, setCouponCode] = useState('');
-  const [giftCardCode, setGiftCardCode] = useState('');
-
-  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-  console.log('Medusa:',  medusaBaseUrl);
-
-    
-    const [orderTotal, setOrderTotal] = useState<number | null>(null);
+  const [giftCardCode, setGiftCardCode] = useState('');  
+  const [orderTotal, setOrderTotal] = useState<number | null>(null);
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
