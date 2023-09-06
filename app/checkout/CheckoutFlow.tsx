@@ -55,6 +55,7 @@ interface Props  {
       }
 
       try {
+        console.log('Medusa:',  medusaBaseUrl)
         const initializedMedusa = new Medusa({
           baseUrl: medusaBaseUrl,
           maxRetries: 3,
@@ -86,7 +87,6 @@ interface Props  {
     try {
       setLoading(true);
       const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
-    
       if (!updatedCart) {
         console.error('Cart data is undefined or null');
         return;
