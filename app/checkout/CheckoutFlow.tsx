@@ -27,8 +27,9 @@ interface Props {
   onComplete: () => void;
   onCartUpdate: (cart: { id: string }) => void;
 }
-  const CheckoutFlow(props: Props) => {
-  const { cart, onComplete, onCartUpdate} = props;
+
+const CheckoutFlow = (props: Props) => {
+  const { cart, onComplete, onCartUpdate } = props;
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
@@ -45,16 +46,14 @@ interface Props {
 
   useEffect(() => {
     const initializeMedusa = async () => {
-    const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-    console.log('Medusa:',  medusaBaseUrl);
-      if (!medusaBaseUrl) {
+      if (!process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API) {
         console.error('Medusa base URL is not defined.');
         return;
       }
 
       try {
         const initializedMedusa = new Medusa({
-          baseUrl: medusaBaseUrl,
+          baseUrl: process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API,
           maxRetries: 3,
         });
         console.log('Initialized Medusa:', initializedMedusa);
@@ -345,6 +344,6 @@ interface Props {
       )}
     </>
   );
-}
+};
 
 export default CheckoutFlow;
