@@ -6,9 +6,6 @@ import ShippingForm from './ShippingForm';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
- const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-  console.log('Medusa:',  medusaBaseUrl);
-
 const PaymentMethod = {
   credit_card: {
     card_number: '',
@@ -24,6 +21,8 @@ const PaymentMethod = {
   },
 };
 type PaymentMethodKey = keyof typeof PaymentMethod;
+ const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+  console.log('Medusa:',  medusaBaseUrl);
 
 interface Props  { 
   cart: any;
