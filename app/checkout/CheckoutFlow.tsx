@@ -6,6 +6,9 @@ import ShippingForm from './ShippingForm';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+ const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+  console.log('Medusa:',  medusaBaseUrl);
+
 const PaymentMethod = {
   credit_card: {
     card_number: '',
@@ -38,9 +41,6 @@ interface Props  {
   const [cartItems, setCartItems] = useState<any[]>([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
-    
-  const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-  console.log('Medusa:',  medusaBaseUrl);
     
   const handleCartIdUpdate = useCallback((updatedCartId: string) => {
     onCartUpdate({ id: updatedCartId });
