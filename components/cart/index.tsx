@@ -1,4 +1,3 @@
-'use client'
 import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CartModal from './modal';
@@ -19,18 +18,16 @@ export default async function Cart() {
   if (!cartId || !cart) {
     cart = await createCart();
   }
+   onComplete=() => {
+        alert("Checkout completed! Thank you for your order.");
+      };
+  onCartUpdate=() => {
+        console.log("Cart updated:", cart);
+      }}
   
   return (
     <>
-      <CheckoutFlow
-      cart={cart}
-      onComplete={() => {
-        alert("Checkout completed! Thank you for your order.");
-      }}
-      onCartUpdate={(cart) => {
-        console.log("Cart updated:", cart);
-      }}
-    />
+      <CheckoutFlow cart={cart} onComplete={cart} onCartUpdate={cart}/>
       <CartModal cart={cart} /> 
     </>
   );
