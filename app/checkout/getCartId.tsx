@@ -1,6 +1,5 @@
 import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
-import CartModal from './modal';
 import CheckoutFlow from './CheckoutFlow';
 
 export default async function Cart() {
