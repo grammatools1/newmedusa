@@ -23,7 +23,7 @@ export default async function Cart() {
       };
   onCartUpdate=() => {
         console.log("Cart updated:", cart);
-      }}
+      };
   
   return (
     <>
