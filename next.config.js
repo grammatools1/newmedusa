@@ -30,7 +30,7 @@ module.exports = {
     ]
   },
     env: {
-    NEXT_PUBLIC_MEDUSA_BACKEND_API: 'https://medusa.stylishslacks.cfd',
+    MEDUSA_BACKEND_URL: 'https://medusa.stylishslacks.cfd',
   }
 };
 
