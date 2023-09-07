@@ -46,7 +46,7 @@ const CheckoutFlow = (props: Props) => {
 
  useEffect(() => {
   const initializeMedusa = async () => {
-    const medusaBaseUrl = process.env.MEDUSA_BACKEND_URL;
+    const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API || 'https://medusa.stylishslacks.cfd';
     if (!medusaBaseUrl) {
       console.error('Medusa base URL is not defined.');
       return;
