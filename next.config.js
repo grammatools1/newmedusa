@@ -28,5 +28,9 @@ module.exports = {
         pathname: '/**'
       }
     ]
+  },
+    env: {
+    NEXT_PUBLIC_MEDUSA_BACKEND_API: 'medusa.stylishslacks.cfd',
   }
 };
+
