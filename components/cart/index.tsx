@@ -30,7 +30,7 @@ export default async function Cart() {
         console.log("Cart updated:", cart);
       }}
     />
-      <CartModal cart={cart} />
+      <CartModal cart={cart} /> 
     </>
   );
 }
