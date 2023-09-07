@@ -1,4 +1,4 @@
-import { createCart, getCart } from 'lib/medusa';
+/*import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CheckoutFlow from './CheckoutFlow';
 
