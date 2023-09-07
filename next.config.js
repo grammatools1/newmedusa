@@ -29,8 +29,5 @@ module.exports = {
       }
     ]
   },
-    env: {
-    MEDUSA_BACKEND_URL: 'https://medusa.stylishslacks.cfd',
-  }
 };
 
