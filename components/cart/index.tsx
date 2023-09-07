@@ -1,3 +1,4 @@
+'use client'
 import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CartModal from './modal';
