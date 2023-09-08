@@ -7,7 +7,7 @@ export default async function Cart() {
   const cartId = cookies().get('cartId')?.value;
    console.log(cartId);
 
-  let cart;
+  let cart: any;
   
   if (cartId) {
     cart = await getCart(cartId);
