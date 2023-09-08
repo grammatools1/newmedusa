@@ -6,7 +6,8 @@ import CheckoutFlow from 'app/checkout/CheckoutFlow';
 export default async function Cart() {
   const cartId = cookies().get('cartId')?.value;
    console.log(cartId);
-  let cart;
+  
+  let cart: CartType | undefined;
 
   if (cartId) {
     cart = await getCart(cartId);
