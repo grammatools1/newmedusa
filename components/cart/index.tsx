@@ -1,13 +1,13 @@
 import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CartModal from './modal';
-import CheckoutFlow from 'app/checkout/CheckoutFlow';
+
 
 export default async function Cart() {
   const cartId = cookies().get('cartId')?.value;
    console.log(cartId);
 
-  let cart: any;
+  let cart;
   
   if (cartId) {
     cart = await getCart(cartId);
@@ -20,17 +20,9 @@ export default async function Cart() {
     cart = await createCart();
   }
 
-  const onComplete = () => {
-    alert("Checkout completed! Thank you for your order.");
-  };
-
-  const onCartUpdate = () => {
-    console.log("Cart updated:", cart);
-  };
-
   return (
-    <>
-      <CheckoutFlow cart={cart} onComplete={onComplete} onCartUpdate={onCartUpdate} /> 
+ 
+    <> 
       <CartModal cart={cart} />
     </>
   );
