@@ -5,6 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import Medusa from '@medusajs/medusa-js';
 import CheckoutFlow from './CheckoutFlow';
+import CheckoutCart from './checkoutCart'
 
 function Checkout() {
   const [cart, setCart] = useState<string | undefined>(undefined);
@@ -89,6 +90,7 @@ function Checkout() {
       {!loading && cart && orderTotal !== null && cartItems !== null && (
         <div className="checkout-container">
           <CheckoutFlow cart={cart} onCartUpdate={handleCartUpdate} onComplete={handleCheckoutComplete} />
+          <CheckoutCart />
         </div>
       )}
     </>
