@@ -90,7 +90,7 @@ function Checkout() {
       {!loading && cart && orderTotal !== null && cartItems !== null && (
         <div className="checkout-container">
           <CheckoutFlow cart={cart} onCartUpdate={handleCartUpdate} onComplete={handleCheckoutComplete} />
-          <CheckoutCart />
+          <CheckoutCart cart={cart}/>
         </div>
       )}
     </>
