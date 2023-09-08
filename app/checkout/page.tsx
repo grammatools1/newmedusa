@@ -1,100 +1,27 @@
-"use client"
-
-import React, { useState, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-import Medusa from '@medusajs/medusa-js';
-import CheckoutFlow from './CheckoutFlow';
+import { createCart, getCart } from 'lib/medusa';
+import { cookies } from 'next/headers';
 import CheckoutCart from './checkoutCart';
 
-function Checkout() {
-  const [cart, setCart] = useState<string | undefined>(undefined);
-  const [loading, setLoading] = useState(false);
-  const [medusa, setMedusa] = useState<Medusa | null>(null);
-    const [orderTotal, setOrderTotal] = useState<number | null>(null);
-  const [cartItems, setCartItems] = useState<any[]>([]);
 
-  useEffect(() => {
-    const initializeMedusa = async () => {
-      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+export default async function Checkout() {
+  const cartId = cookies().get('cartId')?.value;
 
-      if (!medusaBaseUrl) {
-        console.error('Medusa base URL is not defined.');
-        return;
-      }
+  let cart;
+  
+  if (cartId) {
+    cart = await getCart(cartId);
+  }
 
-      try {
-        const initializedMedusa = new Medusa({
-          baseUrl: medusaBaseUrl,
-          maxRetries: 3,
-        });
-        setMedusa(initializedMedusa);
-      } catch (error) {
-        console.error('Error initializing Medusa:', error);
-      }
-    };
-
-    initializeMedusa();
-  }, []);
-
-  useEffect(() => {
-    if (cart && medusa) {
-      fetchCartItems(cart);
-    }
-  }, [cart, medusa]);
-
-  const fetchCartItems = async (cartId: string) => {
-    console.log('cartId:', cartId);
-
-    if (!medusa) {
-      console.error('Medusa not initialized');
-      return;
-    }
-
-    try {
-      setLoading(true);
-      const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
-
-      if (!updatedCart) {
-        console.error('Cart data is undefined or null');
-        return;
-      }
-
-      setOrderTotal(updatedCart.total);
-      console.log('orderTotal:', updatedCart.total);
-      setCartItems(updatedCart.items);
-      console.log('cartItems:', updatedCart.items);
-    } catch (error) {
-      console.error('Error fetching cart items:', error);
-      toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleCartUpdate = (cart: { id: string }) => {
-    console.log('Updated cart:', cart);
-    setCart(cart.id);
-  };
-
-  const handleCheckoutComplete = () => {
-    console.log('Checkout completed successfully!');
-  };
+  // If the `cartId` from the cookie is not set or the cart is empty
+  // (old carts become `null` when you checkout), then get a new `cartId`
+  //  and re-fetch the cart.
+  if (!cartId || !cart) {
+    cart = await createCart();
+  }
 
   return (
-    <>
-      <ToastContainer position="top-right" />
-
-      {loading && <div className="loader">Loading...</div>}
-
-      {!loading && cart !== undefined && orderTotal !== null && cartItems !== null && (
-      <div className="checkout-container">
-      <CheckoutFlow cart={cart} onCartUpdate={handleCartUpdate} onComplete={handleCheckoutComplete} />
+    <> 
       <CheckoutCart cart={cart} />
-       </div>
-     )}
     </>
   );
 }
-
-export default Checkout;
