@@ -87,12 +87,12 @@ function Checkout() {
 
       {loading && <div className="loader">Loading...</div>}
 
-      {!loading && cart && orderTotal !== null && cartItems !== null && (
-        <div className="checkout-container">
-          <CheckoutFlow cart={cart} onCartUpdate={handleCartUpdate} onComplete={handleCheckoutComplete} />
-          <CheckoutCart />
-        </div>
-      )}
+      {!loading && cart !== undefined && orderTotal !== null && cartItems !== null && (
+      <div className="checkout-container">
+    <CheckoutFlow cart={cart} onCartUpdate={handleCartUpdate} onComplete={handleCheckoutComplete} />
+    <CheckoutCart />
+    </div>
+   )}
     </>
   );
 }
