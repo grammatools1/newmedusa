@@ -1,6 +1,7 @@
 import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CheckoutCart from './checkoutCart';
+import CheckoutFlow from './CheckoutFlow';
 
 
 export default async function Checkout() {
@@ -22,6 +23,7 @@ export default async function Checkout() {
   return (
     <> 
       <CheckoutCart cart={cart} />
+      <CheckoutFlow cart={cart} />
     </>
   );
 }
