@@ -150,24 +150,23 @@ useEffect(() => {
     }
   };
 
-  const handleApplyCoupon = async () => {
-    if (!medusa || !cart || !couponCode) return;
+ const handleApplyCoupon = async () => {
+  if (!medusa || !cart || !couponCode) return;
 
-    try {
-      let cartData = cart;
-     if (cartData && cartData.id) {
-     const { cart: updatedCartData } = await medusa.carts.update(cartData.id, {
-     discounts: [{ code: couponCode }],
-      });
-     setOrderTotal(updatedCartData.total);
-      setCouponCode('');
-      toast.success('Coupon applied!', { autoClose: 3000 });
-     }
-    } catch (error) {
-      console.error('Error applying coupon:', error);
-      toast.error('Failed to apply coupon. Please try again or contact support.', { autoClose: 3000 });
-    }
-  };
+  try {
+    const cartId = cart.id || ''; // Use an empty string as a default if cart.id is undefined
+    const { cart: updatedCartData } = await medusa.carts.update(cartId, {
+      discounts: [{ code: couponCode }],
+    });
+    setOrderTotal(updatedCartData.total);
+    setCouponCode("");
+
+    toast.success("Coupon applied!", { autoClose: 3000 });
+  } catch (error) {
+    console.error("Error applying coupon:", error);
+    toast.error("Failed to apply coupon. Please try again or contact support.", { autoClose: 3000 });
+  }
+};
 
  const handleApplyGiftCard = useCallback(async () => {
   if (!medusa || !cart || !giftCardCode) return;
