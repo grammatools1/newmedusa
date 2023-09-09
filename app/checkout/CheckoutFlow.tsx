@@ -73,7 +73,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
 
 useEffect(() => {
   if (cart && medusa && cart?.id) {
-    fetchCartItems(cart);
+    fetchCartItems(cart as { id: string });
   }
 }, [cart, medusa]);
 
