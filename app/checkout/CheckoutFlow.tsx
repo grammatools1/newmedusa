@@ -11,10 +11,9 @@ import type { Cart } from 'lib/medusa/types';
 import { createUrl } from 'lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useRef} from 'react';
+
 import DeleteItemButton from 'components/cart/delete-item-button';
 import EditItemQuantityButton from 'components/cart/edit-item-quantity-button';
-
 
 const PaymentMethod = {
   credit_card: {
@@ -41,11 +40,11 @@ type MerchandiseSearchParams = {
   [key: string]: string;
 };
 
-  function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
+function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   const quantityRef = useRef(cart?.totalQuantity);
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
+  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>('credit_card');
   const [couponCode, setCouponCode] = useState('');
   const [giftCardCode, setGiftCardCode] = useState('');
   const [orderTotal, setOrderTotal] = useState(0);
@@ -53,27 +52,7 @@ type MerchandiseSearchParams = {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
-useEffect(() => {
-  const initializeMedusa = async () => {
-    const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-    if (!medusaBaseUrl) {
-      console.error('Medusa base URL is not defined.');
-      return;
-    }
-
-    const initializedMedusa = new Medusa({
-      baseUrl: medusaBaseUrl,
-      maxRetries: 3,
-    });
-    console.log('Initializ Medusa:', initializedMedusa);
-    setMedusa(initializedMedusa);
-  };
-
-  initializeMedusa();
-}, []);
-    
-
-  /*useEffect(() => {
+  useEffect(() => {
     const initializeMedusa = async () => {
       const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
       if (!medusaBaseUrl) {
@@ -85,24 +64,22 @@ useEffect(() => {
         baseUrl: medusaBaseUrl,
         maxRetries: 3,
       });
+      console.log('Initialized Medusa:', initializedMedusa);
       setMedusa(initializedMedusa);
     };
 
     initializeMedusa();
-  }, []); */
+  }, []);
 
-    
-   
   useEffect(() => {
     fetchCartItems(cart);
   }, [cart, medusa]);
 
-
-useEffect(() => {
+  useEffect(() => {
     // Open cart modal when quantity changes.
     if (cart?.totalQuantity !== quantityRef.current) {
       // But only if it's not already open (quantity also changes when editing items in cart).
-      
+
       // Always update the quantity reference
       quantityRef.current = cart?.totalQuantity;
     }
@@ -116,68 +93,67 @@ useEffect(() => {
     setStep(3);
   };
 
- const handlePlaceOrder = async () => {
-  if (!medusa) return;
+  const handlePlaceOrder = async () => {
+    if (!medusa) return;
 
-  try {
-    setLoading(true);
-    const paymentData = {
-      provider_id: selectedPaymentMethod,
-      data: {
-        ...PaymentMethod[selectedPaymentMethod],
-      },
-    };
+    try {
+      setLoading(true);
+      const paymentData = {
+        provider_id: selectedPaymentMethod,
+        data: {
+          ...PaymentMethod[selectedPaymentMethod],
+        },
+      };
 
-    await medusa.carts.setPaymentSession(cart.id, paymentData);
-    const { type, data } = await medusa.carts.complete(cart.id);
-    console.log('Checkout Completed:', type, data);
-    toast.success('Your order has been successfully placed!', { autoClose: 3000 });
-    setConfirmOrder(false);
-    // TODO: Display order confirmation or handle any further actions
-  } catch (error) {
-    console.error('Error completing checkout:', error);
-    toast.error('Failed to place order. Please try again or contact support.', { autoClose: 3000 });
-  } finally {
-    setLoading(false);
-  }
-};
-   
- const handleApplyCoupon = async () => {
-  if (!medusa || !cart || !couponCode) return;
+      await medusa.carts.setPaymentSession(cart.id, paymentData);
+      const { type, data } = await medusa.carts.complete(cart.id);
+      console.log('Checkout Completed:', type, data);
+      toast.success('Your order has been successfully placed!', { autoClose: 3000 });
+      setConfirmOrder(false);
+      // TODO: Display order confirmation or handle any further actions
+    } catch (error) {
+      console.error('Error completing checkout:', error);
+      toast.error('Failed to place order. Please try again or contact support.', { autoClose: 3000 });
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  try {
-    let cartData = cart;
-    const { cart: updatedCartData } = await medusa.carts.update(cartData.id, {
-      discounts: [{ code: couponCode }],
-    });
-    setOrderTotal(updatedCartData.total);
-    setCouponCode("");
+  const handleApplyCoupon = async () => {
+    if (!medusa || !cart || !couponCode) return;
 
-    toast.success("Coupon applied!", { autoClose: 3000 });
-  } catch (error) {
-    console.error("Error applying coupon:", error);
-    toast.error("Failed to apply coupon. Please try again or contact support.", { autoClose: 3000 });
-  }
-};
+    try {
+      let cartData = cart;
+      const { cart: updatedCartData } = await medusa.carts.update(cartData.id, {
+        discounts: [{ code: couponCode }],
+      });
+      setOrderTotal(updatedCartData.total);
+      setCouponCode('');
 
- const handleApplyGiftCard = useCallback(async () => {
-  if (!medusa || !cart || !giftCardCode) return;
+      toast.success('Coupon applied!', { autoClose: 3000 });
+    } catch (error) {
+      console.error('Error applying coupon:', error);
+      toast.error('Failed to apply coupon. Please try again or contact support.', { autoClose: 3000 });
+    }
+  };
 
-  try {
-    let cartData = cart;
-    const { cart: updatedCart } = await medusa.carts.update(cart.id, {
-      gift_cards: [{ code: giftCardCode }],
-    });
-    setOrderTotal(updatedCart.total);
-    setGiftCardCode(""); // Clear the gift card code input field
+  const handleApplyGiftCard = useCallback(async () => {
+    if (!medusa || !cart || !giftCardCode) return;
 
-    toast.success("Gift card applied!", { autoClose: 3000 });
-  } catch (error) {
-    console.error("Error applying gift card:", error);
-    toast.error("Failed to apply gift card. Please try again or contact support.", { autoClose: 3000 });
-  }
-}, [cart, giftCardCode, medusa]);
+    try {
+      let cartData = cart;
+      const { cart: updatedCart } = await medusa.carts.update(cart.id, {
+        gift_cards: [{ code: giftCardCode }],
+      });
+      setOrderTotal(updatedCart.total);
+      setGiftCardCode(''); // Clear the gift card code input field
 
+      toast.success('Gift card applied!', { autoClose: 3000 });
+    } catch (error) {
+      console.error('Error applying gift card:', error);
+      toast.error('Failed to apply gift card. Please try again or contact support.', { autoClose: 3000 });
+    }
+  }, [cart, giftCardCode, medusa]);
 
   const validateForm = (formValues: any) => {
     const errors: any = {};
@@ -210,9 +186,9 @@ useEffect(() => {
   };
 
   const handleCreditCardChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
-  const { name, value } = e.currentTarget;
-  setSelectedPaymentMethod('credit_card');
-}, []);
+    const { name, value } = e.currentTarget;
+    setSelectedPaymentMethod('credit_card');
+  }, []);
 
   const handlePaypalChange = useCallback((e: React.FormEvent<HTMLInputElement>) => {
     const { name, value } = e.currentTarget;
@@ -239,7 +215,7 @@ useEffect(() => {
             <div>
               {/* Step 1: Cart Review */}
               <h1>Step 1: Cart Review</h1>
-                {!cart || cart.lines.length === 0 ? (
+              {!cart || cart.lines.length === 0 ? (
                 <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
                   <p className="mt-6 text-center text-2xl font-bold">Your cart is empty.</p>
                 </div>
@@ -338,7 +314,6 @@ useEffect(() => {
                       />
                     </div>
                   </div>
-                </div>
                   <div className="coupon-gift">
                     <div>
                       <label htmlFor="coupon">Coupon Code:</label>
@@ -365,7 +340,7 @@ useEffect(() => {
                   </div>
                   <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
                   <ShippingForm cart={cart} onComplete={handleShippingComplete} />
-                </>
+                </div>
               )}
             </div>
           )}
@@ -445,4 +420,5 @@ useEffect(() => {
     </>
   );
 }
+
 export default CheckoutFlow;
