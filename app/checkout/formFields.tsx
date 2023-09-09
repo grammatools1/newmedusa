@@ -260,12 +260,7 @@ const FormFields = ({
         <label htmlFor="countryCode" className="block text-gray-700 font-bold mb-2">
           Country:
         </label>
-        // ...
-import Autocomplete from 'react-autocomplete';
 
-// ...
-
-// Inside your FormFields component:
 <Controller
   name="countryCode"
   control={control}
