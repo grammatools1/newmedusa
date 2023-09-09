@@ -240,6 +240,7 @@ useEffect(() => {
         <div className="checkout-flow">
           {step === 1 && (
             <div>
+              <>
                   <div className="coupon-gift">
                     <div>
                       <label htmlFor="coupon">Coupon Code:</label>
