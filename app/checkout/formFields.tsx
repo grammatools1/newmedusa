@@ -276,7 +276,7 @@ const FormFields = ({
                   {...props}
                   type="text"
                   placeholder="Country"
-                  autoComplete="off"
+                  autoComplete="on"
                   aria-label="Country"
                   className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
                 />
