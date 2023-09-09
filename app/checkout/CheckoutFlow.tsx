@@ -54,7 +54,7 @@ useEffect(() => {
       baseUrl: medusaBaseUrl,
       maxRetries: 3,
     });
-    console.log('Initialized Medusa:', initializedMedusa);
+    console.log('Initializ Medusa:', initializedMedusa);
     setMedusa(initializedMedusa);
   };
 
