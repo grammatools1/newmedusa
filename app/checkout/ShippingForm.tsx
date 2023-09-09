@@ -187,6 +187,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
 
       if (medusa && cart && cart.id) {
         const cartId = cart.id as string; // Type assertion
+        console.log(cartId);
 
         // Update shipping address and method
         await medusa.carts.update(cartId, {
@@ -220,7 +221,6 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   };
 
   const fetchCartItems = async (cartId: string) => {
-    console.log('cartId:', cartId);
   
     // Check if medusa is not initialized
     if (!medusa) {
