@@ -220,18 +220,23 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     }
   };
 
-  const fetchCartItems = async (cart: { id: string }) => {
-    const cartId = async (cart: { id: string });
-     console.log(cartId);
-    // Check if medusa is not initialized
-    if (!medusa) {
-      console.error('Medusa not initialized');
-      return;
-    }
+     
+  useEffect(() => {
+    fetchCartItems(cart);
+  }, [cart, medusa]);
 
-    try {
-          setIsLoading(true);
-          const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
+
+ const fetchCartItems = async (cart: { id: string }) => {
+
+  if (!medusa) {
+    console.error('Medusa not initialized');
+   return 
+   /*<div>Loading...</div>;*/
+  }
+
+  try {
+    setLoading(true);
+    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
           console.log( updatedCart);
           // Replace below `console.log` statements with your own custom logic
         } catch (error) {
