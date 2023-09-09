@@ -169,23 +169,23 @@ useEffect(() => {
     }
   };
 
-  const handleApplyGiftCard = useCallback(async () => {
-    if (!medusa || !cart || !giftCardCode) return;
+ const handleApplyGiftCard = useCallback(async () => {
+  if (!medusa || !cart || !giftCardCode) return;
 
-    try {
-      let cartData = cart;
-      const { cart: updatedCart } = await medusa.carts.update(cart.id, {
-        gift_cards: [{ code: giftCardCode }],
-      });
-      setOrderTotal(updatedCart.total);
-      setGiftCardCode(''); // Clear the gift card code input field
+  try {
+    const cartId = cart.id || ''; // Use an empty string as a default if cart.id is undefined
+    const { cart: updatedCart } = await medusa.carts.update(cartId, {
+      gift_cards: [{ code: giftCardCode }],
+    });
+    setOrderTotal(updatedCart.total);
+    setGiftCardCode(""); // Clear the gift card code input field
 
-      toast.success('Gift card applied!', { autoClose: 3000 });
-    } catch (error) {
-      console.error('Error applying gift card:', error);
-      toast.error('Failed to apply gift card. Please try again or contact support.', { autoClose: 3000 });
-    }
-  }, [cart, giftCardCode, medusa]);
+    toast.success("Gift card applied!", { autoClose: 3000 });
+  } catch (error) {
+    console.error("Error applying gift card:", error);
+    toast.error("Failed to apply gift card. Please try again or contact support.", { autoClose: 3000 });
+  }
+}, [cart, giftCardCode, medusa]);
 
   const validateForm = (formValues: any) => {
     const errors: any = {};
