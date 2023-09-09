@@ -84,7 +84,7 @@ useEffect(() => {
    
   useEffect(() => {
     fetchCartItems(cart);
-  }, [cart]);
+  }, [cart, medusa]);
 
 
  const fetchCartItems = async (cart: { id: string }) => {
