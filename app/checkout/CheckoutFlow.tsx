@@ -141,7 +141,8 @@ useEffect(() => {
         toast.success('Your order has been successfully placed!', { autoClose: 3000 });
         setConfirmOrder(false);
       // TODO: Display order confirmation or handle any further actions
-    } catch (error) {
+       }
+    }catch (error) {
       console.error('Error completing checkout:', error);
       toast.error('Failed to place order. Please try again or contact support.', { autoClose: 3000 });
     } finally {
