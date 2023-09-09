@@ -148,7 +148,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
 
   useEffect(() => {
      const fetchShippingOptions = async (cart: { id: string }) => {
-       console.log(id);
+       console.log(fetchShippingOptions);
         try {
           if (!medusa) {
             console.error('Medusa not initialized');
