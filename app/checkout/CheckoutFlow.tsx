@@ -85,6 +85,33 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
     }
   }, [cart?.totalQuantity, quantityRef]);
 
+
+  useEffect(() => {
+    fetchCartItems(cart);
+  }, [cart]);
+
+
+ const fetchCartItems = async (cart: { id: string }) => {
+  console.log('cart:', cart);
+  if (!medusa) {
+    console.error('Medusa not initialized');
+   return 
+   /*<div>Loading...</div>;*/
+  }
+
+  try {
+    setLoading(true);
+    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+    setOrderTotal(updatedCart.total);
+    setCartItems(updatedCart.items);
+  } catch (error) {
+    console.error('Error fetching cart items:', error);
+    toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
+  } finally {
+    setLoading(false);
+  }
+};
+
   const handleShippingComplete = () => {
     setStep(2);
   };
