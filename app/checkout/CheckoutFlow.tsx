@@ -94,11 +94,11 @@ useEffect(() => {
 
 
  const fetchCartItems = async (cart: { id: string }) => {
-  console.log('cart:', cart);
+
   if (!medusa) {
     console.error('Medusa not initialized');
    return 
-   /*<div>Loading...</div>;*/
+   <div>Loading...</div>;
   }
 
   try {
