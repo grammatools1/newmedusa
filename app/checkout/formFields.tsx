@@ -41,6 +41,7 @@ const FormFields = ({
 }: FormFieldsProps) => {
   const { watch } = useForm<CombinedFormData>();
   const selectedCountryCode = watch('countryCode');
+  const initialCountryOptions: CountryOption[] = [];
   const [countryOptions, setCountryOptions] = useState<CountryOption[]>([]);
 
   useEffect(() => {
