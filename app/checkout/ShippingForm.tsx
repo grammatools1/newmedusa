@@ -53,7 +53,7 @@ type Props = {
   cartId?: string; // make cartId an optional prop
 }
 
-const ShippingForm = ({ cart, onComplete, cartId }: Props) => {
+const ShippingForm = ({ cart, onComplete }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null); 
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
@@ -142,10 +142,10 @@ const ShippingForm = ({ cart, onComplete, cartId }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (cartId) {
-      fetchCartItems(cartId);
+    if (cart) {
+      fetchCartItems(cart);
     }
-  }, [cartId, medusa]);
+  }, [cart, medusa]);
 
   useEffect(() => {
       const fetchShippingOptions = async () => {
