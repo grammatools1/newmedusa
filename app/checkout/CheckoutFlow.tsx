@@ -34,8 +34,8 @@ interface Props {
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
   const [couponCode, setCouponCode] = useState('');
-    /*const [giftCardCode, setGiftCardCode] = useState('');
-  const [orderTotal, setOrderTotal] = useState(cart.total);
+  const [giftCardCode, setGiftCardCode] = useState('');
+   /*const [orderTotal, setOrderTotal] = useState(cart.total);
   const [cartItems, setCartItems] = useState(cart.items);*/
   const [orderTotal, setOrderTotal] = useState(0);
   const [cartItems, setCartItems] = useState([]);
@@ -163,23 +163,24 @@ useEffect(() => {
   }
 };
 
-  const handleApplyGiftCard = useCallback(async () => {
-    if (!medusa || !cart || !giftCardCode)  return;
+ const handleApplyGiftCard = useCallback(async () => {
+  if (!medusa || !cart || !giftCardCode) return;
 
-   try {
+  try {
     let cartData = cart;
-  const { cart: updatedCart } = await medusa.carts.update(cart.id, {
-    gift_cards: [{ code: giftCardCode }],
-  });
-  setOrderTotal(updatedCart.total);
-  setgiftCardCode("");
+    const { cart: updatedCart } = await medusa.carts.update(cart.id, {
+      gift_cards: [{ code: giftCardCode }],
+    });
+    setOrderTotal(updatedCart.total);
+    setGiftCardCode(""); // Clear the gift card code input field
 
-  toast.success("Gift card applied!", { autoClose: 3000 });
-} catch (error) {
-  console.error("Error applying gift card:", error);
-  toast.error("Failed to apply gift card. Please try again or contact support.", { autoClose: 3000 });
-} 
+    toast.success("Gift card applied!", { autoClose: 3000 });
+  } catch (error) {
+    console.error("Error applying gift card:", error);
+    toast.error("Failed to apply gift card. Please try again or contact support.", { autoClose: 3000 });
+  }
 }, [cart, giftCardCode, medusa]);
+
 
   const validateForm = (formValues: any) => {
     const errors: any = {};
@@ -264,7 +265,7 @@ useEffect(() => {
                       />
                       <button onClick={memoizedHandleApplyCoupon}>Apply Coupon</button>
                     </div>
-                    <div>
+                      <div>
                       <label htmlFor="gift-card">Gift Card Code:</label>
                       <input
                         id="gift-card"
