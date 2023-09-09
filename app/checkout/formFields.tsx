@@ -290,34 +290,21 @@ const FormFields = ({
           autoComplete="on"
           aria-label="Country"
           className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
-          value={field.value} // Bind input value to field.value
+          value={field.value}
           onChange={(event) => {
-            field.onChange(event.target.value); // Update field value when input changes
+            field.onChange(event.target.value);
           }}
         />
       )}
-      value={field.value} // Bind Autocomplete value to field.value
+      value={field.value}
       onChange={(event, value) => {
-        field.onChange(value); // Update field value when Autocomplete selection changes
+        field.onChange(value);
         onSelectCountryCode(value);
-              }}
-            />
-          )}
-        />
-        value={
-          field.value &&
-          countryOptions.find((option) => option.value === field.value)?.label
-            ? field.value
-            : ''
-        }
-        onChange={(event) => field.onChange(event.target.value)}
-        onSelect={(value) => {
-          field.onChange(value);
-          onSelectCountryCode(value);
-        }}
-      />
-    )}
-  />
+      }}
+    />
+  )}
+/>
+
   {errors.countryCode && (
     <span className="text-red-500">Please select your country</span>
   )}
