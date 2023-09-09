@@ -1,5 +1,5 @@
 import React from 'react';
-import { Controller, Control, FieldError,useForm } from 'react-hook-form';
+import { Controller, Control, FieldError, useForm } from 'react-hook-form';
 import Autocomplete from 'react-autocomplete';
 const countryList = require('country-list');
 
@@ -46,13 +46,13 @@ const FormFields = ({
     <>
       {/* Validation Summary */}
       {Object.keys(errors).length > 0 && (
-        <div style={{ backgroundColor: 'red', color: 'white', padding: '1rem'}}>
+        <div className="bg-red-500 text-white py-2 px-4 mb-4">
           {Object.values(errors).map((error: any) => (
             <div key={error.message}>{error.message}</div>
           ))}
         </div>
       )}
-      
+
       {/* First Name */}
       <Controller
         name="firstName"
@@ -60,11 +60,18 @@ const FormFields = ({
         defaultValue=""
         rules={{ required: 'First name is required' }}
         render={({ field }) => (
-          <div>
-            <label htmlFor="firstName">First Name:</label>
-            <input {...field} type="text" aria-label="First Name" />
+          <div className="mb-4">
+            <label htmlFor="firstName" className="block text-gray-700 font-bold mb-2">
+              First Name:
+            </label>
+            <input
+              {...field}
+              type="text"
+              aria-label="First Name"
+              className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
+            />
             {errors.firstName && (
-              <span style={{ color: 'red' }}>Please enter your first name</span>
+              <span className="text-red-500">Please enter your first name</span>
             )}
           </div>
         )}
@@ -77,11 +84,18 @@ const FormFields = ({
         defaultValue=""
         rules={{ required: 'Last name is required' }}
         render={({ field }) => (
-          <div>
-            <label htmlFor="lastName">Last Name:</label>
-            <input {...field} type="text" aria-label="Last Name" />
+          <div className="mb-4">
+            <label htmlFor="lastName" className="block text-gray-700 font-bold mb-2">
+              Last Name:
+            </label>
+            <input
+              {...field}
+              type="text"
+              aria-label="Last Name"
+              className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
+            />
             {errors.lastName && (
-              <span style={{ color: 'red' }}>Please enter your last name</span>
+              <span className="text-red-500">Please enter your last name</span>
             )}
           </div>
         )}
@@ -100,78 +114,124 @@ const FormFields = ({
           },
         }}
         render={({ field }) => (
-          <div>
-            <label htmlFor="email">Email:</label>
-            <input {...field} type="email" aria-label="Email" />
+          <div className="mb-4">
+            <label htmlFor="email" className="block text-gray-700 font-bold mb-2">
+              Email:
+            </label>
+            <input
+              {...field}
+              type="email"
+              aria-label="Email"
+              className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
+            />
             {errors.email && (
-              <span style={{ color: 'red' }}>{errors.email.message}</span>
+              <span className="text-red-500">{errors.email.message}</span>
             )}
           </div>
         )}
       />
 
       {/* Subscribe to Updates checkbox */}
-      <div>
+      <div className="mb-4">
         <input
           type="checkbox"
           id="acceptUpdates"
           checked={acceptUpdates}
           onChange={() => setAcceptUpdates(!acceptUpdates)}
+          className="mr-2 leading-tight"
         />
-        <label htmlFor="acceptUpdates">Receive product updates and newsletters</label>
+        <label htmlFor="acceptUpdates" className="text-gray-700 font-bold">
+          Receive product updates and newsletters
+        </label>
       </div>
 
       {/* Address */}
-      <div>
-        <label htmlFor="address1">Address:</label>
+      <div className="mb-4">
+        <label htmlFor="address1" className="block text-gray-700 font-bold mb-2">
+          Address:
+        </label>
         <Controller
           name="address1"
           control={control}
           defaultValue=""
-          render={({ field }) => <input {...field} type="text" aria-label="Address" />}
+          render={({ field }) => (
+            <input
+              {...field}
+              type="text"
+              aria-label="Address"
+              className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
+            />
+          )}
           rules={{ required: 'Address is required' }}
         />
         {errors.address1 && (
-          <span style={{ color: 'red' }}>Please enter your address</span>
+          <span className="text-red-500">Please enter your address</span>
         )}
       </div>
 
       {/* City */}
-      <div>
-        <label htmlFor="city">City:</label>
+      <div className="mb-4">
+        <label htmlFor="city" className="block text-gray-700 font-bold mb-2">
+          City:
+        </label>
         <Controller
           name="city"
           control={control}
           defaultValue=""
-          render={({ field }) => <input {...field} type="text" aria-label="City" />}
+          render={({ field }) => (
+            <input
+              {...field}
+              type="text"
+              aria-label="City"
+              className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
+            />
+          )}
           rules={{ required: 'City is required' }}
         />
         {errors.city && (
-          <span style={{ color: 'red' }}>Please enter your city</span>
+          <span className="text-red-500">Please enter your city</span>
         )}
       </div>
 
       {/* State or Province */}
       {selectedCountryCode === 'US' && (
-        <div>
-          <label htmlFor="province">State:</label>
+        <div className="mb-4">
+          <label htmlFor="province" className="block text-gray-700 font-bold mb-2">
+            State:
+          </label>
           <Controller
             name="province"
             control={control}
             defaultValue=""
-            render={({ field }) => <input {...field} type="text" aria-label="State" />}
+            render={({ field }) => (
+              <input
+                {...field}
+                type="text"
+                aria-label="State"
+                className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
+              />
+            )}
           />
         </div>
       )}
 
       {/* Postal Code */}
-      <div>
-        <label htmlFor="postalCode">Postal Code:</label>
+      <div className="mb-4">
+        <label htmlFor="postalCode" className="block text-gray-700 font-bold mb-2">
+          Postal Code:
+        </label>
         <Controller
           name="postalCode"
           control={control}
           defaultValue=""
-          render={({ field }) => <input {...field} type="text" aria-label="Postal Code" />}
+          render={({ field }) => (
+            <input
+              {...field}
+              type="text"
+              aria-label="Postal Code"
+              className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
+            />
+          )}
           rules={{
             pattern: {
               value: /^\d{5}(-\d{4})?$/,
@@ -181,13 +241,15 @@ const FormFields = ({
           }}
         />
         {errors.postalCode && (
-          <span style={{ color: 'red' }}>{errors.postalCode.message}</span>
+          <span className="text-red-500">{errors.postalCode.message}</span>
         )}
       </div>
 
       {/* Country */}
-      <div>
-        <label htmlFor="countryCode">Country:</label>
+      <div className="mb-4">
+        <label htmlFor="countryCode" className="block text-gray-700 font-bold mb-2">
+          Country:
+        </label>
         <Controller
           name="countryCode"
           control={control}
@@ -210,7 +272,14 @@ const FormFields = ({
                 </div>
               )}
               renderInput={(props) => (
-                <input {...props} type="text" placeholder="Country" autoComplete="off" aria-label="Country" />
+                <input
+                  {...props}
+                  type="text"
+                  placeholder="Country"
+                  autoComplete="off"
+                  aria-label="Country"
+                  className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
+                />
               )}
               value={
                 field.value &&
@@ -227,18 +296,27 @@ const FormFields = ({
           )}
         />
         {errors.countryCode && (
-          <span style={{ color: 'red' }}>Please select your country</span>
+          <span className="text-red-500">Please select your country</span>
         )}
       </div>
 
       {/* Phone */}
-      <div>
-        <label htmlFor="phone">Phone:</label>
+      <div className="mb-4">
+        <label htmlFor="phone" className="block text-gray-700 font-bold mb-2">
+          Phone:
+        </label>
         <Controller
           name="phone"
           control={control}
           defaultValue=""
-          render={({ field }) => <input {...field} type="text" aria-label="Phone Number" />}
+          render={({ field }) => (
+            <input
+              {...field}
+              type="text"
+              aria-label="Phone Number"
+              className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
+            />
+          )}
           rules={{
             pattern: {
               value: /^\+(?:[0-9] ?){6,14}[0-9]$/,
@@ -248,7 +326,7 @@ const FormFields = ({
           }}
         />
         {errors.phone && (
-          <span style={{ color: 'red' }}>{errors.phone.message}</span>
+          <span className="text-red-500">{errors.phone.message}</span>
         )}
       </div>
 
