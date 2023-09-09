@@ -267,30 +267,44 @@ const FormFields = ({
     defaultValue=""
     rules={{ required: 'Country is required' }}
     render={({ field }) => (
-      <Autocomplete
-        getItemValue={(option) => option.label}
-        items={countryOptions}
-        renderItem={(option, isHighlighted) => (
-          <div
-            key={option.value}
-            style={{
-              background: isHighlighted ? 'lightgray' : 'white',
-              cursor: 'pointer',
-              padding: '0.5rem',
-            }}
-          >
-            {option.label}
-          </div>
-        )}
-        renderInput={(props) => (
-          <input
-            {...props}
-            type="text"
-            placeholder="Country"
-            autoComplete="on"
-            aria-label="Country"
-            className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
-          />
+// ...
+
+<Autocomplete
+  getItemValue={(option) => option.label}
+  items={countryOptions}
+  renderItem={(option, isHighlighted) => (
+    <div
+      key={option.value}
+      style={{
+        background: isHighlighted ? 'lightgray' : 'white',
+        cursor: 'pointer',
+        padding: '0.5rem',
+      }}
+    >
+      {option.label}
+    </div>
+  )}
+  renderInput={(props) => (
+    <input
+      {...props}
+      type="text"
+      placeholder="Country"
+      autoComplete="on"
+      aria-label="Country"
+      className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
+      value={field.value} // Bind input value to field.value
+      onChange={(event) => {
+        field.onChange(event.target.value);
+      }}
+    />
+  )}
+  value={field.value} // Bind Autocomplete value to field.value
+  onChange={(event, value) => {
+    field.onChange(value);
+    onSelectCountryCode(value);
+  }}
+/>
+
         )}
         value={
           field.value &&
