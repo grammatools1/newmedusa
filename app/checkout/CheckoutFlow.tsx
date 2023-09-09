@@ -34,11 +34,11 @@ interface Props {
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
   const [couponCode, setCouponCode] = useState('');
-  const [giftCardCode, setGiftCardCode] = useState('');
+    /*const [giftCardCode, setGiftCardCode] = useState('');
   const [orderTotal, setOrderTotal] = useState(cart.total);
-  const [cartItems, setCartItems] = useState(cart.items);
-  /* const [orderTotal, setOrderTotal] = useState(0);
-  const [cartItems, setCartItems] = useState([]);*/
+  const [cartItems, setCartItems] = useState(cart.items);*/
+  const [orderTotal, setOrderTotal] = useState(0);
+  const [cartItems, setCartItems] = useState([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
