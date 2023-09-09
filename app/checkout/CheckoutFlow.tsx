@@ -240,19 +240,6 @@ useEffect(() => {
         <div className="checkout-flow">
           {step === 1 && (
             <div>
-              {/* Step 1: Cart Review */}
-              <h1>Step 1: Cart Review</h1>
-              {cartItems.length === 0 ? (
-                <p>Your cart is empty.</p>
-              ) : (
-                <>
-                  <ul>
-                    {cartItems.map((item: any) => (
-                      <li key={item.id}>
-                        {item.quantity} x {item.product.title} - ${item.total.toFixed(2)}
-                      </li>
-                    ))}
-                    </ul>
                   <div className="coupon-gift">
                     <div>
                       <label htmlFor="coupon">Coupon Code:</label>
