@@ -85,10 +85,10 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
     }
   }, [cart?.totalQuantity, quantityRef]);
 
-
+/*
   useEffect(() => {
     fetchCartItems(cart);
-  }, [cart]);
+  }, [cart]); */
 
 
  const fetchCartItems = async (cart: { id: string }) => {
