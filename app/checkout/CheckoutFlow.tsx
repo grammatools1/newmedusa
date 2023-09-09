@@ -5,6 +5,15 @@ import Medusa from '@medusajs/medusa-js';
 import ShippingForm from './ShippingForm';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import Price from 'components/price';
+import { DEFAULT_OPTION } from 'lib/constants';
+import type { Cart } from 'lib/medusa/types';
+import { createUrl } from 'lib/utils';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useRef} from 'react';
+import DeleteItemButton from 'components/cart/delete-item-button';
+import EditItemQuantityButton from 'components/cart/edit-item-quantity-button';
 
 
 const PaymentMethod = {
@@ -28,15 +37,17 @@ interface Props {
   cart: any;
 }
 
-  function CheckoutFlow(props: Props) {
-  const { cart } = props;
+type MerchandiseSearchParams = {
+  [key: string]: string;
+};
+
+  function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
+  const quantityRef = useRef(cart?.totalQuantity);
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [loading, setLoading] = useState(false);
   const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<keyof typeof PaymentMethod>("credit_card");
   const [couponCode, setCouponCode] = useState('');
   const [giftCardCode, setGiftCardCode] = useState('');
-   /*const [orderTotal, setOrderTotal] = useState(cart.total);
-  const [cartItems, setCartItems] = useState(cart.items);*/
   const [orderTotal, setOrderTotal] = useState(0);
   const [cartItems, setCartItems] = useState([]);
   const [step, setStep] = useState(1);
@@ -87,26 +98,15 @@ useEffect(() => {
   }, [cart, medusa]);
 
 
- const fetchCartItems = async (cart: { id: string }) => {
-
-  if (!medusa) {
-    console.error('Medusa not initialized');
-   return 
-   /*<div>Loading...</div>;*/
-  }
-
-  try {
-    setLoading(true);
-    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-    setOrderTotal(updatedCart.total);
-    setCartItems(updatedCart.items);
-  } catch (error) {
-    console.error('Error fetching cart items:', error);
-    toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
-  } finally {
-    setLoading(false);
-  }
-};
+useEffect(() => {
+    // Open cart modal when quantity changes.
+    if (cart?.totalQuantity !== quantityRef.current) {
+      // But only if it's not already open (quantity also changes when editing items in cart).
+      
+      // Always update the quantity reference
+      quantityRef.current = cart?.totalQuantity;
+    }
+  }, [cart?.totalQuantity, quantityRef]);
 
   const handleShippingComplete = () => {
     setStep(2);
@@ -239,11 +239,106 @@ useEffect(() => {
             <div>
               {/* Step 1: Cart Review */}
               <h1>Step 1: Cart Review</h1>
-              {cartItems.length === 0 ? (
-                <p>Your cart is empty.</p>
+                {!cart || cart.lines.length === 0 ? (
+                <div className="mt-20 flex w-full flex-col items-center justify-center overflow-hidden">
+                  <p className="mt-6 text-center text-2xl font-bold">Your cart is empty.</p>
+                </div>
               ) : (
-                <>
-                 
+                <div className="flex h-full flex-col justify-between overflow-hidden p-1">
+                  <ul className="flex-grow overflow-auto py-4">
+                    {cart.lines.map((item, i) => {
+                      const merchandiseSearchParams = {} as MerchandiseSearchParams;
+
+                      item.merchandise.selectedOptions.forEach(({ name, value }) => {
+                        if (value !== DEFAULT_OPTION) {
+                          merchandiseSearchParams[name.toLowerCase()] = value;
+                        }
+                      });
+
+                      const merchandiseUrl = createUrl(
+                        `/product/${item.merchandise.product.handle}`,
+                        new URLSearchParams(merchandiseSearchParams)
+                      );
+
+                      return (
+                        <li
+                          key={i}
+                          className="flex w-full flex-col border-b border-neutral-300 dark:border-neutral-700"
+                        >
+                          <div className="relative flex w-full flex-row justify-between px-1 py-4">
+                            <div className="absolute z-40 -mt-2 ml-[55px]">
+                              <DeleteItemButton item={item} />
+                            </div>
+                            <Link
+                              href={merchandiseUrl}
+                              className="z-30 flex flex-row space-x-4"
+                            >
+                              <div className="relative h-16 w-16 cursor-pointer overflow-hidden rounded-md border border-neutral-300 bg-neutral-300 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800">
+                                <Image
+                                  className="h-full w-full object-cover"
+                                  width={64}
+                                  height={64}
+                                  alt={
+                                    item.merchandise.product.featuredImage.altText ||
+                                    item.merchandise.product.title
+                                  }
+                                  src={item.merchandise.product.featuredImage.url}
+                                />
+                              </div>
+
+                              <div className="flex flex-1 flex-col text-base">
+                                <span className="leading-tight">
+                                  {item.merchandise.product.title}
+                                </span>
+                                {item.merchandise.title !== DEFAULT_OPTION ? (
+                                  <p className="text-sm text-neutral-500 dark:text-neutral-400">
+                                    {item.merchandise.title}
+                                  </p>
+                                ) : null}
+                              </div>
+                            </Link>
+                            <div className="flex h-16 flex-col justify-between">
+                              <Price
+                                className="flex justify-end space-y-2 text-right text-sm"
+                                amount={item.cost.totalAmount.amount}
+                                currencyCode={item.cost.totalAmount.currencyCode}
+                              />
+                              <div className="ml-auto flex h-9 flex-row items-center rounded-full border border-neutral-200 dark:border-neutral-700">
+                                <EditItemQuantityButton item={item} type="minus" />
+                                <p className="w-6 text-center">
+                                  <span className="w-full text-sm">{item.quantity}</span>
+                                </p>
+                                <EditItemQuantityButton item={item} type="plus" />
+                              </div>
+                            </div>
+                          </div>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                  <div className="py-4 text-sm text-neutral-500 dark:text-neutral-400">
+                    <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 dark:border-neutral-700">
+                      <p>Taxes</p>
+                      <Price
+                        className="text-right text-base text-black dark:text-white"
+                        amount={cart.cost.totalTaxAmount.amount}
+                        currencyCode={cart.cost.totalTaxAmount.currencyCode}
+                      />
+                    </div>
+                    <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
+                      <p>Shipping</p>
+                      <p className="text-right">Calculated at checkout</p>
+                    </div>
+                    <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
+                      <p>Total</p>
+                      <Price
+                        className="text-right text-base text-black dark:text-white"
+                        amount={cart.cost.totalAmount.amount}
+                        currencyCode={cart.cost.totalAmount.currencyCode}
+                      />
+                    </div>
+                  </div>
+                </div>
                   <div className="coupon-gift">
                     <div>
                       <label htmlFor="coupon">Coupon Code:</label>
