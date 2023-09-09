@@ -240,7 +240,13 @@ useEffect(() => {
         <div className="checkout-flow">
           {step === 1 && (
             <div>
-              <>
+              {/* Step 1: Cart Review */}
+              <h1>Step 1: Cart Review</h1>
+              {cartItems.length === 0 ? (
+                <p>Your cart is empty.</p>
+              ) : (
+                <>
+                 
                   <div className="coupon-gift">
                     <div>
                       <label htmlFor="coupon">Coupon Code:</label>
@@ -253,7 +259,7 @@ useEffect(() => {
                       />
                       <button onClick={memoizedHandleApplyCoupon}>Apply Coupon</button>
                     </div>
-                      <div>
+                    <div>
                       <label htmlFor="gift-card">Gift Card Code:</label>
                       <input
                         id="gift-card"
