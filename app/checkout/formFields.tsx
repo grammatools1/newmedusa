@@ -37,20 +37,10 @@ const FormFields = ({
   setAcceptUpdates,
   errors,
   onSelectCountryCode,
+  countryOptions,
 }: FormFieldsProps) => {
   const { watch } = useForm<CombinedFormData>();
   const selectedCountryCode = watch('countryCode');
-  const [countryOptions, setCountryOptions] = useState<CountryOption[]>([]);
-
-  useEffect(() => {
-    // Fetch and convert the country list
-    const countries = countryList.getData();
-    const options = countries.map((country: any) => ({
-      value: country.code,
-      label: country.name,
-    }));
-    setCountryOptions(options);
-  }, []);
 
   return (
     <>
