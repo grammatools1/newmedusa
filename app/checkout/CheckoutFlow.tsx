@@ -155,13 +155,14 @@ useEffect(() => {
 
     try {
       let cartData = cart;
-      const { cart: updatedCartData } = await medusa.carts.update(cartData.id, {
-        discounts: [{ code: couponCode }],
+     if (cartData && cartData.id) {
+     const { cart: updatedCartData } = await medusa.carts.update(cartData.id, {
+     discounts: [{ code: couponCode }],
       });
-      setOrderTotal(updatedCartData.total);
+     setOrderTotal(updatedCartData.total);
       setCouponCode('');
-
       toast.success('Coupon applied!', { autoClose: 3000 });
+     }
     } catch (error) {
       console.error('Error applying coupon:', error);
       toast.error('Failed to apply coupon. Please try again or contact support.', { autoClose: 3000 });
