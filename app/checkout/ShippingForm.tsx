@@ -47,20 +47,19 @@ const validationSchema = yup.object().shape({
   company: yup.string().notRequired(),
 });
 
-interface Props  { 
-  cart: any;
+type Props = {
+  cart: any; // Replace 'any' with your actual cart type
   onComplete: () => void;
-  onCartUpdate: (cart: { id: string }) => void;
+  cartId?: string; // make cartId an optional prop
 }
 
-const ShippingForm = ({onComplete, onCartUpdate, cart }: Props) => {
+const ShippingForm = ({ cart, onComplete, cartId }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null); 
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<FormErrors>();
   const [acceptUpdates, setAcceptUpdates] = useState(false);
-  const [cartState, setCartState] = useState<{ id: string } | null>(null); // Define cart as a state variable
 
   const { control, handleSubmit, formState } = useForm<CombinedFormData>({
     resolver: async (data: CombinedFormData, context: any, options: any) => {
@@ -120,7 +119,7 @@ const ShippingForm = ({onComplete, onCartUpdate, cart }: Props) => {
 
   useEffect(() => {
     const initializeMedusa = async () => {
-      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+    const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
       if (!medusaBaseUrl) {
         console.error('Medusa base URL is not defined.');
@@ -143,29 +142,29 @@ const ShippingForm = ({onComplete, onCartUpdate, cart }: Props) => {
   }, []);
 
   useEffect(() => {
-    if (cart?.id) {
-      fetchCartItems(cart.id);
+    if (cartId) {
+      fetchCartItems(cartId);
     }
-  }, [cart?.id, medusa]);
+  }, [cartId, medusa]);
 
   useEffect(() => {
-    const fetchShippingOptions = async () => {
-      try {
-        if (!medusa) {
-          console.error('Medusa not initialized');
-          return;
+      const fetchShippingOptions = async () => {
+        try {
+          if (!medusa) {
+            console.error('Medusa not initialized');
+            return;
+          }
+
+          const { shipping_options } = await medusa.shippingOptions.list();
+          setShippingOptions(shipping_options);
+        } catch (error) {
+          console.error('Error retrieving shipping options', error);
+          setError(error as FormErrors);
         }
+      };
 
-        const { shipping_options } = await medusa.shippingOptions.list();
-        setShippingOptions(shipping_options);
-      } catch (error) {
-        console.error('Error retrieving shipping options', error);
-        setError(error as FormErrors);
-      }
-    };
-
-    fetchShippingOptions();
-  }, []);
+      fetchShippingOptions();
+    }, []);
 
   const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
     const {
@@ -186,8 +185,8 @@ const ShippingForm = ({onComplete, onCartUpdate, cart }: Props) => {
       setIsLoading(true);
       setError(undefined);
 
-      if (medusa && cartState && cartState.id) {
-        const cartId = cartState.id as string; // Use the cartState variable here
+      if (medusa && cart && cart.id) {
+        const cartId = cart.id as string; // Type assertion
 
         // Update shipping address and method
         await medusa.carts.update(cartId, {
@@ -230,22 +229,16 @@ const ShippingForm = ({onComplete, onCartUpdate, cart }: Props) => {
     }
 
     try {
-      setIsLoading(true);
-      const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
-      
-      if (!updatedCart) {
-        console.error('Cart data is undefined or null');
-        return;
-      }
-
-      setCartState(updatedCart); // Set the cartState instead of the constant cart
-      onCartUpdate({ id: updatedCart.id });
-    } catch (error) {
-      console.error('Error fetching cart:', error);
-      setError(error as FormErrors);
-    } finally {
-      setIsLoading(false);
-    }
+          setIsLoading(true);
+          const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
+          // Replace below `console.log` statements with your own custom logic
+        } catch (error) {
+          console.error('Error fetching cart items:', error);
+          // Replace below `toast` statement with your own custom logic
+          console.error('Failed to fetch cart items. Please refresh the page.');
+        } finally {
+          setIsLoading(false);
+        }
   };
 
   const selectedCountryCode = useWatch({ control, name: 'countryCode' });
