@@ -134,14 +134,14 @@ useEffect(() => {
         },
       };
 
-      if (cart) {
-        await medusa.carts.setPaymentSession(cart.id, paymentData);
-        const { type, data } = await medusa.carts.complete(cart.id);
-        console.log('Checkout Completed:', type, data);
-        toast.success('Your order has been successfully placed!', { autoClose: 3000 });
+      if (cart && cart.id) {
+          await medusa.carts.setPaymentSession(cart.id, paymentData);
+          const { type, data } = await medusa.carts.complete(cart.id);
+          console.log('Checkout Completed:', type, data);
+          toast.success('Your order has been successfully placed!', { autoClose: 3000 });
+        }
         setConfirmOrder(false);
       // TODO: Display order confirmation or handle any further actions
-       }
     }catch (error) {
       console.error('Error completing checkout:', error);
       toast.error('Failed to place order. Please try again or contact support.', { autoClose: 3000 });
