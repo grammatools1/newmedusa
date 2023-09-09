@@ -164,15 +164,15 @@ useEffect(() => {
 };
 
   const handleApplyGiftCard = useCallback(async () => {
-    if (!medusa || !giftCardCode) {
-      return;
-    }
+    if (!medusa || !cart || !giftCardCode)  return;
 
    try {
+    let cartData = cart;
   const { cart: updatedCart } = await medusa.carts.update(cart.id, {
     gift_cards: [{ code: giftCardCode }],
   });
   setOrderTotal(updatedCart.total);
+  setgiftCardCode("");
 
   toast.success("Gift card applied!", { autoClose: 3000 });
 } catch (error) {
