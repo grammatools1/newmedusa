@@ -37,7 +37,6 @@ const FormFields = ({
   setAcceptUpdates,
   errors,
   onSelectCountryCode,
-  countryOptions,
 }: FormFieldsProps) => {
   const { watch } = useForm<CombinedFormData>();
   const selectedCountryCode = watch('countryCode');
