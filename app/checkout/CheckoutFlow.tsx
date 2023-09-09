@@ -252,7 +252,7 @@ useEffect(() => {
                         {item.quantity} x {item.product.title} - ${item.total.toFixed(2)}
                       </li>
                     ))}
-                  </ul>
+                    </ul>
                   <div className="coupon-gift">
                     <div>
                       <label htmlFor="coupon">Coupon Code:</label>
