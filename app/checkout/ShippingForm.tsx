@@ -221,7 +221,8 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   };
 
   const fetchCartItems = async (cart: { id: string }) => {
-  
+    const cartId = async (cart: { id: string });
+     console.log(cartId);
     // Check if medusa is not initialized
     if (!medusa) {
       console.error('Medusa not initialized');
