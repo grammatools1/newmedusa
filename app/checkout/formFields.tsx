@@ -23,7 +23,7 @@ export type FormFieldsProps = {
   setAcceptUpdates: (value: boolean) => void;
   errors: Record<keyof CombinedFormData, FieldError>;
   onSelectCountryCode: (value: string) => void;
- countryOptions: CountryOption[];
+  countryOptions: CountryOption[];
 };
 
 export type CountryOption = {
@@ -37,10 +37,10 @@ const FormFields = ({
   setAcceptUpdates,
   errors,
   onSelectCountryCode,
+  countryOptions,
 }: FormFieldsProps) => {
   const { watch } = useForm<CombinedFormData>();
   const selectedCountryCode = watch('countryCode');
-  const initialCountryOptions: CountryOption[] = [];
   const [countryOptions, setCountryOptions] = useState<CountryOption[]>([]);
 
   useEffect(() => {
@@ -256,60 +256,62 @@ const FormFields = ({
         )}
       </div>
 
-     {/* Country */}
-<div className="mb-4">
-  <label htmlFor="countryCode" className="block text-gray-700 font-bold mb-2">
-    Country:
-  </label>
- <Controller
-  name="countryCode"
-  control={control}
-  defaultValue=""
-  rules={{ required: 'Country is required' }}
-  render={({ field }) => (
-    <Autocomplete
-      getItemValue={(option) => option.label}
-      items={countryOptions}
-      renderItem={(option, isHighlighted) => (
-        <div
-          key={option.value}
-          style={{
-            background: isHighlighted ? 'lightgray' : 'white',
-            cursor: 'pointer',
-            padding: '0.5rem',
-          }}
-        >
-          {option.label}
-        </div>
-      )}
-      renderInput={(props) => (
-        <input
-          {...props}
-          type="text"
-          placeholder="Country"
-          autoComplete="on"
-          aria-label="Country"
-          className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
-          value={field.value}
-          onChange={(event) => {
-            field.onChange(event.target.value);
-          }}
+      {/* Country */}
+      <div className="mb-4">
+        <label htmlFor="countryCode" className="block text-gray-700 font-bold mb-2">
+          Country:
+        </label>
+        <Controller
+          name="countryCode"
+          control={control}
+          defaultValue=""
+          rules={{ required: 'Country is required' }}
+          render={({ field }) => (
+            <Autocomplete
+              getItemValue={(option) => option.label}
+              items={countryOptions}
+              renderItem={(option, isHighlighted) => (
+                <div
+                  key={option.value}
+                  style={{
+                    background: isHighlighted ? 'lightgray' : 'white',
+                    cursor: 'pointer',
+                    padding: '0.5rem',
+                  }}
+                >
+                  {option.label}
+                </div>
+              )}
+              renderInput={(props) => (
+                <input
+                  {...props}
+                  type="text"
+                  placeholder="Country"
+                  autoComplete="on"
+                  aria-label="Country"
+                  className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
+                  value={field.value} // Bind input value to field.value
+                  onChange={(event) => {
+                    field.onChange(event.target.value); // Update field value when input changes
+                  }}
+                />
+              )}
+              value={field.value} // Bind Autocomplete value to field.value
+              onChange={(event, value) => {
+                field.onChange(value); // Update field value when Autocomplete selection changes
+                onSelectCountryCode(value);
+              }}
+              onSelect={(value) => {
+                field.onChange(value);
+                onSelectCountryCode(value);
+              }}
+            />
+          )}
         />
-      )}
-      value={field.value}
-      onChange={(event, value) => {
-        field.onChange(value);
-        onSelectCountryCode(value);
-      }}
-    />
-  )}
-/>
-
-  {errors.countryCode && (
-    <span className="text-red-500">Please select your country</span>
-  )}
-</div>
-
+        {errors.countryCode && (
+          <span className="text-red-500">Please select your country</span>
+        )}
+      </div>
 
       {/* Phone */}
       <div className="mb-4">
