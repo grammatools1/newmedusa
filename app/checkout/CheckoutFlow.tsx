@@ -71,9 +71,11 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
     initializeMedusa();
   }, []);
 
-  useEffect(() => {
+ useEffect(() => {
+  if (cart && medusa) {
     fetchCartItems(cart);
-  }, [cart, medusa]);
+  }
+}, [cart, medusa]);
 
   useEffect(() => {
     // Open cart modal when quantity changes.
