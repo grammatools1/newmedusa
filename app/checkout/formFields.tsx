@@ -23,7 +23,7 @@ export type FormFieldsProps = {
   setAcceptUpdates: (value: boolean) => void;
   errors: Record<keyof CombinedFormData, FieldError>;
   onSelectCountryCode: (value: string) => void;
- /* countryOptions: CountryOption[];*/
+ countryOptions: CountryOption[];
 };
 
 export type CountryOption = {
@@ -37,7 +37,6 @@ const FormFields = ({
   setAcceptUpdates,
   errors,
   onSelectCountryCode,
-  countryOptions,
 }: FormFieldsProps) => {
   const { watch } = useForm<CombinedFormData>();
   const selectedCountryCode = watch('countryCode');
