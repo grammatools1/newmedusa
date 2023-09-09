@@ -300,13 +300,10 @@ const FormFields = ({
       onChange={(event, value) => {
         field.onChange(value); // Update field value when Autocomplete selection changes
         onSelectCountryCode(value);
-      }}
-    />
-  )}
-/>
-
-
-        )}
+              }}
+            />
+          )}
+        />
         value={
           field.value &&
           countryOptions.find((option) => option.value === field.value)?.label
