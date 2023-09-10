@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { useForm } from 'react-hook-form'; // Updated import statement
+import { useForm, SubmitHandler, Control, FormState, FieldError, useWatch } from 'react-hook-form'; // Updated import statement
 import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -15,14 +15,15 @@ type CombinedFormData = {
   email: string;
   address1: string;
   city: string;
-  province?: string | undefined;
+  province?: string | null;
   countryCode: string;
   postalCode: string;
   phone: string;
-  company?: string | undefined;
-  acceptUpdates?: boolean | undefined;
-  address2?: string | undefined; // Add this field if required
+  company?: string | null;
+  acceptUpdates?: boolean | null;
+  address2?: string | null; // Add this field if required
 };
+
 interface ValidationError {
   path: string;
   message: string;
@@ -65,7 +66,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
 
   const {
     control,
-    handleSubmit, // Use the handleSubmit function from useForm
+    handleSubmit,
     formState,
   } = useForm<CombinedFormData>({
     resolver: yupResolver(validationSchema),
@@ -83,7 +84,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     },
     mode: 'onChange',
     shouldUnregister: true,
-   }) as {
+  }) as {
     control: Control<CombinedFormData>;
     handleSubmit: SubmitHandler<CombinedFormData>;
     formState: FormState<CombinedFormData>;
@@ -179,58 +180,57 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     }
   }, [cart, medusa]);
 
- const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    address1,
-    address2, // Add address2 to your data object
-    city,
-    province,
-    countryCode,
-    postalCode,
-    phone,
-    company,
-    acceptUpdates,
-  } = data;
+  const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
+    const {
+      firstName,
+      lastName,
+      email,
+      address1,
+      address2,
+      city,
+      province,
+      countryCode,
+      postalCode,
+      phone,
+      company,
+      acceptUpdates,
+    } = data;
 
-  try {
-    setIsLoading(true);
-    setError(undefined);
+    try {
+      setIsLoading(true);
+      setError(undefined);
 
-    if (medusa && cart && cart.id) {
-      const cartId = cart.id as string; // Type assertion
+      if (medusa && cart && cart.id) {
+        const cartId = cart.id as string;
 
-      // Update shipping address and method
-      await medusa.carts.update(cartId, {
-        shipping_address: {
-          company: company,
-          first_name: firstName,
-          last_name: lastName,
-          address_1: address1,
-          address_2: address2, // Include address2 in the request
-          city: city,
-          country_code: countryCode,
-          province: province,
-          postal_code: postalCode,
-          phone: phone,
-        },
-      });
+        // Update shipping address and method
+        await medusa.carts.update(cartId, {
+          shipping_address: {
+            company: company || null,
+            first_name: firstName,
+            last_name: lastName,
+            address_1: address1,
+            address_2: address2 || null,
+            city: city,
+            country_code: countryCode,
+            province: province || null,
+            postal_code: postalCode,
+            phone: phone,
+          },
+        });
 
-      onComplete();
+        onComplete();
+      }
+    } catch (error) {
+      if (error instanceof YupValidationError) {
+        setError(new Error('Validation error: ' + error.message) as FormErrors);
+      } else {
+        setError(error as FormErrors);
+      }
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    if (error instanceof YupValidationError) {
-      setError(new Error('Validation error: ' + error.message) as FormErrors);
-    } else {
-      setError(error as FormErrors);
-    }
-  } finally {
-    setIsLoading(false);
-  }
-};
-
+  };
 
   const selectedCountryCode = useWatch({ control, name: 'countryCode' });
 
