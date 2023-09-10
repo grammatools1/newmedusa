@@ -60,12 +60,12 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
         return;
       }
 
-      const medusa = new Medusa({
+        const initializedMedusa = new Medusa({
         baseUrl: medusaBaseUrl,
         maxRetries: 3,
       });
       console.log('Initialized Medusa:', initializedMedusa);
-      setMedusa(medusa);
+      setMedusa(initializedMedusa);
     };
 
     initializeMedusa();
