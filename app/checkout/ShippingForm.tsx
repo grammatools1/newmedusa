@@ -9,7 +9,7 @@ import { ValidationError as YupValidationError } from 'yup';
 import Autocomplete from 'react-autocomplete';
 import FormFields, { CountryOption } from './formFields';
 
-type CombinedFormData = Partial<{
+type CombinedFormData = {
   firstName: string;
   lastName: string;
   email: string;
@@ -22,7 +22,7 @@ type CombinedFormData = Partial<{
   company?: string;
   acceptUpdates?: boolean;
   address2?: string; // Add this field if required
-}>;
+};
 
 interface ValidationError {
   path: string;
