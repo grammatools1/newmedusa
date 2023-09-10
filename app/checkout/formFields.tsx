@@ -155,7 +155,7 @@ const FormFields = ({
         </label>
       </div>
 
-      {/* Address */}
+      {/* Address_1 */}
       <div className="mb-4">
         <label htmlFor="address1" className="block text-gray-700 font-bold mb-2">
           Address:
@@ -175,6 +175,29 @@ const FormFields = ({
           rules={{ required: 'Address is required' }}
         />
         {errors.address1 && (
+          <span className="text-red-500">Please enter your address</span>
+        )}
+      </div>
+      {/* Address_2 */}
+      <div className="mb-4">
+        <label htmlFor="address1" className="block text-gray-700 font-bold mb-2">
+          Address:
+        </label>
+        <Controller
+          name="address2"
+          control={control}
+          defaultValue=""
+          render={({ field }) => (
+            <input
+              {...field}
+              type="text"
+              aria-label="Address"
+              className="w-full border-b-2 border-gray-300 py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:border-green-500"
+            />
+          )}
+          rules={{ required: 'Address is required' }}
+        />
+        {errors.address2 && (
           <span className="text-red-500">Please enter your address</span>
         )}
       </div>
