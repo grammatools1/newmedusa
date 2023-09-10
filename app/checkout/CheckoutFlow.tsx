@@ -77,7 +77,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   };}
   }, [medusa, cart]);
   
-  Effect(() => {
+  useEffect(() => {
     const initializeMedusa = async () => {
       const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
       if (!medusaBaseUrl) {
