@@ -94,9 +94,11 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   }, []);
 
     
-  useEffect(() => {
-    fetchCartItems(cart);
-  }, [cart, medusa]);
+ useEffect(() => {
+  if (cart && medusa && cart.id) {
+    fetchCartItems(cart as { id: string });
+  }
+}, [cart, medusa]);
 
 
   useEffect(() => {
