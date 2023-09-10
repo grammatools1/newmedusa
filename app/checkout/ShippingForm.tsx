@@ -150,7 +150,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   const fetchShippingOptions = async () => {
     try {
       if (!medusa) {
-        console.error('Medusa not initialized');
+        console.error('Medusa not ini');
         return;
       }
 
