@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { useForm, SubmitHandler, Control, FormState, FieldError, useWatch, UnpackNestedValue, useController } from 'react-hook-form';
+import { Controller, SubmitHandler, useForm, useWatch, FieldError } from 'react-hook-form';
 import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -9,20 +9,20 @@ import { ValidationError as YupValidationError } from 'yup';
 import Autocomplete from 'react-autocomplete';
 import FormFields, { CountryOption } from './formFields';
 
-type CombinedFormData = {
+interface CombinedFormData {
   firstName: string;
   lastName: string;
   email: string;
   address1: string;
-  address2?: string | null; // Make optional and nullable
+  address2: string;
   city: string;
-  province?: string | null;
+  province?: string;
   countryCode: string;
   postalCode: string;
   phone: string;
-  company?: string | null;
-  acceptUpdates?: boolean | null;
-};
+  company?: string;
+  acceptUpdates?: boolean;
+}
 
 interface ValidationError {
   path: string;
@@ -40,14 +40,13 @@ const validationSchema = yup.object().shape({
   lastName: yup.string().required(),
   email: yup.string().email().required(),
   address1: yup.string().required(),
-  address2: yup.string().nullable(), // Make optional and nullable
+  address2: yup.string().required(),
   city: yup.string().required(),
-  province: yup.string().nullable(), // Make optional and nullable
+  province: yup.string(),
   countryCode: yup.string().required(),
   postalCode: yup.string().required(),
   phone: yup.string().required(),
-  company: yup.string().nullable(), // Make optional and nullable
-  acceptUpdates: yup.boolean().nullable(), // Make optional and nullable
+  company: yup.string().notRequired(),
 });
 
 type Props = {
@@ -58,17 +57,11 @@ type Props = {
 
 const ShippingForm = ({ cart, onComplete }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
-  const [shippingOptions, setShippingOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<FormErrors>();
   const [acceptUpdates, setAcceptUpdates] = useState(false);
 
-  const {
-    control,
-    handleSubmit,
-    formState,
-  } = useForm<CombinedFormData>({
+  const { control, handleSubmit, formState } = useForm<CombinedFormData>({
     resolver: yupResolver(validationSchema),
     defaultValues: {
       firstName: '',
@@ -86,8 +79,6 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     mode: 'onChange',
     shouldUnregister: true,
   });
-
-  type FormValues = UnpackNestedValue<typeof control>;
 
   const { errors } = formState;
 
@@ -129,18 +120,15 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     initializeMedusa();
   }, []);
 
-  const fetchCartItems = async (cart: { id: string }) => {
-    // Check if medusa is not initialized
+  const fetchCartItems = async (cartId: string) => {
     if (!medusa) {
       console.error('Medusa not initialized');
-      // You can handle this case accordingly, e.g., show a loading message
-      // or return early if needed
       return;
     }
 
     try {
-      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-      console.log('updateCart:', updatedCart);
+      const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
+      console.log('Updated Cart:', updatedCart);
       // Replace below `console.log` statements with your own custom logic
     } catch (error) {
       console.error('Error fetching cart items:', error);
@@ -153,88 +141,11 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
 
   useEffect(() => {
     if (medusa && cart && cart.id) {
-      fetchCartItems(cart);
+      fetchCartItems(cart.id);
     }
   }, [cart, medusa]);
 
-  useEffect(() => {
-    const fetchShippingOptions = async () => {
-      try {
-        if (!medusa) {
-          console.error('Medusa not initializ');
-          return;
-        }
-
-        const { shipping_options } = await medusa.shippingOptions.list();
-        setShippingOptions(shipping_options);
-      } catch (error) {
-        console.error('Error retrieving shipping options', error);
-        setError(error as FormErrors);
-      }
-    };
-
-    // Check if medusa is initialized before fetching shipping options
-    if (medusa) {
-      fetchShippingOptions();
-    }
-  }, [cart, medusa]);
-
-  const { field: firstNameField } = useController({
-    control,
-    name: 'firstName',
-  });
-  
-  const { field: lastNameField } = useController({
-    control,
-    name: 'lastName',
-  });
-
-  const { field: emailField } = useController({
-    control,
-    name: 'email',
-  });
-
-  const { field: address1Field } = useController({
-    control,
-    name: 'address1',
-  });
-
-  const { field: address2Field } = useController({
-    control,
-    name: 'address2',
-  });
-
-  const { field: cityField } = useController({
-    control,
-    name: 'city',
-  });
-
-  const { field: provinceField } = useController({
-    control,
-    name: 'province',
-  });
-
-  const { field: countryCodeField } = useController({
-    control,
-    name: 'countryCode',
-  });
-
-  const { field: postalCodeField } = useController({
-    control,
-    name: 'postalCode',
-  });
-
-  const { field: phoneField } = useController({
-    control,
-    name: 'phone',
-  });
-
-  const { field: companyField } = useController({
-    control,
-    name: 'company',
-  });
-
-  const handleFormSubmit = async (data: FormValues) => {
+  const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
     const {
       firstName,
       lastName,
@@ -257,21 +168,33 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
       if (medusa && cart && cart.id) {
         const cartId = cart.id as string;
 
-        // Update shipping address and method
-        await medusa.carts.update(cartId, {
-          shipping_address: {
-            company: company || null,
-            first_name: firstName,
-            last_name: lastName,
-            address_1: address1,
-            address_2: address2 || null,
-            city: city,
-            country_code: countryCode,
-            province: province || null,
-            postal_code: postalCode,
-            phone: phone,
-          },
-        });
+        // Create the shipping address object
+        const shippingAddress = {
+          company: company,
+          first_name: firstName,
+          last_name: lastName,
+          email: email,
+          address_1: address1,
+          address_2: address2,
+          city: city,
+          province: province,
+          postal_code: postalCode,
+          country_code: countryCode,
+          phone: phone,
+          acceptUpdates: acceptUpdates,
+        };
+
+        // Construct the cart update data
+        const cartUpdateData = {
+          shipping_address: shippingAddress,
+          // Add any other cart update data as needed
+        };
+
+        // Update the cart
+        const updatedCart = await medusa.carts.update(cartId, cartUpdateData);
+        console.log('Updated Cart:', updatedCart);
+
+        // Perform any other actions you need here
 
         onComplete();
       }
@@ -286,349 +209,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     }
   };
 
-  return (
-    <div>
-      <h2>Shipping Information</h2>
-      {isLoading && <div>Loading...</div>}
-      {!isLoading && (
-        <form onSubmit={handleSubmit(handleFormSubmit)}>
-          <FormFields
-            firstNameField={firstNameField}
-            lastNameField={lastNameField}
-            emailField={emailField}
-            address1Field={address1Field}
-            address2Field={address2Field}
-            cityField={cityField}
-            provinceField={provinceField}
-            countryCodeField={countryCodeField}
-            postalCodeField={postalCodeField}
-            phoneField={phoneField}
-            companyField={companyField}
-            errors={errors as Record<keyof CombinedFormData, FieldError>}
-            countryOptions={countryOptions}
-          />
-          {error && (
-            <div style={{ color: 'red' }}>
-              {typeof error === 'string'
-                ? error
-                : error instanceof Error
-                ? error.message
-                : ''}
-            </div>
-          )}
-          <button type="submit">Save Shipping Address</button>
-        </form>
-      )}
-    </div>
-  );
-};
-
-export default ShippingForm;
-```
-Copy
-Delete
-Type error: Property 'firstName' does not exist on type '{ _subjects: { values: { readonly observers: { next: {}; }[]; subscribe: {}; unsubscribe: {}; next: {}; }; array: { readonly observers: { next: {}; }[]; subscribe: {}; unsubscribe: {}; next: {}; }; state: { readonly observers: { ...; }[]; subscribe: {}; unsubscribe: {}; next: {}; }; }; ... 23 more ...; setError: {}; }'.
-  237 |   const handleFormSubmit = async (data: FormValues) => {
-  238 |     const {
-> 239 |       firstName,
-      |       ^
-  240 |       lastName,
-  241 |       email,
-  242 |       address1,
-error Command failed with exit code 1.
-Delete
-This error message indicates that the `firstName` property is undefined on the `data` object being destructured in the `handleFormSubmit` function.
-
-To solve this issue, update all instances of `firstName` in your code. This means updating the `useController` hook that defines the `firstNameField` variable, the `FormFields` component that consumes this variable, and the `CombinedFormData` type definition to include an optional `address2` field.
-
-Here's an updated code:
-
-```typescript
-import React, { useState, useEffect } from 'react';
-import { useForm, SubmitHandler, Control, FormState, FieldError, useWatch, UnpackNestedValue, useController } from 'react-hook-form';
-import Medusa from '@medusajs/medusa-js';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
-import { ValidationError as YupValidationError } from 'yup';
-import Autocomplete from 'react-autocomplete';
-import FormFields, { CountryOption } from './formFields';
-
-type CombinedFormData = {
-  firstName: string;
-  lastName: string;
-  email: string;
-  address1: string;
-  address2?: string | null; // Make optional and nullable
-  city: string;
-  province?: string | null;
-  countryCode: string;
-  postalCode: string;
-  phone: string;
-  company?: string | null;
-  acceptUpdates?: boolean | null;
-};
-
-interface ValidationError {
-  path: string;
-  message: string;
-}
-
-interface CustomError {
-  [key: string]: string;
-}
-
-type FormErrors = CustomError | ValidationError[] | Error;
-
-const validationSchema = yup.object().shape({
-  firstName: yup.string().required(),
-  lastName: yup.string().required(),
-  email: yup.string().email().required(),
-  address1: yup.string().required(),
-  address2: yup.string().nullable(), // Make optional and nullable
-  city: yup.string().required(),
-  province: yup.string().nullable(), // Make optional and nullable
-  countryCode: yup.string().required(),
-  postalCode: yup.string().required(),
-  phone: yup.string().required(),
-  company: yup.string().nullable(), // Make optional and nullable
-  acceptUpdates: yup.boolean().nullable(), // Make optional and nullable
-});
-
-type Props = {
-  cart: any; // Replace 'any' with your actual cart type
-  onComplete: () => void;
-  cartId?: string; // make cartId an optional prop
-};
-
-const ShippingForm = ({ cart, onComplete }: Props) => {
-  const [medusa, setMedusa] = useState<Medusa | null>(null);
-  const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
-  const [shippingOptions, setShippingOptions] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<FormErrors>();
-  const [acceptUpdates, setAcceptUpdates] = useState(false);
-
-  const {
-    control,
-    handleSubmit,
-    formState,
-  } = useForm<CombinedFormData>({
-    resolver: yupResolver(validationSchema),
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      address1: '',
-      address2: '',
-      city: '',
-      province: '',
-      countryCode: '',
-      postalCode: '',
-      phone: '',
-      company: '',
-    },
-    mode: 'onChange',
-    shouldUnregister: true,
-  });
-
-  type FormValues = UnpackNestedValue<typeof control>;
-
-  const { errors } = formState;
-
-  const countryOptions: CountryOption[] = React.useMemo(() => {
-    const countryList = require('country-list');
-    const countries = countryList.getNameList();
-
-    if (!Array.isArray(countries)) {
-      return [];
-    }
-
-    return countries.map((countryCode: string) => ({
-      value: countryCode,
-      label: countryList.getName(countryCode),
-    }));
-  }, []);
-
-  useEffect(() => {
-    const initializeMedusa = async () => {
-      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-
-      if (!medusaBaseUrl) {
-        console.error('Medusa base URL is not defined.');
-        return;
-      }
-
-      try {
-        const initializedMedusa = new Medusa({
-          baseUrl: medusaBaseUrl,
-          maxRetries: 3,
-        });
-        console.log('Initialized Medusa:', initializedMedusa);
-        setMedusa(initializedMedusa);
-      } catch (error) {
-        console.error('Error initializing Medusa:', error);
-      }
-    };
-
-    initializeMedusa();
-  }, []);
-
-  const fetchCartItems = async (cart: { id: string }) => {
-    // Check if medusa is not initialized
-    if (!medusa) {
-      console.error('Medusa not initialized');
-      // You can handle this case accordingly, e.g., show a loading message
-      // or return early if needed
-      return;
-    }
-
-    try {
-      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-      console.log('updateCart:', updatedCart);
-      // Replace below `console.log` statements with your own custom logic
-    } catch (error) {
-      console.error('Error fetching cart items:', error);
-      // Replace below `toast` statement with your own custom logic
-      console.error('Failed to fetch cart items. Please refresh the page.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (medusa && cart && cart.id) {
-      fetchCartItems(cart);
-    }
-  }, [cart, medusa]);
-
-  useEffect(() => {
-    const fetchShippingOptions = async () => {
-      try {
-        if (!medusa) {
-          console.error('Medusa not initializ');
-          return;
-        }
-
-        const { shipping_options } = await medusa.shippingOptions.list();
-        setShippingOptions(shipping_options);
-      } catch (error) {
-        console.error('Error retrieving shipping options', error);
-        setError(error as FormErrors);
-      }
-    };
-
-    // Check if medusa is initialized before fetching shipping options
-    if (medusa) {
-      fetchShippingOptions();
-    }
-  }, [cart, medusa]);
-
-  const { field: firstNameField } = useController({
-    control,
-    name: 'firstName',
-  });
-  
-  const { field: lastNameField } = useController({
-    control,
-    name: 'lastName',
-  });
-
-  const { field: emailField } = useController({
-    control,
-    name: 'email',
-  });
-
-  const { field: address1Field } = useController({
-    control,
-    name: 'address1',
-  });
-
-  const { field: address2Field } = useController({
-    control,
-    name: 'address2',
-  });
-
-  const { field: cityField } = useController({
-    control,
-    name: 'city',
-  });
-
-  const { field: provinceField } = useController({
-    control,
-    name: 'province',
-  });
-
-  const { field: countryCodeField } = useController({
-    control,
-    name: 'countryCode',
-  });
-
-  const { field: postalCodeField } = useController({
-    control,
-    name: 'postalCode',
-  });
-
-  const { field: phoneField } = useController({
-    control,
-    name: 'phone',
-  });
-
-  const { field: companyField } = useController({
-    control,
-    name: 'company',
-  });
-
-  const handleFormSubmit = async (data: FormValues) => {
-    const {
-      firstName,
-      lastName,
-      email,
-      address1,
-      address2,
-      city,
-      province,
-      countryCode,
-      postalCode,
-      phone,
-      company,
-      acceptUpdates,
-    } = data;
-
-    try {
-      setIsLoading(true);
-      setError(undefined);
-
-      if (medusa && cart && cart.id) {
-        const cartId = cart.id as string;
-
-        // Update shipping address and method
-        await medusa.carts.update(cartId, {
-          shipping_address: {
-            company: company || null,
-            first_name: firstName,
-            last_name: lastName,
-            address_1: address1,
-            address_2: address2 || null,
-            city: city,
-            country_code: countryCode,
-            province: province || null,
-            postal_code: postalCode,
-            phone: phone,
-          },
-        });
-
-        onComplete();
-      }
-    } catch (error) {
-      if (error instanceof YupValidationError) {
-        setError(new Error('Validation error: ' + error.message) as FormErrors);
-      } else {
-        setError(error as FormErrors);
-      }
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const selectedCountryCode = useWatch({ control, name: 'countryCode' });
 
   return (
     <div>
@@ -637,27 +218,16 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
       {!isLoading && (
         <form onSubmit={handleSubmit(handleFormSubmit)}>
           <FormFields
-            firstNameField={firstNameField}
-            lastNameField={lastNameField}
-            emailField={emailField}
-            address1Field={address1Field}
-            address2Field={address2Field}
-            cityField={cityField}
-            provinceField={provinceField}
-            countryCodeField={countryCodeField}
-            postalCodeField={postalCodeField}
-            phoneField={phoneField}
-            companyField={companyField}
+            control={control}
+            acceptUpdates={acceptUpdates}
+            setAcceptUpdates={setAcceptUpdates}
             errors={errors as Record<keyof CombinedFormData, FieldError>}
             countryOptions={countryOptions}
+            onSelectCountryCode={() => {}}
           />
           {error && (
             <div style={{ color: 'red' }}>
-              {typeof error === 'string'
-                ? error
-                : error instanceof Error
-                ? error.message
-                : ''}
+              {typeof error === 'string' ? error : error instanceof Error ? error.message : ''}
             </div>
           )}
           <button type="submit">Save Shipping Address</button>
