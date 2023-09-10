@@ -51,7 +51,9 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   const [cartItems, setCartItems] = useState([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
-
+  
+  useEffect(() => {
+  if (medusa && cart) {
   const fetchCartItems = async (cart: { id: string }) => {
     // Check if medusa is not initialized
     if (!medusa) {
@@ -72,9 +74,10 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
     } finally {
       setLoading(false);
     }
-  };
-
-  useEffect(() => {
+  };}
+  }, [medusa, cart]);
+  
+  Effect(() => {
     const initializeMedusa = async () => {
       const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
       if (!medusaBaseUrl) {
