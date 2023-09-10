@@ -42,11 +42,13 @@ const validationSchema = yup.object().shape({
   address1: yup.string().required(),
   address2: yup.string().required(),
   city: yup.string().required(),
-  province: yup.string(),
+  province: yup.string().notRequired(), // Make optional
   countryCode: yup.string().required(),
   postalCode: yup.string().required(),
   phone: yup.string().required(),
-  company: yup.string().notRequired(),
+  company: yup.string().notRequired(), // Make optional
+  acceptUpdates: yup.boolean().notRequired(), // Make optional
+  // Add address2 to the schema if it's required
 });
 
 type Props = {
