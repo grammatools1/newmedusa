@@ -14,7 +14,7 @@ type CombinedFormData = {
   lastName: string;
   email: string;
   address1: string;
-  address2?: string | null;
+  address2?: string | null; // Make optional and nullable
   city: string;
   province?: string | null;
   countryCode: string;
