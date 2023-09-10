@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { useForm, SubmitHandler, Control, FormState, FieldError, useWatch, UnpackNestedValue, useController } from 'react-hook-form'; // Updated import statement
+import { useForm, SubmitHandler, Control, FormState, FieldError, useWatch, UnpackNestedValue, useController } from 'react-hook-form';
 import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -197,8 +197,41 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     control,
     name: 'address1',
   });
-  
-  const selectedCountryCode = useWatch({ control, name: 'countryCode' });
+
+  const { field: address2Field } = useController({
+    control,
+    name: 'address2',
+  });
+
+  const { field: cityField } = useController({
+    control,
+    name: 'city',
+  });
+
+  const { field: provinceField } = useController({
+    control,
+    name: 'province',
+  });
+
+  const { field: countryCodeField } = useController({
+    control,
+    name: 'countryCode',
+  });
+
+  const { field: postalCodeField } = useController({
+    control,
+    name: 'postalCode',
+  });
+
+  const { field: phoneField } = useController({
+    control,
+    name: 'phone',
+  });
+
+  const { field: companyField } = useController({
+    control,
+    name: 'company',
+  });
 
   const handleFormSubmit = async (data: FormValues) => {
     const {
@@ -263,6 +296,13 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
             lastNameField={lastNameField}
             emailField={emailField}
             address1Field={address1Field}
+            address2Field={address2Field}
+            cityField={cityField}
+            provinceField={provinceField}
+            countryCodeField={countryCodeField}
+            postalCodeField={postalCodeField}
+            phoneField={phoneField}
+            companyField={companyField}
             errors={errors as Record<keyof CombinedFormData, FieldError>}
             countryOptions={countryOptions}
           />
