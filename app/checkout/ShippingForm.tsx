@@ -140,10 +140,10 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
 
     initializeMedusa();
   }, []);
-  /*
+  
   useEffect(() => {
     fetchCartItems(cart);
-  }, [cart, medusa]);*/
+  }, [cart, medusa]);
 
  useEffect(() => {
   const fetchShippingOptions = async () => {
@@ -222,9 +222,9 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   };
 
      
- /* useEffect(() => {
+  useEffect(() => {
     fetchCartItems(cart);
-  }, [cart, medusa]);*/
+  }, [cart, medusa]);
 
 
   useEffect(() => {
