@@ -52,8 +52,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
-useEffect(() => {
-  const fetchCartItems = async (cartId: string) => {
+ const fetchCartItems = async (cartId: string) => {
     // Check if medusa is not initialized
     if (!medusa) {
       console.error('Medusa not initialized');
@@ -80,8 +79,6 @@ useEffect(() => {
     fetchCartItems(cart.id);
   }
 }, [cart, medusa]);
-
-
 
 
   useEffect(() => {
