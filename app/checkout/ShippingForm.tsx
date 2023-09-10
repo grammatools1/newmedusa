@@ -14,6 +14,7 @@ interface CombinedFormData {
   lastName: string;
   email: string;
   address1: string;
+  address2: string; // Add this field
   city: string;
   province?: string;
   countryCode: string;
