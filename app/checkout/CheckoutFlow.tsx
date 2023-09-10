@@ -96,11 +96,11 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
     initializeMedusa();
   }, []);
 
- useEffect(() => {
-    if (medusa && cart && cart.id) {
-      fetchCartItems(cart);
+    useEffect(() => {
+    if (cart && medusa && cart?.id) {
+      fetchCartItems(cart as { id: string });
     }
-  }, [medusa, cart]);
+  }, [cart, medusa]);
 
   useEffect(() => {
     // Open cart modal when quantity changes.
