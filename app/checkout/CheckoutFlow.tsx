@@ -70,35 +70,42 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
     initializeMedusa();
   }, []);
   
-  /* const fetchCartItems = async (cart: { id: string }) => {*/
-    const fetchCartItems = async (cartId: string) => {
-    // Check if medusa is not initialized
-    if (!medusa) {
-      console.error('Medusa not initialized');
-      // You can handle this case accordingly, e.g., show a loading message
-      // or return early if needed
-      return;
-    }
+       useEffect(() => {
+        const fetchCartItems = async (cart: { id: string }) => {
+          // Check if medusa is not initialized
+          if (!medusa) {
+            console.error('Medusa not initialized');
+            // You can handle this case accordingly, e.g., show a loading message
+            // or return early if needed
+            return;
+          }
 
-    try {
-      setLoading(true);
-      const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
-      setOrderTotal(updatedCart.total);
-      setCartItems(updatedCart.items);
-    } catch (error) {
-      console.error('Error fetching cart items:', error);
-      toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
-    } finally {
-      setLoading(false);
-    }
-  };
+          try {
+            setLoading(true);
+            const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+            setOrderTotal(updatedCart.total);
+            setCartItems(updatedCart.items);
+          } catch (error) {
+            console.error('Error fetching cart items:', error);
+            toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
+          } finally {
+            setLoading(false);
+          }
+        };
 
-   useEffect(() => {
-    const fetchItems = async () => {
+      // Call fetchCartItems when medusa is initialized and cart is available
       if (medusa && cart && cart.id) {
-        await fetchCartItems(cart as { id: string });
+        fetchCartItems(cart);
       }
-    };
+       }, [cart, medusa]);
+
+
+       useEffect(() => {
+        const fetchItems = async () => {
+          if (medusa && cart && cart.id) {
+            await fetchCartItems(cart as { id: string });
+          }
+        };
      
     fetchItems();
   }, [cart, medusa]);
