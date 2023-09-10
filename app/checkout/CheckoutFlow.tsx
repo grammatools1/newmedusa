@@ -75,7 +75,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
         const fetchCartItems = async (cart: { id: string }) => {
           // Check if medusa is not initialized
           if (!medusa) {
-            console.error('Medusa not initialized');
+            console.error('Medusa not initial');
             // You can handle this case accordingly, e.g., show a loading message
             // or return early if needed
             return;
