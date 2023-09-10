@@ -151,7 +151,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
 
   try {
     const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-    console.log(updatedCart);
+    console.log('updateCart:', updatedCart);
     // Replace below `console.log` statements with your own custom logic
   } catch (error) {
     console.error('Error fetching cart items:', error);
