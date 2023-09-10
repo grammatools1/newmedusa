@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Controller, SubmitHandler, useForm, useWatch, FieldError} from 'react-hook-form';
+import { Controller, SubmitHandler, useForm, useWatch, FieldError } from 'react-hook-form';
 import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -23,7 +23,7 @@ interface CombinedFormData {
   acceptUpdates?: boolean;
 }
 
-interface ValidationError  {
+interface ValidationError {
   path: string;
   message: string;
 }
@@ -51,10 +51,10 @@ type Props = {
   cart: any; // Replace 'any' with your actual cart type
   onComplete: () => void;
   cartId?: string; // make cartId an optional prop
-}
+};
 
 const ShippingForm = ({ cart, onComplete }: Props) => {
-  const [medusa, setMedusa] = useState<Medusa | null>(null); 
+  const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
   const [shippingOptions, setShippingOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -64,7 +64,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   const { control, handleSubmit, formState } = useForm<CombinedFormData>({
     resolver: async (data: CombinedFormData, context: any, options: any) => {
       try {
-        // Cast the data object to the expected type - this will throw 
+        // Cast the data object to the expected type - this will throw
         // an error if any required fields are missing
         const values = await validationSchema.validate(data, {
           abortEarly: false,
@@ -76,7 +76,6 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
           values,
           errors: {},
         };
-
       } catch (errors) {
         // If there are any validation errors, return them
         return {
@@ -106,7 +105,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   const countryOptions: CountryOption[] = React.useMemo(() => {
     const countryList = require('country-list');
     const countries = countryList.getNameList();
-    
+
     if (!Array.isArray(countries)) {
       return [];
     }
@@ -119,7 +118,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
 
   useEffect(() => {
     const initializeMedusa = async () => {
-    const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
 
       if (!medusaBaseUrl) {
         console.error('Medusa base URL is not defined.');
@@ -140,33 +139,54 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
 
     initializeMedusa();
   }, []);
-  
+
+  const fetchCartItems = async (cart: { id: string }) => {
+    // Check if medusa is not initialized
+    if (!medusa) {
+      console.error('Medusa not initializedooo');
+      // You can handle this case accordingly, e.g., show a loading message
+      // or return early if needed
+      return;
+    }
+
+    try {
+      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+      console.log(updatedCart);
+      // Replace below `console.log` statements with your own custom logic
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
+      // Replace below `toast` statement with your own custom logic
+      console.error('Failed to fetch cart items. Please refresh the page.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchCartItems(cart);
   }, [cart, medusa]);
 
- useEffect(() => {
-  const fetchShippingOptions = async () => {
-    try {
-      if (!medusa) {
-        console.error('Medusa not ini');
-        return;
+  useEffect(() => {
+    const fetchShippingOptions = async () => {
+      try {
+        if (!medusa) {
+          console.error('Medusa not initializ');
+          return;
+        }
+
+        const { shipping_options } = await medusa.shippingOptions.list();
+        setShippingOptions(shipping_options);
+      } catch (error) {
+        console.error('Error retrieving shipping options', error);
+        setError(error as FormErrors);
       }
+    };
 
-      const { shipping_options } = await medusa.shippingOptions.list();
-      setShippingOptions(shipping_options);
-    } catch (error) {
-      console.error('Error retrieving shipping options', error);
-      setError(error as FormErrors);
+    // Check if medusa is initialized before fetching shipping options
+    if (medusa) {
+      fetchShippingOptions();
     }
-  };
-
-  // Check if medusa is initialized before fetching shipping options
-  if (medusa) {
-    fetchShippingOptions();
-  }
   }, [cart, medusa]);
-
 
   const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
     const {
@@ -220,36 +240,6 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
       setIsLoading(false);
     }
   };
-
-     
-  useEffect(() => {
-    fetchCartItems(cart);
-  }, [cart, medusa]);
-
-
-  useEffect(() => {
-        if (medusa && cart) {
-        const fetchCartItems = async (cart: { id: string }) => {
-          // Check if medusa is not initialized
-          if (!medusa) {
-            console.error('Medusa not initi');
-            // You can handle this case accordingly, e.g., show a loading message
-            // or return early if needed
-            return;
-          }
-
-          try {
-          const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-          console.log( updatedCart);
-          // Replace below `console.log` statements with your own custom logic
-        } catch (error) {
-          console.error('Error fetching cart items:', error);
-          // Replace below `toast` statement with your own custom logic
-          console.error('Failed to fetch cart items. Please refresh the page.');
-        } finally {
-          setIsLoading(false);
-        }}};
-  }, [cart, medusa]);
 
   const selectedCountryCode = useWatch({ control, name: 'countryCode' });
 
