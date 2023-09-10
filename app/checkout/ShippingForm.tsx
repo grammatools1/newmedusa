@@ -1,15 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import {
-  Controller,
-  SubmitHandler,
-  useForm,
-  useWatch,
-  FieldError,
-  FormState,
-  Control,
-} from 'react-hook-form';
+import { useForm } from 'react-hook-form'; // Updated import statement
 import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -72,7 +64,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
 
   const {
     control,
-    handleSubmit,
+    handleSubmit, // Use the handleSubmit function from useForm
     formState,
   } = useForm<CombinedFormData>({
     resolver: yupResolver(validationSchema),
@@ -90,7 +82,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     },
     mode: 'onChange',
     shouldUnregister: true,
-  }) as {
+   }) as {
     control: Control<CombinedFormData>;
     handleSubmit: SubmitHandler<CombinedFormData>;
     formState: FormState<CombinedFormData>;
