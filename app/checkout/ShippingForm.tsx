@@ -14,6 +14,7 @@ type CombinedFormData = {
   lastName: string;
   email: string;
   address1: string;
+  address2?: string | null;
   city: string;
   province?: string | null;
   countryCode: string;
@@ -21,7 +22,6 @@ type CombinedFormData = {
   phone: string;
   company?: string | null;
   acceptUpdates?: boolean | null;
-  address2?: string | null; // Add this field if required
 };
 
 interface ValidationError {
@@ -40,6 +40,7 @@ const validationSchema = yup.object().shape({
   lastName: yup.string().required(),
   email: yup.string().email().required(),
   address1: yup.string().required(),
+  address2: yup.string().nullable(), // Make optional and nullable
   city: yup.string().required(),
   province: yup.string().nullable(), // Make optional and nullable
   countryCode: yup.string().required(),
@@ -47,7 +48,6 @@ const validationSchema = yup.object().shape({
   phone: yup.string().required(),
   company: yup.string().nullable(), // Make optional and nullable
   acceptUpdates: yup.boolean().nullable(), // Make optional and nullable
-  address2: yup.string().nullable(), // Make optional and nullable
 });
 
 type Props = {
@@ -75,6 +75,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
       lastName: '',
       email: '',
       address1: '',
+      address2: '',
       city: '',
       province: '',
       countryCode: '',
