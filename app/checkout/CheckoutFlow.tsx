@@ -54,7 +54,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   
   useEffect(() => {
   if (medusa && cart) {
-  const fetchCartItems = async (cartId: string) => {
+ const fetchCartItems = async (cartId: string) => {
     // Check if medusa is not initialized
     if (!medusa) {
       console.error('Medusa not initialized');
