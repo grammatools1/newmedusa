@@ -95,12 +95,12 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
 
       // Call fetchCartItems when medusa is initialized and cart is available
       if (medusa && cart && cart.id) {
-        fetchCartItems(cart);
+        fetchCartItems(cart as { id: string });
       }
-       }, [cart, medusa]);
+      }, [cart, medusa]);
 
 
-       useEffect(() => {
+    useEffect(() => {
         const fetchItems = async () => {
           if (medusa && cart && cart.id) {
             await fetchCartItems(cart as { id: string });
