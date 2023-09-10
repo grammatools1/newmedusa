@@ -340,8 +340,8 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
                       />
                     </div>
                   </div>
-                  <div className="coupon-gift">
-                    <div>
+                   <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
+                     <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
                       <label htmlFor="coupon">Coupon Code:</label>
                       <input
                         id="coupon"
@@ -352,7 +352,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
                       />
                       <button onClick={memoizedHandleApplyCoupon}>Apply Coupon</button>
                     </div>
-                    <div>
+                    <div className="mb-3 flex items-center justify-between border-b border-neutral-200 pb-1 pt-1 dark:border-neutral-700">
                       <label htmlFor="gift-card">Gift Card Code:</label>
                       <input
                         id="gift-card"
@@ -364,7 +364,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
                       <button onClick={memoizedHandleApplyGiftCard}>Apply Gift Card</button>
                     </div>
                   </div>
-                  <p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>
+                  {/*<p className="order-total">Order Total: ${orderTotal.toFixed(2)}</p>*/}
                   <ShippingForm cart={cart} onComplete={handleShippingComplete} />
                 </div>
               )}
