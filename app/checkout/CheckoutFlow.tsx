@@ -65,7 +65,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
         maxRetries: 3,
       });
       console.log('Initialized Medusa:', initializedMedusa);
-      setMedusa(initializedMedusa);
+      setMedusa(medusa);
     };
 
     initializeMedusa();
