@@ -249,11 +249,8 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
           console.error('Failed to fetch cart items. Please refresh the page.');
         } finally {
           setIsLoading(false);
-        }};
-      // Call fetchCartItems when medusa is initialized and cart is available
-      if (medusa && cart && cart.id) {
-        fetchCartItems(cart as { id: string });
-      }}}, [cart, medusa]);
+        }}};
+  }, [cart, medusa]);
 
   const selectedCountryCode = useWatch({ control, name: 'countryCode' });
 
