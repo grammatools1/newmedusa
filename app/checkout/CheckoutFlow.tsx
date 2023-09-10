@@ -98,9 +98,6 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
         fetchCartItems(cart as { id: string });
       }}, [cart, medusa]);
 
-    fetchItems();
-  }, [cart, medusa]);
-
   useEffect(() => {
     // Open cart modal when quantity changes.
     if (cart?.totalQuantity !== quantityRef.current) {
