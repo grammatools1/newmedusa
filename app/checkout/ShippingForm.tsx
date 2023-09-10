@@ -223,21 +223,24 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   };
 
      
-  useEffect(() => {
+ /* useEffect(() => {
     fetchCartItems(cart);
-  }, [cart, medusa]);
+  }, [cart, medusa]);*/
 
 
- const fetchCartItems = async (cart: { id: string }) => {
+  useEffect(() => {
+        if (medusa && cart) {
+        const fetchCartItems = async (cart: { id: string }) => {
+          // Check if medusa is not initialized
+          if (!medusa) {
+            console.error('Medusa not initi');
+            // You can handle this case accordingly, e.g., show a loading message
+            // or return early if needed
+            return;
+          }
 
-  if (!medusa) {
-    console.error('Medusa not initialized');
-   return 
-   /*<div>Loading...</div>;*/
-  }
-
-  try {
-    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+          try {
+          const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
           console.log( updatedCart);
           // Replace below `console.log` statements with your own custom logic
         } catch (error) {
@@ -246,8 +249,11 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
           console.error('Failed to fetch cart items. Please refresh the page.');
         } finally {
           setIsLoading(false);
-        }
-  };
+        }};
+      // Call fetchCartItems when medusa is initialized and cart is available
+      if (medusa && cart && cart.id) {
+        fetchCartItems(cart as { id: string });
+      }}}, [cart, medusa]);
 
   const selectedCountryCode = useWatch({ control, name: 'countryCode' });
 
