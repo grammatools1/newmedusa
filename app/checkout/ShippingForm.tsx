@@ -60,22 +60,39 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   const [acceptUpdates, setAcceptUpdates] = useState(false);
 
   const { control, handleSubmit, formState } = useForm<CombinedFormData>({
-    resolver: yupResolver(validationSchema),
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      address1: '',
-      city: '',
-      province: '',
-      countryCode: '',
-      postalCode: '',
-      phone: '',
-      company: '',
-    },
-    mode: 'onChange',
-    shouldUnregister: true,
-  });
+  resolver: async (data: CombinedFormData, context: any, options: any) => {
+    try {
+      const values = await validationSchema.validate(data, {
+        abortEarly: false,
+        stripUnknown: true,
+      }) as CombinedFormData;
+
+      return {
+        values,
+        errors: {},
+      };
+    } catch (errors) {
+      return {
+        values: {},
+        errors: (errors as any)?.errors ?? {},
+      };
+    }
+  },
+  defaultValues: {
+    firstName: '',
+    lastName: '',
+    email: '',
+    address1: '',
+    city: '',
+    province: '',
+    countryCode: '',
+    postalCode: '',
+    phone: '',
+    company: '',
+  },
+  mode: 'onChange',
+  shouldUnregister: true,
+});
 
   const { errors } = formState;
 
