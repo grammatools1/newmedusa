@@ -52,15 +52,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
-    useEffect(() => {
-      if (cart && medusa && cart.id) {
-        fetchCartItems(cart as { id: string });
-      }
-    }, [cart, medusa]);
-      
-
- useEffect(() => {
-  const fetchCartItems = async (cartId: string) => {
+  const fetchCartItems = async (cart: { id: string }) => {
     // Check if medusa is not initialized
     if (!medusa) {
       console.error('Medusa not initialized');
@@ -71,7 +63,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
 
     try {
       setLoading(true);
-      const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
+      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
       setOrderTotal(updatedCart.total);
       setCartItems(updatedCart.items);
     } catch (error) {
@@ -81,12 +73,6 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
       setLoading(false);
     }
   };
-
-  // Call fetchCartItems when medusa is initialized and cart is available
-  if (medusa && cart && cart.id) {
-    fetchCartItems(cart.id);
-  }
-}, [cart, medusa]);
 
   useEffect(() => {
     const initializeMedusa = async () => {
@@ -106,6 +92,12 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
 
     initializeMedusa();
   }, []);
+
+  useEffect(() => {
+    if (cart && medusa && cart?.id) {
+      fetchCartItems(cart as { id: string });
+    }
+  }, [cart, medusa]);
 
   useEffect(() => {
     // Open cart modal when quantity changes.
