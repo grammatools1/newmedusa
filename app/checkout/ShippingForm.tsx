@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { useForm, SubmitHandler, Control, FormState, FieldError, useWatch } from 'react-hook-form'; // Updated import statement
+import { useForm, SubmitHandler, Control, FormState, FieldError, useWatch, UnpackNestedValue } from 'react-hook-form'; // Updated import statement
 import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -84,11 +84,9 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     },
     mode: 'onChange',
     shouldUnregister: true,
-  }) as {
-    control: Control<CombinedFormData>;
-    handleSubmit: SubmitHandler<CombinedFormData>;
-    formState: FormState<CombinedFormData>;
-  };
+  });
+
+  type FormValues = UnpackNestedValue<typeof control>;
 
   const { errors } = formState;
 
@@ -180,7 +178,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     }
   }, [cart, medusa]);
 
-  const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
+  const handleFormSubmit = async (data: FormValues) => {
     const {
       firstName,
       lastName,
