@@ -146,23 +146,28 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     fetchCartItems(cart);
   }, [cart, medusa]);
 
-   useEffect(() => {
-    const fetchShippingOptions = async () => {
-      try {
-        if (!medusa) {
-          console.error('Medusa not initialized');
-          return;
-        }
-        const { shippingOptions } = await medusa.shippingOptions.list(); // Corrected the destructuring
-        setShippingOptions(shippingOptions);
-      } catch (error) {
-        console.error('Error retrieving shipping options', error);
-        setError(error as FormErrors);
+ useEffect(() => {
+  const fetchShippingOptions = async () => {
+    try {
+      if (!medusa) {
+        console.error('Medusa not initialized');
+        return;
       }
-    };
 
+      const { shipping_options } = await medusa.shippingOptions.list();
+      setShippingOptions(shipping_options);
+    } catch (error) {
+      console.error('Error retrieving shipping options', error);
+      setError(error as FormErrors);
+    }
+  };
+
+  // Check if medusa is initialized before fetching shipping options
+  if (medusa) {
     fetchShippingOptions();
+  }
   }, [cart, medusa]);
+
 
   const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
     const {
