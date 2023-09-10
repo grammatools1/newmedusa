@@ -21,7 +21,7 @@ type CombinedFormData = {
   phone: string;
   company?: string;
   acceptUpdates?: boolean;
-  address2?: string; // Add this field if required
+  address2?: string; 
 };
 
 interface ValidationError {
