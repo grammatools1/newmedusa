@@ -28,7 +28,6 @@ interface ValidationError {
   path: string;
   message: string;
 }
-
 interface CustomError {
   [key: string]: string;
 }
