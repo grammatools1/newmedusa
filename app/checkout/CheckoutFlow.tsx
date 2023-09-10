@@ -85,7 +85,6 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
       });
       console.log('Initialized Medusa:', initializedMedusa);
       setMedusa(initializedMedusa);
-    };
   
    const fetchCartItems = async (cart: { id: string }) => {
     // Check if medusa is not initialized
