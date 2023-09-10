@@ -52,8 +52,26 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
-  
-  const fetchCartItems = async (cart: { id: string }) => {
+  useEffect(() => {
+    const initializeMedusa = async () => {
+      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+      if (!medusaBaseUrl) {
+        console.error('Medusa base URL is not defined.');
+        return;
+      }
+
+      const medusa = new Medusa({
+        baseUrl: medusaBaseUrl,
+        maxRetries: 3,
+      });
+      console.log('Initialized Medusa:', initializedMedusa);
+      setMedusa(initializedMedusa);
+    };
+
+    initializeMedusa();
+  }, []);
+
+   const fetchCartItems = async (cart: { id: string }) => {
     // Check if medusa is not initialized
     if (!medusa) {
       console.error('Medusa not initialized');
@@ -74,25 +92,6 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
       setLoading(false);
     }
   }; 
-
-  useEffect(() => {
-    const initializeMedusa = async () => {
-      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-      if (!medusaBaseUrl) {
-        console.error('Medusa base URL is not defined.');
-        return;
-      }
-
-      const initializedMedusa = new Medusa({
-        baseUrl: medusaBaseUrl,
-        maxRetries: 3,
-      });
-      console.log('Initialized Medusa:', initializedMedusa);
-      setMedusa(initializedMedusa);
-    };
-
-    initializeMedusa();
-  }, []);
 
    useEffect(() => {
     const fetchItems = async () => {
