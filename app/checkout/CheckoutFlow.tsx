@@ -53,7 +53,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   const [confirmOrder, setConfirmOrder] = useState(false);
 
 useEffect(() => {
-  const fetchCartItems = async (cart: { id: string }) => {
+  const fetchCartItems = async (cartId: string) => {
     // Check if medusa is not initialized
     if (!medusa) {
       console.error('Medusa not initialized');
@@ -64,7 +64,7 @@ useEffect(() => {
 
     try {
       setLoading(true);
-      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+      const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
       setOrderTotal(updatedCart.total);
       setCartItems(updatedCart.items);
     } catch (error) {
@@ -77,9 +77,10 @@ useEffect(() => {
 
   // Call fetchCartItems when medusa is initialized and cart is available
   if (medusa && cart && cart.id) {
-    fetchCartItems(cart);
+    fetchCartItems(cart.id);
   }
 }, [cart, medusa]);
+
 
 
 
