@@ -141,30 +141,33 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   }, []);
 
   const fetchCartItems = async (cart: { id: string }) => {
-    // Check if medusa is not initialized
-    if (!medusa) {
-      console.error('Medusa not initializedooo');
-      // You can handle this case accordingly, e.g., show a loading message
-      // or return early if needed
-      return;
-    }
+  // Check if medusa is not initialized
+  if (!medusa) {
+    console.error('Medusa not initialized');
+    // You can handle this case accordingly, e.g., show a loading message
+    // or return early if needed
+    return;
+  }
 
-    try {
-      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-      console.log(updatedCart);
-      // Replace below `console.log` statements with your own custom logic
-    } catch (error) {
-      console.error('Error fetching cart items:', error);
-      // Replace below `toast` statement with your own custom logic
-      console.error('Failed to fetch cart items. Please refresh the page.');
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  try {
+    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+    console.log(updatedCart);
+    // Replace below `console.log` statements with your own custom logic
+  } catch (error) {
+    console.error('Error fetching cart items:', error);
+    // Replace below `toast` statement with your own custom logic
+    console.error('Failed to fetch cart items. Please refresh the page.');
+  } finally {
+    setIsLoading(false);
+  }
+};
 
-  useEffect(() => {
+useEffect(() => {
+  if (medusa && cart && cart.id) {
     fetchCartItems(cart);
-  }, [cart, medusa]);
+  }
+}, [cart, medusa]);
+
 
   useEffect(() => {
     const fetchShippingOptions = async () => {
