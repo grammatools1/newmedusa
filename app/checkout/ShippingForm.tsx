@@ -83,6 +83,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     lastName: '',
     email: '',
     address1: '',
+    address_2: '',
     city: '',
     province: '',
     countryCode: '',
@@ -159,67 +160,64 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     }
   }, [cart, medusa]);
 
-  const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
-    const {
-      firstName,
-      lastName,
-      email,
-      address1,
-      city,
-      province,
-      countryCode,
-      postalCode,
-      phone,
-      company,
-      acceptUpdates,
-    } = data;
+ const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
+  const {
+    firstName,
+    lastName,
+    email,
+    address1,
+    address2, // Add address2 from the form data
+    city,
+    province,
+    countryCode,
+    postalCode,
+    phone,
+    company,
+    acceptUpdates,
+  } = data;
 
-    try {
-      setIsLoading(true);
-      setError(undefined);
+  try {
+    setIsLoading(true);
+    setError(undefined);
 
-      if (medusa && cart && cart.id) {
-        const cartId = cart.id as string;
+    if (medusa && cart && cart.id) {
+      const cartId = cart.id as string; // Type assertion
 
-        // Create the shipping address object
-        const shippingAddress = {
-          company: company,
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
-          address_1: address1,
-          city: city,
-          province: province,
-          postal_code: postalCode,
-          country_code: countryCode,
-          phone: phone,
-          acceptUpdates: acceptUpdates,
-        };
+      // Create an object with updated shipping address
+      const updatedShippingAddress = {
+        company,
+        first_name: firstName,
+        last_name: lastName,
+        email,
+        address_1: address1,
+        address_2: address2, // Add address2
+        city,
+        country_code: countryCode,
+        province,
+        postal_code: postalCode,
+        phone,
+        acceptUpdates,
+      };
 
-        // Construct the cart update data
-        const cartUpdateData = {
-          shipping_address: shippingAddress,
-          // Add any other cart update data as needed
-        };
+      // Update shipping address and method using Medusa
+      const { cart: updatedCart } = await medusa.carts.update(cartId, {
+        shipping_address: updatedShippingAddress,
+      });
 
-        // Update the cart
-        const updatedCart = await medusa.carts.update(cartId, cartUpdateData);
-        console.log('Updated Cart:', updatedCart);
-
-        // Perform any other actions you need here
-
-        onComplete();
-      }
-    } catch (error) {
-      if (error instanceof YupValidationError) {
-        setError(new Error('Validation error: ' + error.message) as FormErrors);
-      } else {
-        setError(error as FormErrors);
-      }
-    } finally {
-      setIsLoading(false);
+      console.log(updatedCart.shipping_address);
+      onComplete();
     }
-  };
+  } catch (error) {
+    if (error instanceof YupValidationError) {
+      setError(new Error('Validation error: ' + error.message) as FormErrors);
+    } else {
+      setError(error as FormErrors);
+    }
+  } finally {
+    setIsLoading(false);
+  }
+};
+
 
   const selectedCountryCode = useWatch({ control, name: 'countryCode' });
 
