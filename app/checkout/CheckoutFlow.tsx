@@ -1,5 +1,3 @@
-"use client"
-
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import Medusa from '@medusajs/medusa-js';
 import ShippingForm from './ShippingForm';
@@ -52,48 +50,6 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
-  useEffect(() => {
-    const initializeMedusa = async () => {
-      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
-      if (!medusaBaseUrl) {
-        console.error('Medusa base URL is not defined.');
-        return;
-      }
-
-      const initializedMedusa = new Medusa({
-        baseUrl: medusaBaseUrl,
-        maxRetries: 3,
-      });
-      console.log('Initialized Medusa:', initializedMedusa);
-      setMedusa(initializedMedusa);
-    };
-
-    initializeMedusa();
-  }, []);
-
-useEffect(() => {
-  if (cart && medusa && cart?.id) {
-    fetchCartItems(cart as { id: string });
-  }
-}, [cart, medusa]);
-
-  useEffect(() => {
-    // Open cart modal when quantity changes.
-    if (cart?.totalQuantity !== quantityRef.current) {
-      // But only if it's not already open (quantity also changes when editing items in cart).
-
-      // Always update the quantity reference
-      quantityRef.current = cart?.totalQuantity;
-    }
-  }, [cart?.totalQuantity, quantityRef]);
-
-/*
-  useEffect(() => {
-    fetchCartItems(cart);
-  }, [cart]); */
-
-
-useEffect(() => {
   const fetchCartItems = async (cart: { id: string }) => {
     // Check if medusa is not initialized
     if (!medusa) {
@@ -116,13 +72,41 @@ useEffect(() => {
     }
   };
 
-  // Call fetchCartItems when medusa is initialized and cart is available
-  if (medusa && cart && cart.id) {
-    fetchCartItems(cart);
-  }
-}, [cart, medusa]);
+  useEffect(() => {
+    const initializeMedusa = async () => {
+      const medusaBaseUrl = process.env.NEXT_PUBLIC_MEDUSA_BACKEND_API;
+      if (!medusaBaseUrl) {
+        console.error('Medusa base URL is not defined.');
+        return;
+      }
 
-  
+      const initializedMedusa = new Medusa({
+        baseUrl: medusaBaseUrl,
+        maxRetries: 3,
+      });
+      console.log('Initialized Medusa:', initializedMedusa);
+      setMedusa(initializedMedusa);
+    };
+
+    initializeMedusa();
+  }, []);
+
+  useEffect(() => {
+    if (cart && medusa && cart?.id) {
+      fetchCartItems(cart as { id: string });
+    }
+  }, [cart, medusa]);
+
+  useEffect(() => {
+    // Open cart modal when quantity changes.
+    if (cart?.totalQuantity !== quantityRef.current) {
+      // But only if it's not already open (quantity also changes when editing items in cart).
+
+      // Always update the quantity reference
+      quantityRef.current = cart?.totalQuantity;
+    }
+  }, [cart?.totalQuantity, quantityRef]);
+
   const handleShippingComplete = () => {
     setStep(2);
   };
@@ -144,14 +128,14 @@ useEffect(() => {
       };
 
       if (cart && cart.id) {
-          await medusa.carts.setPaymentSession(cart.id, paymentData);
-          const { type, data } = await medusa.carts.complete(cart.id);
-          console.log('Checkout Completed:', type, data);
-          toast.success('Your order has been successfully placed!', { autoClose: 3000 });
-        }
-        setConfirmOrder(false);
+        await medusa.carts.setPaymentSession(cart.id, paymentData);
+        const { type, data } = await medusa.carts.complete(cart.id);
+        console.log('Checkout Completed:', type, data);
+        toast.success('Your order has been successfully placed!', { autoClose: 3000 });
+      }
+      setConfirmOrder(false);
       // TODO: Display order confirmation or handle any further actions
-    }catch (error) {
+    } catch (error) {
       console.error('Error completing checkout:', error);
       toast.error('Failed to place order. Please try again or contact support.', { autoClose: 3000 });
     } finally {
@@ -159,41 +143,41 @@ useEffect(() => {
     }
   };
 
- const handleApplyCoupon = async () => {
-  if (!medusa || !cart || !couponCode) return;
+  const handleApplyCoupon = async () => {
+    if (!medusa || !cart || !couponCode) return;
 
-  try {
-    const cartId = cart.id || ''; // Use an empty string as a default if cart.id is undefined
-    const { cart: updatedCartData } = await medusa.carts.update(cartId, {
-      discounts: [{ code: couponCode }],
-    });
-    setOrderTotal(updatedCartData.total);
-    setCouponCode("");
+    try {
+      const cartId = cart.id || ''; // Use an empty string as a default if cart.id is undefined
+      const { cart: updatedCartData } = await medusa.carts.update(cartId, {
+        discounts: [{ code: couponCode }],
+      });
+      setOrderTotal(updatedCartData.total);
+      setCouponCode('');
 
-    toast.success("Coupon applied!", { autoClose: 3000 });
-  } catch (error) {
-    console.error("Error applying coupon:", error);
-    toast.error("Failed to apply coupon. Please try again or contact support.", { autoClose: 3000 });
-  }
-};
+      toast.success('Coupon applied!', { autoClose: 3000 });
+    } catch (error) {
+      console.error('Error applying coupon:', error);
+      toast.error('Failed to apply coupon. Please try again or contact support.', { autoClose: 3000 });
+    }
+  };
 
- const handleApplyGiftCard = useCallback(async () => {
-  if (!medusa || !cart || !giftCardCode) return;
+  const handleApplyGiftCard = useCallback(async () => {
+    if (!medusa || !cart || !giftCardCode) return;
 
-  try {
-    const cartId = cart.id || ''; // Use an empty string as a default if cart.id is undefined
-    const { cart: updatedCart } = await medusa.carts.update(cartId, {
-      gift_cards: [{ code: giftCardCode }],
-    });
-    setOrderTotal(updatedCart.total);
-    setGiftCardCode(""); // Clear the gift card code input field
+    try {
+      const cartId = cart.id || ''; // Use an empty string as a default if cart.id is undefined
+      const { cart: updatedCart } = await medusa.carts.update(cartId, {
+        gift_cards: [{ code: giftCardCode }],
+      });
+      setOrderTotal(updatedCart.total);
+      setGiftCardCode(''); // Clear the gift card code input field
 
-    toast.success("Gift card applied!", { autoClose: 3000 });
-  } catch (error) {
-    console.error("Error applying gift card:", error);
-    toast.error("Failed to apply gift card. Please try again or contact support.", { autoClose: 3000 });
-  }
-}, [cart, giftCardCode, medusa]);
+      toast.success('Gift card applied!', { autoClose: 3000 });
+    } catch (error) {
+      console.error('Error applying gift card:', error);
+      toast.error('Failed to apply gift card. Please try again or contact support.', { autoClose: 3000 });
+    }
+  }, [cart, giftCardCode, medusa]);
 
   const validateForm = (formValues: any) => {
     const errors: any = {};
