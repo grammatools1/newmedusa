@@ -14,7 +14,6 @@ interface CombinedFormData {
   lastName: string;
   email: string;
   address1: string;
-  address2: string;
   city: string;
   province?: string;
   countryCode: string;
@@ -40,7 +39,6 @@ const validationSchema = yup.object().shape({
   lastName: yup.string().required(),
   email: yup.string().email().required(),
   address1: yup.string().required(),
-  address2: yup.string().required(),
   city: yup.string().required(),
   province: yup.string(),
   countryCode: yup.string().required(),
@@ -57,18 +55,40 @@ type Props = {
 
 const ShippingForm = ({ cart, onComplete }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
+  const [shippingOptions, setShippingOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<FormErrors>();
   const [acceptUpdates, setAcceptUpdates] = useState(false);
 
   const { control, handleSubmit, formState } = useForm<CombinedFormData>({
-    resolver: yupResolver(validationSchema),
+    resolver: async (data: CombinedFormData, context: any, options: any) => {
+      try {
+        // Cast the data object to the expected type - this will throw
+        // an error if any required fields are missing
+        const values = await validationSchema.validate(data, {
+          abortEarly: false,
+          stripUnknown: true,
+        }) as CombinedFormData;
+
+        // If validation succeeds, we can return the validated data object
+        return {
+          values,
+          errors: {},
+        };
+      } catch (errors) {
+        // If there are any validation errors, return them
+        return {
+          values: {},
+          errors: (errors as any)?.errors ?? {}, // Cast 'errors' as 'any' to bypass TypeScript type checking
+        };
+      }
+    },
     defaultValues: {
       firstName: '',
       lastName: '',
       email: '',
       address1: '',
-      address2: '',
       city: '',
       province: '',
       countryCode: '',
@@ -120,15 +140,18 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     initializeMedusa();
   }, []);
 
-  const fetchCartItems = async (cartId: string) => {
+  const fetchCartItems = async (cart: { id: string }) => {
+    // Check if medusa is not initialized
     if (!medusa) {
       console.error('Medusa not initialized');
+      // You can handle this case accordingly, e.g., show a loading message
+      // or return early if needed
       return;
     }
 
     try {
-      const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
-      console.log('Updated Cart:', updatedCart);
+      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+      console.log(updatedCart);
       // Replace below `console.log` statements with your own custom logic
     } catch (error) {
       console.error('Error fetching cart items:', error);
@@ -140,8 +163,28 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   };
 
   useEffect(() => {
-    if (medusa && cart && cart.id) {
-      fetchCartItems(cart.id);
+    fetchCartItems(cart);
+  }, [cart, medusa]);
+
+  useEffect(() => {
+    const fetchShippingOptions = async () => {
+      try {
+        if (!medusa) {
+          console.error('Medusa not initialized');
+          return;
+        }
+
+        const { shipping_options } = await medusa.shippingOptions.list();
+        setShippingOptions(shipping_options);
+      } catch (error) {
+        console.error('Error retrieving shipping options', error);
+        setError(error as FormErrors);
+      }
+    };
+
+    // Check if medusa is initialized before fetching shipping options
+    if (medusa) {
+      fetchShippingOptions();
     }
   }, [cart, medusa]);
 
@@ -151,7 +194,6 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
       lastName,
       email,
       address1,
-      address2,
       city,
       province,
       countryCode,
@@ -166,35 +208,25 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
       setError(undefined);
 
       if (medusa && cart && cart.id) {
-        const cartId = cart.id as string;
+        const cartId = cart.id as string; // Type assertion
 
-        // Create the shipping address object
-        const shippingAddress = {
-          company: company,
-          first_name: firstName,
-          last_name: lastName,
-          email: email,
-          address_1: address1,
-          address_2: address2,
-          city: city,
-          province: province,
-          postal_code: postalCode,
-          country_code: countryCode,
-          phone: phone,
-          acceptUpdates: acceptUpdates,
-        };
-
-        // Construct the cart update data
-        const cartUpdateData = {
-          shipping_address: shippingAddress,
-          // Add any other cart update data as needed
-        };
-
-        // Update the cart
-        const updatedCart = await medusa.carts.update(cartId, cartUpdateData);
-        console.log('Updated Cart:', updatedCart);
-
-        // Perform any other actions you need here
+        // Update shipping address and method
+        await medusa.carts.update(cartId, {
+          shipping_address: {
+            company: company,
+            first_name: firstName,
+            last_name: lastName,
+            email: email,
+            address_1: address1,
+            city: city,
+            province: province,
+            postal_code: postalCode,
+            country_code: countryCode,
+            phone: phone,
+            acceptUpdates: acceptUpdates,
+          },
+          shipping_method: selectedShippingMethod,
+        });
 
         onComplete();
       }
@@ -227,7 +259,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
           />
           {error && (
             <div style={{ color: 'red' }}>
-              {typeof error === 'string' ? error : error instanceof Error ? error.message : ''}
+              {typeof error === 'string' ? error : (error instanceof Error ? error.message : '')}
             </div>
           )}
           <button type="submit">Save Shipping Address</button>
