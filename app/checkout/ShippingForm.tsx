@@ -15,15 +15,14 @@ type CombinedFormData = {
   email: string;
   address1: string;
   city: string;
-  province?: string;
+  province?: string | undefined;
   countryCode: string;
   postalCode: string;
   phone: string;
-  company?: string;
-  acceptUpdates?: boolean;
-  address2?: string; 
+  company?: string | undefined;
+  acceptUpdates?: boolean | undefined;
+  address2?: string | undefined; // Add this field if required
 };
-
 interface ValidationError {
   path: string;
   message: string;
@@ -41,15 +40,14 @@ const validationSchema = yup.object().shape({
   email: yup.string().email().required(),
   address1: yup.string().required(),
   city: yup.string().required(),
-  province: yup.string().notRequired(), // Make optional
+  province: yup.string().nullable(), // Make optional and nullable
   countryCode: yup.string().required(),
   postalCode: yup.string().required(),
   phone: yup.string().required(),
-  company: yup.string().notRequired(), // Make optional
-  acceptUpdates: yup.boolean().notRequired(), // Make optional
-  address2: yup.string().required(),
+  company: yup.string().nullable(), // Make optional and nullable
+  acceptUpdates: yup.boolean().nullable(), // Make optional and nullable
+  address2: yup.string().nullable(), // Make optional and nullable
 });
-
 
 type Props = {
   cart: any; // Replace 'any' with your actual cart type
