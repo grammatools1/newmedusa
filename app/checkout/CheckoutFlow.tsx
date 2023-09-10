@@ -69,8 +69,9 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
 
     initializeMedusa();
   }, []);
-  
+        
        useEffect(() => {
+        if (medusa && cart) {
         const fetchCartItems = async (cart: { id: string }) => {
           // Check if medusa is not initialized
           if (!medusa) {
@@ -92,7 +93,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
             setLoading(false);
           }
         };
-
+      }
       // Call fetchCartItems when medusa is initialized and cart is available
       if (medusa && cart && cart.id) {
         fetchCartItems(cart as { id: string });
