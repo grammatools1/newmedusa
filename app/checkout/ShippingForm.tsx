@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Controller, SubmitHandler, useForm, useWatch, FieldError } from 'react-hook-form';
+import { useForm, SubmitHandler, Control, FormState, FieldError, useWatch, UnpackNestedValue, useController } from 'react-hook-form';
 import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -9,25 +9,26 @@ import { ValidationError as YupValidationError } from 'yup';
 import Autocomplete from 'react-autocomplete';
 import FormFields, { CountryOption } from './formFields';
 
-interface CombinedFormData {
+type CombinedFormData = {
   firstName: string;
   lastName: string;
   email: string;
   address1: string;
-  address2: string;
   city: string;
-  province?: string;
+  province?: string | null;
   countryCode: string;
   postalCode: string;
   phone: string;
-  company?: string;
-  acceptUpdates?: boolean;
-}
+  company?: string | null;
+  acceptUpdates?: boolean | null;
+  address2?: string | null; // Add this field if required
+};
 
 interface ValidationError {
   path: string;
   message: string;
 }
+
 interface CustomError {
   [key: string]: string;
 }
@@ -39,13 +40,14 @@ const validationSchema = yup.object().shape({
   lastName: yup.string().required(),
   email: yup.string().email().required(),
   address1: yup.string().required(),
-  address2: yup.string().required(),
   city: yup.string().required(),
-  province: yup.string(),
+  province: yup.string().nullable(), // Make optional and nullable
   countryCode: yup.string().required(),
   postalCode: yup.string().required(),
   phone: yup.string().required(),
-  company: yup.string().notRequired(),
+  company: yup.string().nullable(), // Make optional and nullable
+  acceptUpdates: yup.boolean().nullable(), // Make optional and nullable
+  address2: yup.string().nullable(), // Make optional and nullable
 });
 
 type Props = {
@@ -62,35 +64,17 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   const [error, setError] = useState<FormErrors>();
   const [acceptUpdates, setAcceptUpdates] = useState(false);
 
-  const { control, handleSubmit, formState } = useForm<CombinedFormData>({
-    resolver: async (data: CombinedFormData, context: any, options: any) => {
-      try {
-        // Cast the data object to the expected type - this will throw
-        // an error if any required fields are missing
-        const values = await validationSchema.validate(data, {
-          abortEarly: false,
-          stripUnknown: true,
-        }) as CombinedFormData;
-
-        // If validation succeeds, we can return the validated data object
-        return {
-          values,
-          errors: {},
-        };
-      } catch (errors) {
-        // If there are any validation errors, return them
-        return {
-          values: {},
-          errors: (errors as any)?.errors ?? {}, // Cast 'errors' as 'any' to bypass TypeScript type checking
-        };
-      }
-    },
+  const {
+    control,
+    handleSubmit,
+    formState,
+  } = useForm<CombinedFormData>({
+    resolver: yupResolver(validationSchema),
     defaultValues: {
       firstName: '',
       lastName: '',
       email: '',
       address1: '',
-      address2: '',
       city: '',
       province: '',
       countryCode: '',
@@ -101,6 +85,8 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     mode: 'onChange',
     shouldUnregister: true,
   });
+
+  type FormValues = UnpackNestedValue<typeof control>;
 
   const { errors } = formState;
 
@@ -143,33 +129,32 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
   }, []);
 
   const fetchCartItems = async (cart: { id: string }) => {
-  // Check if medusa is not initialized
-  if (!medusa) {
-    console.error('Medusa not initialized');
-    // You can handle this case accordingly, e.g., show a loading message
-    // or return early if needed
-    return;
-  }
+    // Check if medusa is not initialized
+    if (!medusa) {
+      console.error('Medusa not initialized');
+      // You can handle this case accordingly, e.g., show a loading message
+      // or return early if needed
+      return;
+    }
 
-  try {
-    const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-    console.log('updateCart:', updatedCart);
-    // Replace below `console.log` statements with your own custom logic
-  } catch (error) {
-    console.error('Error fetching cart items:', error);
-    // Replace below `toast` statement with your own custom logic
-    console.error('Failed to fetch cart items. Please refresh the page.');
-  } finally {
-    setIsLoading(false);
-  }
-};
+    try {
+      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+      console.log('updateCart:', updatedCart);
+      // Replace below `console.log` statements with your own custom logic
+    } catch (error) {
+      console.error('Error fetching cart items:', error);
+      // Replace below `toast` statement with your own custom logic
+      console.error('Failed to fetch cart items. Please refresh the page.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-useEffect(() => {
-  if (medusa && cart && cart.id) {
-    fetchCartItems(cart);
-  }
-}, [cart, medusa]);
-
+  useEffect(() => {
+    if (medusa && cart && cart.id) {
+      fetchCartItems(cart);
+    }
+  }, [cart, medusa]);
 
   useEffect(() => {
     const fetchShippingOptions = async () => {
@@ -193,7 +178,62 @@ useEffect(() => {
     }
   }, [cart, medusa]);
 
-  const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
+  const { field: firstNameField } = useController({
+    control,
+    name: 'firstName',
+  });
+  
+  const { field: lastNameField } = useController({
+    control,
+    name: 'lastName',
+  });
+
+  const { field: emailField } = useController({
+    control,
+    name: 'email',
+  });
+
+  const { field: address1Field } = useController({
+    control,
+    name: 'address1',
+  });
+
+  const { field: address2Field } = useController({
+    control,
+    name: 'address2',
+  });
+
+  const { field: cityField } = useController({
+    control,
+    name: 'city',
+  });
+
+  const { field: provinceField } = useController({
+    control,
+    name: 'province',
+  });
+
+  const { field: countryCodeField } = useController({
+    control,
+    name: 'countryCode',
+  });
+
+  const { field: postalCodeField } = useController({
+    control,
+    name: 'postalCode',
+  });
+
+  const { field: phoneField } = useController({
+    control,
+    name: 'phone',
+  });
+
+  const { field: companyField } = useController({
+    control,
+    name: 'company',
+  });
+
+  const handleFormSubmit = async (data: FormValues) => {
     const {
       firstName,
       lastName,
@@ -214,25 +254,22 @@ useEffect(() => {
       setError(undefined);
 
       if (medusa && cart && cart.id) {
-        const cartId = cart.id as string; // Type assertion
+        const cartId = cart.id as string;
 
         // Update shipping address and method
         await medusa.carts.update(cartId, {
           shipping_address: {
-            company: company,
+            company: company || null,
             first_name: firstName,
             last_name: lastName,
-            email: email,
             address_1: address1,
-            address_2: address2,
+            address_2: address2 || null,
             city: city,
-            province: province,
-            postal_code: postalCode,
             country_code: countryCode,
+            province: province || null,
+            postal_code: postalCode,
             phone: phone,
-            acceptUpdates: acceptUpdates,
           },
-          shipping_method: selectedShippingMethod,
         });
 
         onComplete();
@@ -248,8 +285,6 @@ useEffect(() => {
     }
   };
 
-  const selectedCountryCode = useWatch({ control, name: 'countryCode' });
-
   return (
     <div>
       <h2>Shipping Information</h2>
@@ -257,16 +292,27 @@ useEffect(() => {
       {!isLoading && (
         <form onSubmit={handleSubmit(handleFormSubmit)}>
           <FormFields
-            control={control}
-            acceptUpdates={acceptUpdates}
-            setAcceptUpdates={setAcceptUpdates}
+            firstNameField={firstNameField}
+            lastNameField={lastNameField}
+            emailField={emailField}
+            address1Field={address1Field}
+            address2Field={address2Field}
+            cityField={cityField}
+            provinceField={provinceField}
+            countryCodeField={countryCodeField}
+            postalCodeField={postalCodeField}
+            phoneField={phoneField}
+            companyField={companyField}
             errors={errors as Record<keyof CombinedFormData, FieldError>}
             countryOptions={countryOptions}
-            onSelectCountryCode={() => {}}
           />
           {error && (
             <div style={{ color: 'red' }}>
-              {typeof error === 'string' ? error : (error instanceof Error ? error.message : '')}
+              {typeof error === 'string'
+                ? error
+                : error instanceof Error
+                ? error.message
+                : ''}
             </div>
           )}
           <button type="submit">Save Shipping Address</button>
