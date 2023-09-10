@@ -14,6 +14,7 @@ interface CombinedFormData {
   lastName: string;
   email: string;
   address1: string;
+  address2: string;
   city: string;
   province?: string;
   countryCode: string;
@@ -39,6 +40,7 @@ const validationSchema = yup.object().shape({
   lastName: yup.string().required(),
   email: yup.string().email().required(),
   address1: yup.string().required(),
+  address2: yup.string().required(),
   city: yup.string().required(),
   province: yup.string(),
   countryCode: yup.string().required(),
@@ -53,7 +55,7 @@ type Props = {
   cartId?: string; // make cartId an optional prop
 };
 
-const ShippingForm = ({ cart, onComplete }: Props) => {
+  const ShippingForm = ({ cart, onComplete }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<FormErrors>();
@@ -83,7 +85,7 @@ const ShippingForm = ({ cart, onComplete }: Props) => {
     lastName: '',
     email: '',
     address1: '',
-    address_2: '',
+    address2: '',
     city: '',
     province: '',
     countryCode: '',
