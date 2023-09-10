@@ -52,6 +52,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
 
+  useEffect(() => {
   const fetchCartItems = async (cart: { id: string }) => {
     // Check if medusa is not initialized
     if (!medusa) {
@@ -73,6 +74,13 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
       setLoading(false);
     }
   };
+
+  // Call fetchCartItems when medusa is initialized and cart is available
+  if (medusa && cart && cart.id) {
+    fetchCartItems(cart);
+  }
+}, [cart, medusa]);
+
 
   useEffect(() => {
     const initializeMedusa = async () => {
