@@ -71,7 +71,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   }, []);
   
   /* const fetchCartItems = async (cart: { id: string }) => {*/
-   const fetchCartItems = async (cartId: string) => {
+    const fetchCartItems = async (cartId: string) => {
     // Check if medusa is not initialized
     if (!medusa) {
       console.error('Medusa not initialized');
@@ -82,7 +82,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
 
     try {
       setLoading(true);
-      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+      const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
       setOrderTotal(updatedCart.total);
       setCartItems(updatedCart.items);
     } catch (error) {
@@ -91,7 +91,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
     } finally {
       setLoading(false);
     }
-  }; 
+  };
 
    useEffect(() => {
     const fetchItems = async () => {
