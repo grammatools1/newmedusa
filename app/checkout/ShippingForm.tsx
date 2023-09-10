@@ -1,7 +1,15 @@
 "use client"
 
 import React, { useState, useEffect } from 'react';
-import { Controller, SubmitHandler, useForm, useWatch, FieldError } from 'react-hook-form';
+import {
+  Controller,
+  SubmitHandler,
+  useForm,
+  useWatch,
+  FieldError,
+  FormState,
+  Control,
+} from 'react-hook-form';
 import Medusa from '@medusajs/medusa-js';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -14,7 +22,6 @@ interface CombinedFormData {
   lastName: string;
   email: string;
   address1: string;
-  address2: string;
   city: string;
   province?: string;
   countryCode: string;
@@ -55,47 +62,39 @@ type Props = {
   cartId?: string; // make cartId an optional prop
 };
 
-  const ShippingForm = ({ cart, onComplete }: Props) => {
+const ShippingForm = ({ cart, onComplete }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
+  const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
+  const [shippingOptions, setShippingOptions] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<FormErrors>();
   const [acceptUpdates, setAcceptUpdates] = useState(false);
 
-  const { control, handleSubmit, formState } = useForm<CombinedFormData>({
-  resolver: async (data: CombinedFormData, context: any, options: any) => {
-    try {
-      const values = await validationSchema.validate(data, {
-        abortEarly: false,
-        stripUnknown: true,
-      }) as CombinedFormData;
-
-      return {
-        values,
-        errors: {},
-      };
-    } catch (errors) {
-      return {
-        values: {},
-        errors: (errors as any)?.errors ?? {},
-      };
-    }
-  },
-  defaultValues: {
-    firstName: '',
-    lastName: '',
-    email: '',
-    address1: '',
-    address2: '',
-    city: '',
-    province: '',
-    countryCode: '',
-    postalCode: '',
-    phone: '',
-    company: '',
-  },
-  mode: 'onChange',
-  shouldUnregister: true,
-});
+  const {
+    control,
+    handleSubmit,
+    formState,
+  } = useForm<CombinedFormData>({
+    resolver: yupResolver(validationSchema),
+    defaultValues: {
+      firstName: '',
+      lastName: '',
+      email: '',
+      address1: '',
+      city: '',
+      province: '',
+      countryCode: '',
+      postalCode: '',
+      phone: '',
+      company: '',
+    },
+    mode: 'onChange',
+    shouldUnregister: true,
+  }) as {
+    control: Control<CombinedFormData>;
+    handleSubmit: SubmitHandler<CombinedFormData>;
+    formState: FormState<CombinedFormData>;
+  };
 
   const { errors } = formState;
 
@@ -137,15 +136,18 @@ type Props = {
     initializeMedusa();
   }, []);
 
-  const fetchCartItems = async (cartId: string) => {
+  const fetchCartItems = async (cart: { id: string }) => {
+    // Check if medusa is not initialized
     if (!medusa) {
       console.error('Medusa not initialized');
+      // You can handle this case accordingly, e.g., show a loading message
+      // or return early if needed
       return;
     }
 
     try {
-      const { cart: updatedCart } = await medusa.carts.retrieve(cartId);
-      console.log('Updated Cart:', updatedCart);
+      const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
+      console.log('updateCart:', updatedCart);
       // Replace below `console.log` statements with your own custom logic
     } catch (error) {
       console.error('Error fetching cart items:', error);
@@ -158,7 +160,29 @@ type Props = {
 
   useEffect(() => {
     if (medusa && cart && cart.id) {
-      fetchCartItems(cart.id);
+      fetchCartItems(cart);
+    }
+  }, [cart, medusa]);
+
+  useEffect(() => {
+    const fetchShippingOptions = async () => {
+      try {
+        if (!medusa) {
+          console.error('Medusa not initializ');
+          return;
+        }
+
+        const { shipping_options } = await medusa.shippingOptions.list();
+        setShippingOptions(shipping_options);
+      } catch (error) {
+        console.error('Error retrieving shipping options', error);
+        setError(error as FormErrors);
+      }
+    };
+
+    // Check if medusa is initialized before fetching shipping options
+    if (medusa) {
+      fetchShippingOptions();
     }
   }, [cart, medusa]);
 
@@ -168,7 +192,7 @@ type Props = {
     lastName,
     email,
     address1,
-    address2, // Add address2 from the form data
+    address2, // Add address2 to your data object
     city,
     province,
     countryCode,
@@ -185,28 +209,22 @@ type Props = {
     if (medusa && cart && cart.id) {
       const cartId = cart.id as string; // Type assertion
 
-      // Create an object with updated shipping address
-      const updatedShippingAddress = {
-        company,
-        first_name: firstName,
-        last_name: lastName,
-        email,
-        address_1: address1,
-        address_2: address2, // Add address2
-        city,
-        country_code: countryCode,
-        province,
-        postal_code: postalCode,
-        phone,
-        acceptUpdates,
-      };
-
-      // Update shipping address and method using Medusa
-      const { cart: updatedCart } = await medusa.carts.update(cartId, {
-        shipping_address: updatedShippingAddress,
+      // Update shipping address and method
+      await medusa.carts.update(cartId, {
+        shipping_address: {
+          company: company,
+          first_name: firstName,
+          last_name: lastName,
+          address_1: address1,
+          address_2: address2, // Include address2 in the request
+          city: city,
+          country_code: countryCode,
+          province: province,
+          postal_code: postalCode,
+          phone: phone,
+        },
       });
 
-      console.log(updatedCart.shipping_address);
       onComplete();
     }
   } catch (error) {
@@ -239,7 +257,11 @@ type Props = {
           />
           {error && (
             <div style={{ color: 'red' }}>
-              {typeof error === 'string' ? error : error instanceof Error ? error.message : ''}
+              {typeof error === 'string'
+                ? error
+                : error instanceof Error
+                ? error.message
+                : ''}
             </div>
           )}
           <button type="submit">Save Shipping Address</button>
