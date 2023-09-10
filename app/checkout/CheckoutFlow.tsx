@@ -74,8 +74,10 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
     } finally {
       setLoading(false);
     }
-  };}
-  }, [medusa, cart]);
+  };} if (cart && medusa && cart?.id) {
+      fetchCartItems(cart as { id: string });
+    }
+  }, [cart, medusa]);
   
   useEffect(() => {
     const initializeMedusa = async () => {
@@ -95,12 +97,6 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
 
     initializeMedusa();
   }, []);
-
-    useEffect(() => {
-    if (cart && medusa && cart?.id) {
-      fetchCartItems(cart as { id: string });
-    }
-  }, [cart, medusa]);
 
   useEffect(() => {
     // Open cart modal when quantity changes.
