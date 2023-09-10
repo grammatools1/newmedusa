@@ -9,12 +9,11 @@ import { ValidationError as YupValidationError } from 'yup';
 import Autocomplete from 'react-autocomplete';
 import FormFields, { CountryOption } from './formFields';
 
-interface CombinedFormData {
+type CombinedFormData = Partial<{
   firstName: string;
   lastName: string;
   email: string;
   address1: string;
-  address2: string; // Add this field
   city: string;
   province?: string;
   countryCode: string;
@@ -22,7 +21,8 @@ interface CombinedFormData {
   phone: string;
   company?: string;
   acceptUpdates?: boolean;
-}
+  address2?: string; // Add this field if required
+}>;
 
 interface ValidationError {
   path: string;
@@ -40,7 +40,6 @@ const validationSchema = yup.object().shape({
   lastName: yup.string().required(),
   email: yup.string().email().required(),
   address1: yup.string().required(),
-  address2: yup.string().required(),
   city: yup.string().required(),
   province: yup.string().notRequired(), // Make optional
   countryCode: yup.string().required(),
@@ -48,8 +47,9 @@ const validationSchema = yup.object().shape({
   phone: yup.string().required(),
   company: yup.string().notRequired(), // Make optional
   acceptUpdates: yup.boolean().notRequired(), // Make optional
-  // Add address2 to the schema if it's required
+  address2: yup.string().required(),
 });
+
 
 type Props = {
   cart: any; // Replace 'any' with your actual cart type
