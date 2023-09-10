@@ -1,3 +1,5 @@
+"use client"
+
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import Medusa from '@medusajs/medusa-js';
 import ShippingForm from './ShippingForm';
