@@ -1,6 +1,6 @@
 "use client"
 
-import { medusaClient } from "@lib/config"
+import { medusaClient } from "components/checkout/components/discount-code/config"
 import { handleError } from "@lib/util/handle-error"
 import { Region } from "@medusajs/medusa"
 import {
