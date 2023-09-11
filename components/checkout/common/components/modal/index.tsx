@@ -65,8 +65,6 @@ const Modal: React.FC<ModalProps> & {
 
 const Title: React.FC<React.HTMLProps<HTMLDivElement>> = ({ children }) => {
   const { close } = useModal();
-  const { close } = useModal();
-
   return (
     <Dialog.Title className="flex items-center justify-between">
       <div className="text-large-semi">{children}</div>
@@ -79,7 +77,8 @@ const Title: React.FC<React.HTMLProps<HTMLDivElement>> = ({ children }) => {
   );
 };
 
-const Description: React.FC = ({ children }) => {
+const Description: React.FC<React.HTMLProps<HTMLDivElement>> = ({ children }) => {
+  const { close } = useModal();
   return (
     <Dialog.Description className="flex text-small-regular text-gray-700 items-center justify-center pt-2 pb-4 h-full">
       {children}
@@ -87,11 +86,13 @@ const Description: React.FC = ({ children }) => {
   );
 };
 
-const Body: React.FC = ({ children }) => {
+const Body: React.FC<React.HTMLProps<HTMLDivElement>> = ({ children }) => {
+  const { close } = useModal();
   return <div className="flex-1">{children}</div>;
 };
 
-const Footer: React.FC = ({ children }) => {
+const Footer: React.FC<React.HTMLProps<HTMLDivElement>> = ({ children }) => {
+  const { close } = useModal();
   return <div className="flex items-center justify-end gap-x-4">{children}</div>;
 };
 
