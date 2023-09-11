@@ -1,14 +1,14 @@
 "use client"
 
-import { medusaClient } from "@lib/config"
-import useToggleState, { StateType } from "@lib/hooks/use-toggle-state"
+import { medusaClient } from "components/checkout/components/discount-code/config"
+import useToggleState, { StateType } from "components/hooks/use-toggle-state"
 import {
   Address,
   Cart,
   Customer,
   StorePostCartsCartReq,
 } from "@medusajs/medusa"
-import Wrapper from "@modules/checkout/components/payment-wrapper"
+import Wrapper from "components/checkout/components/payment-wrapper"
 import { isEqual } from "lodash"
 import {
   formatAmount,
