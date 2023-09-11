@@ -16,10 +16,17 @@ const CartTotals: React.FC<CartTotalsProps> = ({ cart }) => {
     total,
   } = cart;
 
-  const getAmount = (amount: number | null | undefined) => {
+ const getAmount = (amount: number | null | undefined) => {
+  let region: RegionInfo | undefined; // Narrow down the type of region
+
+  if (cart.region && cart.region.country) {
+    // If region exists and has a country defined, set it to the correct type
+    region = cart.region as RegionInfo;
+  }
+
   return formatAmount({
     amount: amount || 0,
-    region: cart.region || undefined, // Add null check to ensure that region is not undefined
+    region: region,
     includeTaxes: false,
   });
 };
