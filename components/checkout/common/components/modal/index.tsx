@@ -64,6 +64,7 @@ const Modal: React.FC<ModalProps> & {
 }
 
 const Title: React.FC = ({ children }) => {
+
   const { close } = useModal()
 
   return (
@@ -94,7 +95,7 @@ const Footer: React.FC = ({ children }) => {
   return <div className="flex items-center justify-end gap-x-4">{children}</div>
 }
 
-Modal.Title = Title
+Modal.Title = <Modal.Title>Title Text</Modal.Title>
 Modal.Description = Description
 Modal.Body = Body
 Modal.Footer = Footer
