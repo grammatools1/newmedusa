@@ -96,8 +96,8 @@ const Footer: React.FC = ({ children }) => {
 }
 
 Modal.Title = <Modal.Title>Title Text</Modal.Title>
-Modal.Description = Description
-Modal.Body = Body
-Modal.Footer = Footer
+Modal.Description = <Modal.Description>Description</Modal.Description>
+Modal.Body = <Modal.Body>Body</Modal.Body>
+Modal.Footer = <Modal.Footer>Footer</Modal.Footer>
 
 export default Modal
