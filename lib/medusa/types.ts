@@ -341,6 +341,7 @@ export type MedusaCart = {
   metadata?: Record<string, any>;
   shipping_total?: number;
   discount_total?: number;
+  gift_card_total?: number;
   raw_discount_total?: number;
   item_tax_total?: number;
   shipping_tax_total?: number;
