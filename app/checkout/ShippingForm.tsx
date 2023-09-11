@@ -219,7 +219,7 @@ const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
             first_name: firstName,
             last_name: lastName,
             address_1: address1,
-            address_2: address2 || null,
+            /*address_2: address2 || null,*/
             city: city,
             country_code: countryCode,
             province: province || null,
