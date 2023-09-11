@@ -19,6 +19,7 @@ const CartTotals: React.FC<CartTotalsProps> = ({ cart }) => {
   const getAmount = (amount: number | null | undefined) => {
     return formatAmount({
       amount: amount || 0,
+      region?: Region | undefined,
       region: cart.region,
       includeTaxes: false,
     })
