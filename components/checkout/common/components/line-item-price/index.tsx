@@ -1,4 +1,4 @@
-import { getPercentageDiff } from "@lib/util/get-precentage-diff"
+import { getPercentageDiff } from "components/util/get-precentage-diff"
 import { LineItem, Region } from "@medusajs/medusa"
 import clsx from "clsx"
 import { formatAmount } from "medusa-react"
