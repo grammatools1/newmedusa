@@ -1,4 +1,4 @@
-import ArrowRight from "@modules/common/icons/arrow-right"
+import ArrowRight from "components/checkout/common/icons/arrow-right"
 import Link from "next/link"
 
 type UnderlineLinkProps = {
