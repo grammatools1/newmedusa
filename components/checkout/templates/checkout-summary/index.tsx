@@ -3,7 +3,7 @@
 import DiscountCode from "components/checkout/components/discount-code"
 import GiftCard from "components/checkout/components/gift-card"
 import PaymentButton from "components/checkout/components/payment-button"
-import CartTotals from "components/common/components/cart-totals"
+import CartTotals from "components/checkout/common/components/cart-totals"
 import { useCart } from "medusa-react"
 
 const CheckoutSummary = () => {
