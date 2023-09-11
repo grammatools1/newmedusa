@@ -1,6 +1,6 @@
 import { CheckoutFormValues } from "@lib/context/checkout-context"
-import ConnectForm from "@modules/common/components/connect-form"
-import Input from "@modules/common/components/input"
+import ConnectForm from "components/checkout/common/components/connect-form"
+import Input from "components/checkout/common/components/input"
 import CountrySelect from "../country-select"
 
 const BillingAddress = () => {
