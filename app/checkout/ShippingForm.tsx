@@ -226,9 +226,9 @@ const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
             postal_code: postalCode,
             phone: phone,
           },
-          shipping_method: selectedShippingMethod,
+            /*shipping_method: selectedShippingMethod,*/
         });
-
+    
         onComplete();
       }
     } catch (error) {
