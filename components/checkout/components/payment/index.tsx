@@ -1,4 +1,4 @@
-import { useCheckout } from "@lib/context/checkout-context"
+import { useCheckout } from "components/context/checkout-context"
 import Spinner from "components/checkout/common/icons/spinner"
 import { useEffect } from "react"
 import PaymentContainer from "../payment-container"
