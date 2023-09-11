@@ -17,7 +17,7 @@ export type ProductCollection = MedusaProductCollection & {
     description?: string;
   };
   path: string;
-  updatedAt: string;
+  updatedAt: string;  
 };
 
 export type MedusaProduct = {
