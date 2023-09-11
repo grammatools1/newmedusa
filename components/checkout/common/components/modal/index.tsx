@@ -1,6 +1,6 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { ModalProvider, useModal } from "@lib/context/modal-context"
-import X from "@modules/common/icons/x"
+import X from "components/checkout/common/icons/x"
 import clsx from "clsx"
 import React, { Fragment } from "react"
 
