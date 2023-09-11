@@ -1,4 +1,4 @@
-import type { Cart,  RegionInfo } from 'lib/medusa/types';
+import type { Cart } from 'lib/medusa/types';
 import { formatAmount } from "medusa-react";
 import React from "react";
 
@@ -16,13 +16,13 @@ const CartTotals: React.FC<CartTotalsProps> = ({ cart }) => {
     total,
   } = cart;
 
-  const getAmount = (amount: number | null | undefined, region: RegionInfo | undefined) => {
-    return formatAmount({
-      amount: amount || 0,
-      region: region || {}, // Provide an empty object as a default value for region
-      includeTaxes: false,
-    });
-  };
+  const getAmount = (amount: number | null | undefined) => {
+  return formatAmount({
+    amount: amount || 0,
+    region: cart.region || undefined, // Add null check to ensure that region is not undefined
+    includeTaxes: false,
+  });
+};
   return (
     <div>
       <div className="text-small-regular text-gray-700">
