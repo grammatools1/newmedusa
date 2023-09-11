@@ -1,4 +1,4 @@
-import Spinner from "@modules/common/icons/spinner"
+import Spinner from "components/checkout/common/icons/spinner"
 import clsx from "clsx"
 import React from "react"
 
