@@ -1,4 +1,4 @@
-import Alert from "@modules/common/icons/alert"
+import Alert from "components/checkout/common/icons/alert"
 
 const PaymentTest = () => {
   return (
