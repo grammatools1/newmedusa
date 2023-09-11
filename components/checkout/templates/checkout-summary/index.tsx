@@ -1,9 +1,9 @@
 "use client"
 
-import DiscountCode from "@modules/checkout/components/discount-code"
-import GiftCard from "@modules/checkout/components/gift-card"
-import PaymentButton from "@modules/checkout/components/payment-button"
-import CartTotals from "@modules/common/components/cart-totals"
+import DiscountCode from "components/checkout/components/discount-code"
+import GiftCard from "components/checkout/components/gift-card"
+import PaymentButton from "components/checkout/components/payment-button"
+import CartTotals from "components/common/components/cart-totals"
 import { useCart } from "medusa-react"
 
 const CheckoutSummary = () => {
