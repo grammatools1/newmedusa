@@ -1,4 +1,4 @@
-import { CheckoutFormValues } from "@lib/context/checkout-context"
+import { CheckoutFormValues } from "components/context/checkout-context"
 import { emailRegex } from "@lib/util/regex"
 import ConnectForm from "components/checkout/common/components/connect-form"
 import Input from "components/checkout/common/components/input"
