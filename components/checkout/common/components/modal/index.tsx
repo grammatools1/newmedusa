@@ -8,6 +8,7 @@ type ModalProps = {
   isOpen: boolean
   close: () => void
   size?: "small" | "medium" | "large"
+  children: React.ReactNode
 }
 
 const Modal: React.FC<ModalProps> & {
