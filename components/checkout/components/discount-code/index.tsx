@@ -1,4 +1,4 @@
-import { medusaClient } from "@lib/config"
+import { medusaClient } from "./config"
 import { Cart } from "@medusajs/medusa"
 import Button from "components/checkout/common/components/button"
 import Input from "components/checkout/common/components/input"
