@@ -1,8 +1,8 @@
 "use client"
 
-import Addresses from "@modules/checkout/components/addresses"
-import Payment from "@modules/checkout/components/payment"
-import Shipping from "@modules/checkout/components/shipping"
+import Addresses from "components/checkout/components/addresses"
+import Payment from "components/checkout/components/payment"
+import Shipping from "components/checkout/components/shipping"
 import { useCart } from "medusa-react"
 
 const CheckoutForm = () => {
