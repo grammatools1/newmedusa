@@ -1,5 +1,5 @@
 import { CheckoutProvider } from "@lib/context/checkout-context"
-import ChevronDown from "@modules/common/icons/chevron-down"
+import ChevronDown from "components/common/icons/chevron-down"
 import MedusaCTA from "@modules/layout/components/medusa-cta"
 import Link from "next/link"
 import CheckoutLoader from "../components/checkout-loader"
