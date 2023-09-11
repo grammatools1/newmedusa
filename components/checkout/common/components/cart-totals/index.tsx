@@ -10,7 +10,7 @@ const CartTotals: React.FC<CartTotalsProps> = ({ cart }) => {
   const {
     subtotal,
     discount_total,
-    /*gift_card_total,*/
+    gift_card_total,
     tax_total,
     shipping_total,
     total,
