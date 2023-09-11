@@ -1,5 +1,5 @@
 import { PaymentSession } from "@medusajs/medusa"
-import Radio from "@modules/common/components/radio"
+import Radio from "components/checkout/common/components/radio"
 import clsx from "clsx"
 import React from "react"
 import PaymentStripe from "../payment-stripe"
