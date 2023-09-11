@@ -1,6 +1,6 @@
 import { ErrorMessage } from "@hookform/error-message"
-import Eye from "@modules/common/icons/eye"
-import EyeOff from "@modules/common/icons/eye-off"
+import Eye from "components/checkout/common/icons/eye"
+import EyeOff from "components/checkout/common/icons/eye-off"
 import clsx from "clsx"
 import React, { useEffect, useImperativeHandle, useState } from "react"
 import { get } from "react-hook-form"
