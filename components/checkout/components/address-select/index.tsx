@@ -1,5 +1,5 @@
 import { Listbox, Transition } from "@headlessui/react"
-import { useCheckout } from "@lib/context/checkout-context"
+import { useCheckout } from "components/context/checkout-context"
 import { Address } from "@medusajs/medusa"
 import Radio from "components/checkout/common/components/radio"
 import ChevronDown from "components/checkout/common/icons/chevron-down"
