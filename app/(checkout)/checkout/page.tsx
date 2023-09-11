@@ -1,4 +1,4 @@
-import CheckoutTemplate from "@modules/checkout/templates"
+import CheckoutTemplate from "@components/checkout/templates"
 import { Metadata } from "next"
 
 export const metadata: Metadata = {
