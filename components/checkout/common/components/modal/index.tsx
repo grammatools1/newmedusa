@@ -63,9 +63,8 @@ const Modal: React.FC<ModalProps> & {
   )
 }
 
-const Title: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-
-  const { close } = useModal()
+const Title: React.FC = ({ children }) => {
+  const { close } = useModal();
 
   return (
     <Dialog.Title className="flex items-center justify-between">
@@ -76,28 +75,29 @@ const Title: React.FC<{ children: React.ReactNode }> = ({ children }) => {
         </button>
       </div>
     </Dialog.Title>
-  )
-}
+  );
+};
 
-const Description: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+const Description: React.FC = ({ children }) => {
   return (
     <Dialog.Description className="flex text-small-regular text-gray-700 items-center justify-center pt-2 pb-4 h-full">
       {children}
     </Dialog.Description>
-  )
-}
+  );
+};
 
-const Body: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <div className="flex-1">{children}</div>
-}
+const Body: React.FC = ({ children }) => {
+  return <div className="flex-1">{children}</div>;
+};
 
-const Footer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  return <div className="flex items-center justify-end gap-x-4">{children}</div>
-}
+const Footer: React.FC = ({ children }) => {
+  return <div className="flex items-center justify-end gap-x-4">{children}</div>;
+};
 
-Modal.Title = Title
-Modal.Description = Description
-Modal.Body = Body
-Modal.Footer = Footer
+Modal.Title = Title as React.FC; // Explicitly cast to React.FC
+Modal.Description = Description as React.FC; // Explicitly cast to React.FC
+Modal.Body = Body as React.FC; // Explicitly cast to React.FC
+Modal.Footer = Footer as React.FC; // Explicitly cast to React.FC
+
 
 export default Modal
