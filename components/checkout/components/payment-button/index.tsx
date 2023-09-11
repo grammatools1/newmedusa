@@ -1,4 +1,4 @@
-import { useCheckout } from "@lib/context/checkout-context"
+import { useCheckout } from "components/context/checkout-context"
 import { PaymentSession } from "@medusajs/medusa"
 import Button from "components/checkout/common/components/button"
 import Spinner from "components/checkout/common/icons/spinner"
