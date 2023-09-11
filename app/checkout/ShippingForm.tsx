@@ -190,13 +190,12 @@ useEffect(() => {
     }
   }, [cart, medusa]);
 
-const handleFormSubmit = async (data: FormValues) => {
+const handleFormSubmit: SubmitHandler<CombinedFormData> = async (data) => {
     const {
       firstName,
       lastName,
       email,
       address1,
-      address2,
       city,
       province,
       countryCode,
@@ -211,7 +210,7 @@ const handleFormSubmit = async (data: FormValues) => {
       setError(undefined);
 
       if (medusa && cart && cart.id) {
-        const cartId = cart.id as string;
+        const cartId = cart.id as string; // Type assertion
 
         // Update shipping address and method
         await medusa.carts.update(cartId, {
@@ -227,6 +226,7 @@ const handleFormSubmit = async (data: FormValues) => {
             postal_code: postalCode,
             phone: phone,
           },
+          shipping_method: selectedShippingMethod,
         });
 
         onComplete();
@@ -241,9 +241,7 @@ const handleFormSubmit = async (data: FormValues) => {
       setIsLoading(false);
     }
   };
-  // ...
-};
-
+  
   const selectedCountryCode = useWatch({ control, name: 'countryCode' });
 
   return (
