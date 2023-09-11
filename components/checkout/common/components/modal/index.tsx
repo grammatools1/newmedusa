@@ -79,7 +79,7 @@ const Title: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   )
 }
 
-const Description: React.FC = ({ children }) => {
+const Description: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return (
     <Dialog.Description className="flex text-small-regular text-gray-700 items-center justify-center pt-2 pb-4 h-full">
       {children}
@@ -87,11 +87,11 @@ const Description: React.FC = ({ children }) => {
   )
 }
 
-const Body: React.FC = ({ children }) => {
+const Body: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <div className="flex-1">{children}</div>
 }
 
-const Footer: React.FC = ({ children }) => {
+const Footer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <div className="flex items-center justify-end gap-x-4">{children}</div>
 }
 
