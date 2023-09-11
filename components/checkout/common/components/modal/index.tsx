@@ -63,7 +63,8 @@ const Modal: React.FC<ModalProps> & {
   )
 }
 
-const Title: React.FC = ({ children }) => {
+const Title: React.FC<React.HTMLProps<HTMLDivElement>> = ({ children }) => {
+  const { close } = useModal();
   const { close } = useModal();
 
   return (
