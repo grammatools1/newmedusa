@@ -1,7 +1,7 @@
 import { useCheckout } from "@lib/context/checkout-context"
-import Button from "@modules/common/components/button"
-import Checkbox from "@modules/common/components/checkbox"
-import Spinner from "@modules/common/icons/spinner"
+import Button from "components/checkout/common/components/button"
+import Checkbox from "components/checkout/common/components/checkbox"
+import Spinner from "components/checkout/common/icons/spinner"
 import BillingAddress from "../billing_address"
 import ShippingAddress from "../shipping-address"
 
