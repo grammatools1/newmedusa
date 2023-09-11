@@ -1,5 +1,5 @@
 import { Disclosure } from "@headlessui/react"
-import { useCheckout } from "@lib/context/checkout-context"
+import { useCheckout } from "components/context/checkout-context"
 import clsx from "clsx"
 
 type StepContainerProps = {
