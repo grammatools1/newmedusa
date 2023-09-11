@@ -2,7 +2,7 @@ import { getPercentageDiff } from "components/util/get-precentage-diff"
 import { LineItem, Region } from "@medusajs/medusa"
 import clsx from "clsx"
 import { formatAmount } from "medusa-react"
-import { CalculatedVariant } from "types/medusa"
+import { CalculatedVariant } from "./medusa"
 
 type LineItemPriceProps = {
   item: Omit<LineItem, "beforeInsert">
