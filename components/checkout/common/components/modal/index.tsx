@@ -95,9 +95,9 @@ const Footer: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   return <div className="flex items-center justify-end gap-x-4">{children}</div>
 }
 
-Modal.Title = <Modal.Title>Title Text</Modal.Title>
-Modal.Description = <Modal.Description>Description</Modal.Description>
-Modal.Body = <Modal.Body>Body</Modal.Body>
-Modal.Footer = <Modal.Footer>Footer</Modal.Footer>
+Modal.Title = Title
+Modal.Description = Description
+Modal.Body = Body
+Modal.Footer = Footer
 
 export default Modal
