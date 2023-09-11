@@ -190,55 +190,58 @@ useEffect(() => {
     }
   }, [cart, medusa]);
 
- const handleFormSubmit = async (data: FormValues) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    address1,
-    address2,
-    city,
-    province,
-    countryCode,
-    postalCode,
-    phone,
-    company,
-    acceptUpdates,
-  } = data;
+const handleFormSubmit = async (data: FormValues) => {
+    const {
+      firstName,
+      lastName,
+      email,
+      address1,
+      address2,
+      city,
+      province,
+      countryCode,
+      postalCode,
+      phone,
+      company,
+      acceptUpdates,
+    } = data;
 
-  try {
-    setIsLoading(true);
-    setError(undefined);
+    try {
+      setIsLoading(true);
+      setError(undefined);
 
-    if (medusa && cart && cart.id) {
-      const cartId = cart.id as string;
-      
-      // Update shipping address and method
-      await medusa.carts.update(cartId, {
-        shipping_address: {
-          first_name: firstName,
-          last_name: lastName,
-          address_1: address1,
-          address_2: address2 || null,
-          city: city,
-          country_code: countryCode,
-          province: province || null,
-          postal_code: postalCode,
-          phone: phone,
-        },
-      });
+      if (medusa && cart && cart.id) {
+        const cartId = cart.id as string;
 
-      onComplete();
+        // Update shipping address and method
+        await medusa.carts.update(cartId, {
+          shipping_address: {
+            company: company || null,
+            first_name: firstName,
+            last_name: lastName,
+            address_1: address1,
+            address_2: address2 || null,
+            city: city,
+            country_code: countryCode,
+            province: province || null,
+            postal_code: postalCode,
+            phone: phone,
+          },
+        });
+
+        onComplete();
+      }
+    } catch (error) {
+      if (error instanceof YupValidationError) {
+        setError(new Error('Validation error: ' + error.message) as FormErrors);
+      } else {
+        setError(error as FormErrors);
+      }
+    } finally {
+      setIsLoading(false);
     }
-  } catch (error) {
-    if (error instanceof YupValidationError) {
-      setError(new Error('Validation error: ' + error.message) as FormErrors);
-    } else {
-      setError(error as FormErrors);
-    }
-  } finally {
-    setIsLoading(false);
-  }
+  };
+  // ...
 };
 
   const selectedCountryCode = useWatch({ control, name: 'countryCode' });
