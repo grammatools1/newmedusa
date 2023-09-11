@@ -3,7 +3,7 @@
 import { Dialog, Transition } from "@headlessui/react"
 import { useCheckout } from "@lib/context/checkout-context"
 import noop from "@lib/util/noop"
-import Spinner from "@modules/common/icons/spinner"
+import Spinner from "components/checkout/common/icons/spinner"
 
 const CheckoutLoader = () => {
   const { isLoading } = useCheckout()
