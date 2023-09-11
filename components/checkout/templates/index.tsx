@@ -4,7 +4,7 @@ import ChevronDown from "components/checkout/common/icons/chevron-down"
 import Link from "next/link"
 import CheckoutLoader from "../components/checkout-loader" 
 import CheckoutForm from "./checkout-form"
-import CheckoutSummary from "./checkout-summary"
+import CheckoutSummary from "./checkout-summary" 
 
 const CheckoutTemplate = () => {
   return (
