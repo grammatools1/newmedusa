@@ -1,11 +1,11 @@
-import type { Cart } from 'lib/medusa/types';
-import { formatAmount, RegionInfo } from "medusa-react";
-
-import React from "react";
+/*import type { Cart } from 'lib/medusa/types';*/
+import { Cart } from "@medusajs/medusa"
+import { formatAmount } from "medusa-react"
+import React from "react"
 
 type CartTotalsProps = {
   cart: Omit<Cart, "refundable_amount" | "refunded_total">
-};
+}
 
 const CartTotals: React.FC<CartTotalsProps> = ({ cart }) => {
   const {
@@ -15,22 +15,16 @@ const CartTotals: React.FC<CartTotalsProps> = ({ cart }) => {
     tax_total,
     shipping_total,
     total,
-  } = cart;
+  } = cart
 
- const getAmount = (amount: number | null | undefined) => {
-  let region: RegionInfo | undefined; // Narrow down the type of region
-
-  if (cart.region && cart.region.country) {
-    // If region exists and has a country defined, set it to the correct type
-    region = cart.region as RegionInfo;
+  const getAmount = (amount: number | null | undefined) => {
+    return formatAmount({
+      amount: amount || 0,
+      region: cart.region,
+      includeTaxes: false,
+    })
   }
 
-  return formatAmount({
-    amount: amount || 0,
-    region: region,
-    includeTaxes: false, 
-  });
-};
   return (
     <div>
       <div className="text-small-regular text-gray-700">
@@ -69,4 +63,5 @@ const CartTotals: React.FC<CartTotalsProps> = ({ cart }) => {
     </div>
   )
 }
+
 export default CartTotals
