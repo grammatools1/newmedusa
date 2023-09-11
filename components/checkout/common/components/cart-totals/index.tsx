@@ -68,5 +68,4 @@ const CartTotals: React.FC<CartTotalsProps> = ({ cart }) => {
     </div>
   )
 }
-
 export default CartTotals
