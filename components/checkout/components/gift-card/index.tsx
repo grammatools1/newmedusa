@@ -27,13 +27,21 @@ const GiftCard: React.FC<GiftCardProps> = ({ cart }) => {
     setError,
   } = useForm<GiftCardFormValues>()
 
-  const appliedGiftCard = useMemo(() => {
+  /*const appliedGiftCard = useMemo(() => {
     if (!cart || !cart.gift_cards?.length) {
       return undefined
     }
 
     return cart.gift_cards[0].code
-  }, [cart])
+  }, [cart])*/
+
+  const appliedGiftCard = useMemo(() => {
+  if (!cart || !cart.gift_cards?.length || !cart.gift_cards[0]) {
+    return undefined;
+  }
+
+  return cart.gift_cards[0].code;
+}, [cart]);
 
   const onSubmit = (data: GiftCardFormValues) => {
     mutate(
