@@ -13,14 +13,12 @@ const transformProductPreview = (
 
   let cheapestVariant = undefined
 
-  if (variants?.length > 0) {
-    cheapestVariant = variants.reduce((acc, curr) => {
-      if (acc.calculated_price > curr.calculated_price) {
-        return curr
-      }
-      return acc
-    }, variants[0])
+  const cheapestVariant = variants.reduce((acc, curr) => {
+  if (!acc || acc.calculated_price > curr.calculated_price) {
+    return curr
   }
+  return acc
+}, variants?.[0] || null);
 
   return {
     id: product.id!,
