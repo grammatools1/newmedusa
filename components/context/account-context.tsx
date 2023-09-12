@@ -1,6 +1,6 @@
 "use client"
 
-import { medusaClient } from "@lib/config"
+import { medusaClient } from "components/checkout/components/discount-code/config"
 import { Customer } from "@medusajs/medusa"
 import { useMutation } from "@tanstack/react-query"
 import { useMeCustomer } from "medusa-react"
