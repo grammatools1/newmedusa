@@ -108,23 +108,24 @@ export const StoreProvider = ({ children }: StoreProps) => {
     )
   }
 
-  const ensureRegion = (region: Region, countryCode?: string | null) => {
-    if (!IS_SERVER) {
-      const { regionId, countryCode: defaultCountryCode } = getRegion() || {
-        regionId: region.id,
-        countryCode: region.countries[0].iso_2,
+       const ensureRegion = (region: Region, countryCode?: string | null) => {
+        if (!IS_SERVER) {
+          const { regionId, countryCode: defaultCountryCode } = getRegion() || {
+            regionId: region.id,
+            countryCode: region.countries?.[0]?.iso_2 || "defaultCountryCodeFallback",
+          };
+      
+          const finalCountryCode = countryCode || defaultCountryCode;
+      
+          if (regionId !== region.id) {
+            setRegion(region.id, finalCountryCode);
+          }
+      
+          storeRegion(region.id, finalCountryCode);
+          setCountryCode(finalCountryCode);
+        }
       }
 
-      const finalCountryCode = countryCode || defaultCountryCode
-
-      if (regionId !== region.id) {
-        setRegion(region.id, finalCountryCode)
-      }
-
-      storeRegion(region.id, finalCountryCode)
-      setCountryCode(finalCountryCode)
-    }
-  }
 
   const storeCart = (id: string) => {
     if (!IS_SERVER) {
