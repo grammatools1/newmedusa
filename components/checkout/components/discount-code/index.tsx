@@ -28,29 +28,29 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
   )
 
 const appliedDiscount = useMemo(() => {
-  if (!discounts || !discounts.length) {
-    return undefined;
-  }
+  const firstDiscount = discounts?.[0];
 
-  if (!discounts[0].rule || typeof discounts[0].rule.type !== 'string') {
+  if (!firstDiscount || !firstDiscount.rule?.type) {
     return "Free shipping"; // Handle the case where the discount or its type is missing or invalid
   }
 
-  switch (discounts[0].rule.type) {
+  const { type, value } = firstDiscount.rule;
+
+  switch (type) {
     case "percentage":
-      if (typeof discounts[0].rule.value === 'number') {
-        return `${discounts[0].rule.value}%`;
+      if (typeof value === 'number') {
+        return `${value}%`;
       }
       break;
 
     case "fixed":
       if (
-        typeof discounts[0].rule.value === 'number' &&
-        typeof region === 'object' &&
+        typeof value === 'number' &&
+        region?.currency_code &&
         typeof region.currency_code === 'string'
       ) {
         return `- ${formatAmount({
-          amount: discounts[0].rule.value,
+          amount: value,
           region: region,
         })}`;
       }
@@ -62,6 +62,7 @@ const appliedDiscount = useMemo(() => {
 
   return "Free shipping"; // Handle any other unexpected cases
 }, [discounts, region]);
+
 
 
   const {
