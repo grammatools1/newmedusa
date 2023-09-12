@@ -1,6 +1,6 @@
 import { MoneyAmount } from "@medusajs/medusa"
 import { formatAmount } from "medusa-react"
-import { Region, Variant } from "types/medusa"
+import { Region, Variant } from "components/medusa"
 
 export const findCheapestRegionPrice = (variants: Variant[], regionId: string) => {
   const regionPrices = variants.reduce((acc, v) => {
