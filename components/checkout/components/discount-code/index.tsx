@@ -96,7 +96,7 @@ const appliedDiscount = useMemo(() => {
     )
   }
 
-  const onRemove = () => {
+ /* const onRemove = () => {
     removeDiscount(
       { cartId: id, code: discounts[0].code },
       {
@@ -105,7 +105,20 @@ const appliedDiscount = useMemo(() => {
         },
       }
     )
+  }*/
+  const onRemove = () => {
+  if (discounts && discounts.length > 0) {
+    removeDiscount(
+      { cartId: id, code: discounts[0].code },
+      {
+        onSuccess: ({ cart }) => {
+          setCart(cart);
+        },
+      }
+    );
   }
+};
+
 
   return (
     <div className="w-full bg-white flex flex-col">
