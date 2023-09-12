@@ -5,6 +5,7 @@ import React from "react"
 
 type WrapperProps = {
   paymentSession?: PaymentSession | null
+  children?: React.ReactNode // Add this line to specify children prop
 }
 
 const Wrapper: React.FC<WrapperProps> = ({ paymentSession, children }) => {
