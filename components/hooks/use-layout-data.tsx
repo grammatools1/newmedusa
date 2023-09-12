@@ -64,13 +64,13 @@ const fetchFeaturedProducts = async (
     .filter((p) => !!p.variants)
     .map((p) => {
       const variants = p.variants as unknown as CalculatedVariant[]
-
-      const cheapestVariant = variants.reduce((acc, curr) => {
-        if (acc.calculated_price > curr.calculated_price) {
-          return curr
-        }
-        return acc
-      }, variants[0])
+        
+              const cheapestVariant = variants.reduce((acc, curr) => {
+          if (!acc || acc.calculated_price > curr.calculated_price) {
+            return curr;
+          }
+          return acc;
+        }, null);
 
       return {
         id: p.id!,
