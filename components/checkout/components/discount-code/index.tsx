@@ -106,8 +106,8 @@ const appliedDiscount = useMemo(() => {
       }
     )
   }*/
-  const onRemove = () => {
-  if (discounts && discounts.length > 0) {
+ const onRemove = () => {
+  if (discounts && discounts.length > 0 && discounts[0]?.code) {
     removeDiscount(
       { cartId: id, code: discounts[0].code },
       {
@@ -118,6 +118,7 @@ const appliedDiscount = useMemo(() => {
     );
   }
 };
+
 
 
   return (
