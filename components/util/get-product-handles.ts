@@ -1,4 +1,4 @@
-import { medusaClient } from "../config"
+import { medusaClient } from "components/checkout/components/discount-code/config"
 
 export const getProductHandles = async (): Promise<string[]> => {
   const products = await medusaClient.products
