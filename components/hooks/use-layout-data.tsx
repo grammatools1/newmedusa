@@ -8,7 +8,7 @@ import { ProductPreviewType } from "components/global"
 import { CalculatedVariant } from "components/medusa"
 
 type LayoutCollection = {
-  handle: string
+  handle: string 
   title: string
 }
 
