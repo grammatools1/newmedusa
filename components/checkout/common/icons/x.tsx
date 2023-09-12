@@ -1,5 +1,5 @@
 import React from "react"
-import { IconProps } from "./icon"
+import { IconProps } from "./icon" 
 
 const X: React.FC<IconProps> = ({
   size = "20",
