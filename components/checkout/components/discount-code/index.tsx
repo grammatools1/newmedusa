@@ -27,24 +27,42 @@ const DiscountCode: React.FC<DiscountCodeProps> = ({ cart }) => {
     }
   )
 
-  const appliedDiscount = useMemo(() => {
-    if (!discounts || !discounts.length) {
-      return undefined
-    }
+const appliedDiscount = useMemo(() => {
+  if (!discounts || !discounts.length) {
+    return undefined;
+  }
 
-    switch (discounts[0].rule.type) {
-      case "percentage":
-        return `${discounts[0].rule.value}%`
-      case "fixed":
+  if (!discounts[0].rule || typeof discounts[0].rule.type !== 'string') {
+    return "Free shipping"; // Handle the case where the discount or its type is missing or invalid
+  }
+
+  switch (discounts[0].rule.type) {
+    case "percentage":
+      if (typeof discounts[0].rule.value === 'number') {
+        return `${discounts[0].rule.value}%`;
+      }
+      break;
+
+    case "fixed":
+      if (
+        typeof discounts[0].rule.value === 'number' &&
+        typeof region === 'object' &&
+        typeof region.currency_code === 'string'
+      ) {
         return `- ${formatAmount({
           amount: discounts[0].rule.value,
           region: region,
-        })}`
+        })}`;
+      }
+      break;
 
-      default:
-        return "Free shipping"
-    }
-  }, [discounts, region])
+    default:
+      return "Free shipping";
+  }
+
+  return "Free shipping"; // Handle any other unexpected cases
+}, [discounts, region]);
+
 
   const {
     register,
