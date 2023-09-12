@@ -11,8 +11,6 @@ const transformProductPreview = (
 ): ProductPreviewType => {
   const variants = product.variants as unknown as CalculatedVariant[]
 
-  let cheapestVariant = undefined
-
   const cheapestVariant = variants.reduce((acc, curr) => {
   if (!acc || acc.calculated_price > curr.calculated_price) {
     return curr
