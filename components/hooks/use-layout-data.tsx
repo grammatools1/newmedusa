@@ -1,4 +1,4 @@
-import { medusaClient } from "components/checkout/components/discount-code/config/config"
+import { medusaClient } from "components/checkout/components/discount-code/config"
 import { getPercentageDiff } from "components/util/get-precentage-diff"
 import { Product, ProductCollection, Region } from "@medusajs/medusa"
 import { PricedProduct } from "@medusajs/medusa/dist/types/pricing"
