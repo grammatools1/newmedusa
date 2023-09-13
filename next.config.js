@@ -29,8 +29,5 @@ module.exports = {
       }
     ]
   },
-  env: {
-    NODE_ENV: 'development', // Set NODE_ENV to 'development'
-  },
 };
 
