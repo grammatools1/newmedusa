@@ -73,7 +73,7 @@ const StripePaymentButton = ({
 
   const { cart } = useCart()
   const { onPaymentCompleted } = useCheckout()
- /*
+ 
   const stripe = useStripe()
   const elements = useElements()
   const card = elements?.getElement("cardNumber")
@@ -84,7 +84,7 @@ const StripePaymentButton = ({
     } else {
       setDisabled(false)
     }
-  }, [stripe, elements])*/
+  }, [stripe, elements])
 
   const handlePayment = async () => {
     setSubmitting(true)
