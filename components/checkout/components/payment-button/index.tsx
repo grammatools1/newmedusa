@@ -115,7 +115,7 @@ const StripePaymentButton = ({
             phone: cart.billing_address.phone ?? undefined,
           },
         },
-      })*/
+      })
       .then(({ error, paymentIntent }) => {
         if (error) {
           const pi = error.payment_intent
@@ -143,7 +143,7 @@ const StripePaymentButton = ({
       .finally(() => {
         setSubmitting(false)
       })
-  }
+  }*/
 
   return (
     <>
