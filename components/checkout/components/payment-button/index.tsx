@@ -4,7 +4,7 @@ import Button from "components/checkout/common/components/button"
 import Spinner from "components/checkout/common/icons/spinner"
 import { OnApproveActions, OnApproveData } from "@paypal/paypal-js"
 import { PayPalButtons, PayPalScriptProvider } from "@paypal/react-paypal-js"
-//import { useElements, useStripe } from "@stripe/react-stripe-js"
+import { useElements, useStripe } from "@stripe/react-stripe-js"
 import { useCart } from "medusa-react"
 import React, { useEffect, useState } from "react"
 
@@ -89,12 +89,12 @@ const StripePaymentButton = ({
   const handlePayment = async () => {
     setSubmitting(true)
 
-  /*  if (!stripe || !elements || !card || !cart) {
+   if (!stripe || !elements || !card || !cart) {
       setSubmitting(false)
       return
-    }*/
+    }
 
-    /*await stripe
+    await stripe
       .confirmCardPayment(session.data.client_secret as string, {
         payment_method: {
           card: card,
@@ -143,7 +143,7 @@ const StripePaymentButton = ({
       .finally(() => {
         setSubmitting(false)
       })
-  }*/
+  }
 
   return (
     <>
