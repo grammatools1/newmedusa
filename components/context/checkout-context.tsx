@@ -8,7 +8,7 @@ import {
   Customer,
   StorePostCartsCartReq,
 } from "@medusajs/medusa"
-//import Wrapper from "components/checkout/components/payment-wrapper"
+import Wrapper from "components/checkout/components/payment-wrapper"
 import { isEqual } from "lodash"
 import {
   formatAmount,
