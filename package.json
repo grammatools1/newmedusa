@@ -29,7 +29,7 @@
     "@medusajs/medusa": "^1.15.1",
     "@hookform/error-message": "^2.0.1",
     "medusa-react":"^9.0.4",
-    "@stripe/stripe-js": "^2..1.5",
+    "@stripe/stripe-js": "^2.1.5",
     "@stripe/react-stripe-js": "^2.3.0",
     "yup": "^1.2.0",
     "@paypal/react-paypal-js": "^8.1.3",
