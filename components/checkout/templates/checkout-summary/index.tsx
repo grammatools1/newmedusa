@@ -1,5 +1,5 @@
 "use client"
-
+import {CartProvider } from 'medusa-react';
 import DiscountCode from "components/checkout/components/discount-code"
 import GiftCard from "components/checkout/components/gift-card"
 import PaymentButton from "components/checkout/components/payment-button"
@@ -20,7 +20,9 @@ const CheckoutSummary = () => {
         <PaymentButton paymentSession={cart?.payment_session} />
       </div>
       <div className="p-6 bg-white">
-        <DiscountCode cart={cart} />
+        <CartProvider>
+        <DiscountCode cart={cart} />   
+        </CartProvider>
       </div>
       <GiftCard cart={cart} />
     </div>
