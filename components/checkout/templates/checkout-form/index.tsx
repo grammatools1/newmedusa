@@ -1,5 +1,5 @@
 "use client"
-
+import { CartProvider } from 'medusa-react';
 import Addresses from "components/checkout/components/addresses"
 import Payment from "components/checkout/components/payment"
 import Shipping from "components/checkout/components/shipping"
@@ -20,7 +20,9 @@ const CheckoutForm = () => {
         </div>
 
         <div>
+          <CartProvider>
           <Shipping cart={cart} />
+          </CartProvider>
         </div>
 
         <div>
