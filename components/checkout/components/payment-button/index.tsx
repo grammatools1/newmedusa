@@ -89,12 +89,12 @@ const StripePaymentButton = ({
   const handlePayment = async () => {
     setSubmitting(true)
 
-    if (!stripe || !elements || !card || !cart) {
+  /*  if (!stripe || !elements || !card || !cart) {
       setSubmitting(false)
       return
-    }
+    }*/
 
-    await stripe
+    /*await stripe
       .confirmCardPayment(session.data.client_secret as string, {
         payment_method: {
           card: card,
@@ -115,7 +115,7 @@ const StripePaymentButton = ({
             phone: cart.billing_address.phone ?? undefined,
           },
         },
-      })
+      })*/
       .then(({ error, paymentIntent }) => {
         if (error) {
           const pi = error.payment_intent
