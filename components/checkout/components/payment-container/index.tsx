@@ -2,7 +2,7 @@ import { PaymentSession } from "@medusajs/medusa"
 import Radio from "components/checkout/common/components/radio"
 import clsx from "clsx"
 import React from "react"
-import PaymentStripe from "../payment-stripe"
+//import PaymentStripe from "../payment-stripe"
 import PaymentTest from "../payment-test"
 
 type PaymentContainerProps = {
