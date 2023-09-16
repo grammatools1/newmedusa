@@ -7,8 +7,10 @@ import { useCart } from "medusa-react"
 
 const CheckoutForm = () => {
   const { cart } = useCart()
+      console.log(cart);
 
   if (!cart?.id) {
+    console.log(cart);
     return null
   }
 
@@ -22,6 +24,7 @@ const CheckoutForm = () => {
         <div>
           <CartProvider>
           <Shipping cart={cart} />
+            console.log(cart);
           </CartProvider>
         </div>
 
