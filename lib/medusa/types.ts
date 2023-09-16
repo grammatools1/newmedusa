@@ -404,7 +404,6 @@ export type MedusaLineItem = {
   original_total: number;
   original_tax_total: number;
   discount_total: number;
-  gift_card_total: number;
   raw_discount_total: number;
   gift_card_total: number;
   includes_tax: boolean;
