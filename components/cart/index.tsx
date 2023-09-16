@@ -25,7 +25,7 @@ export default async function Cart() {
  
     <> 
       <CartModal cart={cart} />
-      < CheckoutFlow cart={cart} />
+      <CheckoutFlow cart={cart}/>
     </>
   );
 }
