@@ -64,14 +64,10 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
           }
 
           try {
-            
-           
             setLoading(true);
             const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-            if(updatedCart.total !== undefined) {
               setOrderTotal(updatedCart.total);
-            }
-            setCartItems(updatedCart.items);
+             setCartItems(updatedCart.items);
           } catch (error) {
             console.error('Error fetching cart items:', error);
             toast.error('Failed to fetch cart items. Please refresh the page.', { autoClose: 3000 });
