@@ -92,6 +92,7 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
 
   const { mutate: updateCart, isLoading: updatingCart } = useUpdateCart(
     cart?.id!
+    console.log(cart.id);
   )
 
   const { shipping_options } = useCartShippingOptions(cart?.id!, {
@@ -161,6 +162,8 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
    * Resets the form when the cart changed.
    */
   useEffect(() => {
+    console.log(cart);
+     console.log(cart.id);
     if (cart?.id) {
       methods.reset(mapFormValues(customer, cart, countryCode))
     }
