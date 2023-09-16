@@ -28,7 +28,7 @@ const CheckoutSummary = () => {
       </div>
       <GiftCard cart={cart} />
     </div>
-      <MedusaProvider/>
+    </MedusaProvider>
   )
 }
 
