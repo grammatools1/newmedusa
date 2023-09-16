@@ -92,7 +92,6 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
 
   const { mutate: updateCart, isLoading: updatingCart } = useUpdateCart(
     cart?.id!
-    console.log(cart.id),
   )
 
   const { shipping_options } = useCartShippingOptions(cart?.id!, {
@@ -188,6 +187,7 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
    * Method to set the selected shipping method for the cart. This is called when the user selects a shipping method, such as UPS, FedEx, etc.
    */
   const setShippingOption = (soId: string) => {
+    
     if (cart) {
       setShippingMethod(
         { option_id: soId },
@@ -264,7 +264,7 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
       last_name: address.last_name || "",
       phone: address.phone || "",
       postal_code: address.postal_code || "",
-      province: address.province || "",
+     province: address.province || "",
       company: address.company || "",
     })
   }
@@ -308,6 +308,8 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
     updateCart(payload, {
       onSuccess: ({ cart }) => {
         setCart(cart)
+        console.log(cart?.id)
+          console.log(cart)
         prepareFinalSteps()
       },
     })
