@@ -1,4 +1,4 @@
-import UnderlineLink from "@modules/common/components/underline-link"
+import UnderlineLink from "components/checkout/common/components/underline-link"
 
 const EmptyCartMessage = () => {
   return (
