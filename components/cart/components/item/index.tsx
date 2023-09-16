@@ -1,9 +1,9 @@
 import { useStore } from "@lib/context/store-context"
 import { LineItem, Region } from "@medusajs/medusa"
-import LineItemOptions from "@modules/common/components/line-item-options"
-import LineItemPrice from "@modules/common/components/line-item-price"
-import NativeSelect from "@modules/common/components/native-select"
-import Trash from "@modules/common/icons/trash"
+import LineItemOptions from "components/checkout/common/components/line-item-options"
+import LineItemPrice from "components/checkout/common/components/line-item-price"
+import NativeSelect from "components/checkout/common/components/native-select"
+import Trash from "components/checkout/common/icons/trash"
 import Thumbnail from "@modules/products/components/thumbnail"
 
 type ItemProps = {
