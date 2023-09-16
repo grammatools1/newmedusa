@@ -2,6 +2,7 @@ import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CartModal from './modal';
 import CartTotals from 'components/checkout/common/components/cart-totals';
+import DiscountCode from 'components/checkout/components/discount-code';
 
 
 
@@ -27,6 +28,7 @@ export default async function Cart() {
     <> 
       <CartModal cart={cart} />
       <CartTotals cart={cart}/>
+      <DiscountCode cart={cart}/>
      
     </>
   );
