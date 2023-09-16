@@ -1,6 +1,6 @@
 import { LineItem, Region } from "@medusajs/medusa"
-import Item from "@modules/cart/components/item"
-import SkeletonLineItem from "@modules/skeletons/components/skeleton-line-item"
+import Item from "components/cart/components/item"
+import SkeletonLineItem from "components/skeletons/components/skeleton-line-item"
 
 type ItemsTemplateProps = {
   items?: Omit<LineItem, "beforeInsert">[]
