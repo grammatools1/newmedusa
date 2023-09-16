@@ -1,5 +1,5 @@
 "use client"
-import { MedusaProvider, CartProvider } from "medusa-react"
+import { CartProvider } from "medusa-react"
 import Addresses from "components/checkout/components/addresses"
 import Payment from "components/checkout/components/payment"
 import Shipping from "components/checkout/components/shipping"
@@ -15,7 +15,7 @@ const CheckoutForm = () => {
   }
 
   return (
-    < MedusaProvider>
+    
     <div>
       <div className="w-full grid grid-cols-1 gap-y-8">
         <div>
@@ -34,7 +34,7 @@ const CheckoutForm = () => {
         </div>
       </div>
     </div>
-    </MedusaProvider>
+
   )
 }
 
