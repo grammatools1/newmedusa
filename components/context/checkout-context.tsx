@@ -162,7 +162,7 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
    */
   useEffect(() => {
     console.log(cart);
-     console.log(cart.id);
+     console.log(cart?.id);
     if (cart?.id) {
       methods.reset(mapFormValues(customer, cart, countryCode))
     }
