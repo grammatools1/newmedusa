@@ -1,5 +1,5 @@
 "use client"
-import { MedusaProvider, CartProvider } from "medusa-react"
+import {  CartProvider } from "medusa-react"
 import DiscountCode from "components/checkout/components/discount-code"
 import GiftCard from "components/checkout/components/gift-card"
 import PaymentButton from "components/checkout/components/payment-button"
@@ -14,7 +14,7 @@ const CheckoutSummary = () => {
   }
 
   return (
-    <MedusaProvider>
+   
     <div className="sticky top-0 flex flex-col-reverse small:flex-col gap-y-8">
       <div className="w-full bg-white p-6 flex flex-col gap-y-6">
         <CartTotals cart={cart} />
@@ -28,7 +28,7 @@ const CheckoutSummary = () => {
       </div>
       <GiftCard cart={cart} />
     </div>
-    </MedusaProvider>
+
   )
 }
 
