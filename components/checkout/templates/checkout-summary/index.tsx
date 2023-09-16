@@ -8,9 +8,8 @@ import { useCart } from "medusa-react"
 
 const CheckoutSummary = () => {
   const { cart } = useCart()
-
+ console.log(cart?.id);
   if (!cart?.id) {
-    console.log(cart?.id);
     return null
   }
 
