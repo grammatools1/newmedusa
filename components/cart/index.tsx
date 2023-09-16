@@ -1,7 +1,7 @@
 import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CartModal from './modal';
-import DiscountCode from components/checkout/components/discount-code
+import DiscountCode from 'components/checkout/components/discount-code';
 
 
 export default async function Cart() {
