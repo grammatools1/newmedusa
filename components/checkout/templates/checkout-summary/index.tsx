@@ -10,6 +10,7 @@ const CheckoutSummary = () => {
   const { cart } = useCart()
 
   if (!cart?.id) {
+    console.log(cart.id);
     return null
   }
 
@@ -17,6 +18,7 @@ const CheckoutSummary = () => {
     <div className="sticky top-0 flex flex-col-reverse small:flex-col gap-y-8">
       <div className="w-full bg-white p-6 flex flex-col gap-y-6">
         <CartTotals cart={cart} />
+            console.log(<CartTotals cart={cart} />);
         <PaymentButton paymentSession={cart?.payment_session} />
       </div>
       <div className="p-6 bg-white">
