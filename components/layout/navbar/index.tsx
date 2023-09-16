@@ -1,5 +1,5 @@
-import Cart from 'components/cart';
-import OpenCart from 'components/cart/open-cart';
+//import Cart from 'components/cart';
+//import OpenCart from 'components/cart/open-cart';
 import LogoSquare from 'components/logo-square';
 import { getMenu } from 'lib/medusa';
 import { Menu } from 'lib/medusa/types';
@@ -48,9 +48,6 @@ export default async function Navbar() {
           <Search />
         </div>
         <div className="flex justify-end md:w-1/3">
-          <Suspense fallback={<OpenCart />}>
-            <Cart />
-          </Suspense>
         </div>
       </div>
     </nav>
