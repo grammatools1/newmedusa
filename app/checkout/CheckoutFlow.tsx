@@ -68,7 +68,9 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
            
             setLoading(true);
             const { cart: updatedCart } = await medusa.carts.retrieve(cart.id);
-            setOrderTotal(updatedCart.total);
+            if(updatedCart.total !== undefined) {
+              setOrderTotal(updatedCart.total);
+            }
             setCartItems(updatedCart.items);
           } catch (error) {
             console.error('Error fetching cart items:', error);
