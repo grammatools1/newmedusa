@@ -10,7 +10,7 @@ const CheckoutSummary = () => {
   const { cart } = useCart()
 
   if (!cart?.id) {
-    console.log(cart.id);
+    console.log(cart?.id);
     return null
   }
 
