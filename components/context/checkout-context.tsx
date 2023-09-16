@@ -92,7 +92,7 @@ export const CheckoutProvider = ({ children }: CheckoutProviderProps) => {
 
   const { mutate: updateCart, isLoading: updatingCart } = useUpdateCart(
     cart?.id!
-    console.log(cart.id)
+    console.log(cart.id),
   )
 
   const { shipping_options } = useCartShippingOptions(cart?.id!, {
