@@ -1,4 +1,4 @@
-import { Cart } from "lib/medusa/types"
+import { Cart } from "@medusajs/medusa"
 import { formatAmount } from "medusa-react" 
 import React from "react"
 
