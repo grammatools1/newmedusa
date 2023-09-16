@@ -1,8 +1,8 @@
 "use client"
 
-import useEnrichedLineItems from "@lib/hooks/use-enrich-line-items"
-import DiscountCode from "@modules/checkout/components/discount-code"
-import SkeletonCartPage from "@modules/skeletons/templates/skeleton-cart-page"
+import useEnrichedLineItems from "components/hooks/use-enrich-line-items"
+import DiscountCode from "components/checkout/components/discount-code"
+import SkeletonCartPage from "components/skeletons/templates/skeleton-cart-page"
 import { useCart, useMeCustomer } from "medusa-react"
 import EmptyCartMessage from "../components/empty-cart-message"
 import SignInPrompt from "../components/sign-in-prompt"
