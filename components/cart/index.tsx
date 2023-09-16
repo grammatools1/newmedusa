@@ -1,7 +1,7 @@
 import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CartModal from './modal';
-import CartTotal from 'components/checkout/common/cartTotal';
+import CartTotal from 'components/checkout/common/components/cartTotal';
 
 
 export default async function Cart() {
