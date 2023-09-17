@@ -48,7 +48,7 @@ function CheckoutFlow({ cart }: { cart: Cart | undefined }) {
   const [couponCode, setCouponCode] = useState('');
   const [giftCardCode, setGiftCardCode] = useState('');
   const [orderTotal, setOrderTotal] = useState<number | undefined>(undefined);
-  const [cartItems, setCartItems] = useState([]);
+  const [cartItems, setCartItems] = useState<LineItem[]>([]);
   const [step, setStep] = useState(1);
   const [confirmOrder, setConfirmOrder] = useState(false);
   
