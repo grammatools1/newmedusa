@@ -1,7 +1,7 @@
 "use client"
 
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import Medusa, { LineItem } from '@medusajs/medusa-js';
+import Medusa from '@medusajs/medusa-js';
 import ShippingForm from './ShippingForm';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -11,6 +11,7 @@ import type { Cart } from 'lib/medusa/types';
 import { createUrl } from 'lib/utils';
 import Image from 'next/image';
 import Link from 'next/link';
+import { LineItem, Region } from "@medusajs/medusa"
 
 import DeleteItemButton from 'components/cart/delete-item-button';
 import EditItemQuantityButton from 'components/cart/edit-item-quantity-button';
