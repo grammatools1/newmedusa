@@ -56,7 +56,7 @@ type Props = {
 const ShippingForm = ({ cart, onComplete }: Props) => {
   const [medusa, setMedusa] = useState<Medusa | null>(null);
   const [selectedShippingMethod, setSelectedShippingMethod] = useState('');
-  const [shippingOptions, setShippingOptions] = useState([]);
+  const [shippingOptions, setShippingOptions] = useState<PricedShippingOption[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<FormErrors>();
   const [acceptUpdates, setAcceptUpdates] = useState(false);
