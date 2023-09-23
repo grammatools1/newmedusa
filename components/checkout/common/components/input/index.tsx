@@ -1,3 +1,4 @@
+"use client"
 import { ErrorMessage } from "@hookform/error-message"
 import Eye from "components/checkout/common/icons/eye"
 import EyeOff from "components/checkout/common/icons/eye-off"
