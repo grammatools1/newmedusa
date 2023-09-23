@@ -1,3 +1,4 @@
+"use client"
 import { CheckoutProvider } from "components/context/checkout-context"
 import ChevronDown from "components/checkout/common/icons/chevron-down"
 
