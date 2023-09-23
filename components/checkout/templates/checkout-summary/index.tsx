@@ -1,3 +1,4 @@
+"use client"
 import {  CartProvider } from "medusa-react"
 import DiscountCode from "components/checkout/components/discount-code"
 import GiftCard from "components/checkout/components/gift-card"
