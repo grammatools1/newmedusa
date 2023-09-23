@@ -2,8 +2,8 @@ import { createCart, getCart } from 'lib/medusa';
 import { cookies } from 'next/headers';
 import CheckoutTemplate from "components/checkout/templates"
 import { Metadata } from "next"
-import CheckoutForm from "components/checkout/checkout-form"
-import CheckoutSummary from "components/checkout/checkout-summary" 
+import CheckoutForm from "components/checkout/templates/checkout-form"
+import CheckoutSummary from "components/checkout/templates/checkout-summary" 
 
 
 export default async function Checkout() {
