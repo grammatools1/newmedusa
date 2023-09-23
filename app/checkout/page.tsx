@@ -22,7 +22,7 @@ export default async function Checkout() {
 
   return (
     <> 
-      <CheckoutTemplate cart={cart} />
+      <CheckoutTemplate />
     </>
   );
 }
